@@ -5,11 +5,17 @@ import React, { Component } from 'react';
 export default class App extends Component {
   render() {
     return <div style={{display: 'flex', flexWrap: 'wrap', height: '100%'}}>
-      {[0,1,2,3].map(i =>
-        <div key={i} style={{width: '50%', border:'1px solid black'}}>
-          <h3>test</h3>
-        </div>
-      )}
+      <div style={{width: '50%'}}>
+        <h4>Playlist</h4>
+      </div>
+
+      <div style={{width: '50%'}}>
+        <h4>Dropzone</h4>
+      </div>
+
+      <div style={{width: '100%'}}>
+        <h4>Controls</h4>
+      </div>
     </div>;
   }
 }
