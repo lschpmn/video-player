@@ -14,11 +14,17 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        exclude: /(node_modules|bower_components)/,
-        use: { loader: 'babel-loader', options: { presets: ['react'] } }
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['react', 'env'],
+            plugins: [require('babel-plugin-transform-object-rest-spread')],
+          },
+        }
       },
 
-      { test: /\.(png|svg|jpg|gif|html)$/, use: ['file-loader?name=[name].[ext]'], }
+      {test: /\.(png|svg|jpg|gif|html)$/, use: ['file-loader?name=[name].[ext]'],}
     ]
   }
 };
