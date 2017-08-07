@@ -2,6 +2,7 @@
 
 import React, { Component } from 'react';
 import { Glyphicon } from 'react-bootstrap';
+import FileUpload from './components/FileUpload';
 
 export default class App extends Component {
   constructor() {
