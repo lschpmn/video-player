@@ -1,6 +1,7 @@
 'use strict';
 
 const path = require('path');
+const BundleAnalyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   entry: './client/index',
@@ -26,5 +27,5 @@ module.exports = {
 
       {test: /\.(png|svg|jpg|gif|html)$/, use: ['file-loader?name=[name].[ext]'],}
     ]
-  }
+  },
 };
