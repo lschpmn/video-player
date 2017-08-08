@@ -13,7 +13,6 @@ export default class FileUpload extends Component {
   
   drop(event) {
     event.preventDefault();
-    event.persist();
     
     const { dataTransfer } = event;
     const files = [];
