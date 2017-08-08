@@ -20,7 +20,7 @@ export default class App extends Component {
       </div>
 
       <div style={{height: '75%', width: '50%'}}>
-        <h4>Dropzone</h4>
+        <FileUpload />
       </div>
 
       <div style={styles.controlContainer}>
