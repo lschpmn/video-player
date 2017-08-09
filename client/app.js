@@ -14,37 +14,36 @@ export default class App extends Component {
   }
 
   render() {
-    return <div style={styles.parent}>
-      <div style={{height: '75%', width: '50%'}}>
-        <h4>Playlist</h4>
+    return <FileUpload>
+      <div style={styles.parent}>
+    
+        <div style={{height: '75%', width: '100%'}}>
+          <h4>Playlist</h4>
+        </div>
+    
+        <div style={styles.controlContainer}>
+          <div style={styles.controlItems}>
+            <Glyphicon glyph='fast-backward' style={styles.icon} />
+          </div>
+      
+          <div style={styles.controlItems}>
+            <Glyphicon glyph='backward' style={styles.icon} />
+          </div>
+      
+          <div style={styles.controlItems} onClick={() => this.setState({ play: !this.state.play })}>
+            <Glyphicon glyph={this.state.play ? 'play' : 'pause'} style={styles.icon} />
+          </div>
+      
+          <div style={styles.controlItems}>
+            <Glyphicon glyph='forward' style={styles.icon} />
+          </div>
+      
+          <div style={styles.controlItems}>
+            <Glyphicon glyph='fast-forward' style={styles.icon} />
+          </div>
+        </div>
       </div>
-
-      <div style={{height: '75%', width: '50%'}}>
-        <FileUpload />
-      </div>
-
-      <div style={styles.controlContainer}>
-        <div style={styles.controlItems}>
-          <Glyphicon glyph='fast-backward' style={styles.icon} />
-        </div>
-
-        <div style={styles.controlItems}>
-          <Glyphicon glyph='backward' style={styles.icon} />
-        </div>
-
-        <div style={styles.controlItems} onClick={() => this.setState({ play: !this.state.play })}>
-          <Glyphicon glyph={this.state.play ? 'play' : 'pause'} style={styles.icon} />
-        </div>
-
-        <div style={styles.controlItems}>
-          <Glyphicon glyph='forward' style={styles.icon} />
-        </div>
-
-        <div style={styles.controlItems}>
-          <Glyphicon glyph='fast-forward' style={styles.icon} />
-        </div>
-      </div>
-    </div>;
+    </FileUpload>;
   }
 }
 

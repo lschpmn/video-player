@@ -32,7 +32,7 @@ export default class FileUpload extends Component {
   
   render() {
     return <div id='dropzone' style={{height: '100%', width: '100%'}} onDrop={this.drop} onDragOver={this.eventNoop} onDragEnd={this.eventNoop} >
-      Drop Here
+      {this.props.children}
     </div>;
   }
 }
