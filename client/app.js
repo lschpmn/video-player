@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import FileUpload from './components/FileUpload';
+import Streamer from './lib/Streamer';
 
 export default class App extends Component {
   constructor() {
@@ -10,7 +11,14 @@ export default class App extends Component {
     this.state = {
       media: [{}],
       play: false,
+      streamer: null,
     };
+  }
+  
+  componentDidMount() {
+    this.setState({
+      streamer: new Streamer(),
+    });
   }
 
   render() {
