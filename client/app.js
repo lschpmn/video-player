@@ -2,10 +2,11 @@
 
 import React, { Component } from 'react';
 import { Glyphicon } from 'react-bootstrap';
+import { connect } from 'react-redux';
 import FileUpload from './components/FileUpload';
 import Streamer from './lib/Streamer';
 
-export default class App extends Component {
+class App extends Component {
   constructor() {
     super();
     this.state = {
@@ -22,6 +23,10 @@ export default class App extends Component {
   }
 
   render() {
+    const { changePlay, play } = this.props;
+    
+    console.log(this.props);
+    
     return <FileUpload>
       <div style={styles.parent}>
     
@@ -38,8 +43,8 @@ export default class App extends Component {
             <Glyphicon glyph='backward' style={styles.icon} />
           </div>
       
-          <div style={styles.controlItems} onClick={() => this.setState({ play: !this.state.play })}>
-            <Glyphicon glyph={this.state.play ? 'play' : 'pause'} style={styles.icon} />
+          <div style={styles.controlItems} onClick={() => changePlay(!play)}>
+            <Glyphicon glyph={this.props.play ? 'pause' : 'play'} style={styles.icon} />
           </div>
       
           <div style={styles.controlItems}>
@@ -54,6 +59,13 @@ export default class App extends Component {
     </FileUpload>;
   }
 }
+
+export default connect(
+  state => state,
+  dispatch => ({
+    changePlay: isPlaying => dispatch({type: 'PLAY', data: isPlaying}),
+  })
+)(App);
 
 const styles = {
   controlContainer: {
