@@ -2,6 +2,14 @@
 
 import { combineReducers } from 'redux';
 
+
+
+function media(state, action) {
+  switch(action.type) {
+    
+  }
+}
+
 function play(state=false, action) {
   switch(action.type) {
     case 'PLAY':
@@ -12,5 +20,6 @@ function play(state=false, action) {
 }
 
 export default combineReducers({
+  media,
   play,
 });
