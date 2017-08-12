@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-
+import PropTypes from 'prop-types';
 
 export default class FileUpload extends Component {
   constructor() {
@@ -22,8 +22,7 @@ export default class FileUpload extends Component {
     }
     
     console.log(files);
-    
-    console.log(event.dataTransfer);
+    this.props.changeMedia(files[0].path);
   }
   
   eventNoop(event) {
@@ -36,3 +35,7 @@ export default class FileUpload extends Component {
     </div>;
   }
 }
+
+FileUpload.propTypes = {
+  changeMedia: PropTypes.func
+};

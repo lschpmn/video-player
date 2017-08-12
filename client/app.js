@@ -4,14 +4,13 @@ import React, { Component } from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import FileUpload from './components/FileUpload';
+import { actions } from './lib/reducers';
 import Streamer from './lib/Streamer';
 
 class App extends Component {
   constructor() {
     super();
     this.state = {
-      media: [{}],
-      play: false,
       streamer: null,
     };
   }
@@ -23,11 +22,13 @@ class App extends Component {
   }
 
   render() {
-    const { changePlay, play } = this.props;
+    const { changePlay, changeMedia, play } = this.props;
     
     console.log(this.props);
     
-    return <FileUpload>
+    return <FileUpload
+      changeMedia={filePath => changeMedia(filePath)}
+    >
       <div style={styles.parent}>
     
         <div style={{height: '75%', width: '100%'}}>
@@ -63,7 +64,8 @@ class App extends Component {
 export default connect(
   state => state,
   dispatch => ({
-    changePlay: isPlaying => dispatch({type: 'PLAY', data: isPlaying}),
+    changeMedia: filePath => dispatch({type: actions.CHANGE_MEDIA, data: filePath}),
+    changePlay: isPlaying => dispatch({type: actions.PLAY, data: isPlaying}),
   })
 )(App);
 
