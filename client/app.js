@@ -3,6 +3,7 @@
 import React, { Component } from 'react';
 import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
+import { changeMedia, changePlay } from './lib/actions';
 import FileUpload from './components/FileUpload';
 import { actions } from './lib/reducers';
 import Streamer from './lib/Streamer';
@@ -64,8 +65,8 @@ class App extends Component {
 export default connect(
   state => state,
   dispatch => ({
-    changeMedia: filePath => dispatch({type: actions.CHANGE_MEDIA, data: filePath}),
-    changePlay: isPlaying => dispatch({type: actions.PLAY, data: isPlaying}),
+    changeMedia: changeMedia(dispatch),
+    changePlay: changePlay(dispatch),
   })
 )(App);
 

@@ -1,15 +1,11 @@
 'use strict';
 
 import { combineReducers } from 'redux';
-
-export const actions = {
-  CHANGE_MEDIA: 'CHANGE_MEDIA',
-  PLAY: 'PLAY',
-};
+import { CHANGE_MEDIA, PLAY } from './actions';
 
 function media(state={}, action) {
   switch(action.type) {
-    case actions.CHANGE_MEDIA:
+    case CHANGE_MEDIA:
       return {
         path: action.data, 
         timestamp: Date.now(),
@@ -21,7 +17,7 @@ function media(state={}, action) {
 
 function play(state=false, action) {
   switch(action.type) {
-    case 'PLAY':
+    case PLAY:
       return action.data;
     default:
         return state;
