@@ -29,7 +29,13 @@ app.post('/api/play-media', (req, res) => {
 function addFile(filePath) {
   if (!files[filePath]) {
     
-    app.use(`/api/file.mp4`, express.static(filePath));
+    app.use(`/api/file.mp4`, express.static(filePath, {
+      setHeaders: (res, path, stat) => {
+        res.type('video/mp4');
+        console.log('Headers set');
+      }
+    }));
+    
     console.log(`Adding ${filePath} to static server`);
     
     files[filePath] = true;
