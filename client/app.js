@@ -9,8 +9,8 @@ import { actions } from './lib/reducers';
 import Streamer from './lib/Streamer';
 
 class App extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     this.state = {
       streamer: null,
     };
@@ -78,7 +78,7 @@ const styles = {
   },
 
   controlItems: {
-    fontSize: 50,
+    fontSize: '20vh',
     width: '20%',
   },
 

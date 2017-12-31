@@ -4,8 +4,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 export default class FileUpload extends Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
     
     this.drop = this.drop.bind(this);
     this.eventNoop = this.eventNoop.bind(this);
