@@ -1,61 +1,26 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { Glyphicon } from 'react-bootstrap';
 import { connect } from 'react-redux';
 import { changeMedia, changePlay } from './lib/actions';
+import Controls from './components/Controls';
 import FileUpload from './components/FileUpload';
-import { actions } from './lib/reducers';
-import Streamer from './lib/Streamer';
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      streamer: null,
-    };
-  }
-  
-  componentDidMount() {
-    this.setState({
-      streamer: new Streamer(),
-    });
-  }
-
   render() {
     const { changePlay, changeMedia, play } = this.props;
-    
-    console.log(this.props);
     
     return <FileUpload
       changeMedia={filePath => changeMedia(filePath)}
     >
       <div style={styles.parent}>
     
-        <div style={{height: '75%', width: '100%'}}>
+        <div style={{height: '80%', width: '100%'}}>
           <h4>Playlist</h4>
         </div>
-    
-        <div style={styles.controlContainer}>
-          <div style={styles.controlItems}>
-            <Glyphicon glyph='fast-backward' style={styles.icon} />
-          </div>
-      
-          <div style={styles.controlItems}>
-            <Glyphicon glyph='backward' style={styles.icon} />
-          </div>
-      
-          <div style={styles.controlItems} onClick={() => changePlay(!play)}>
-            <Glyphicon glyph={this.props.play ? 'pause' : 'play'} style={styles.icon} />
-          </div>
-      
-          <div style={styles.controlItems}>
-            <Glyphicon glyph='forward' style={styles.icon} />
-          </div>
-      
-          <div style={styles.controlItems}>
-            <Glyphicon glyph='fast-forward' style={styles.icon} />
-          </div>
+
+        <div style={{height: '20%', width: '100%'}}>
+          <Controls changePlay={changePlay} play={play} />
         </div>
       </div>
     </FileUpload>;
@@ -71,23 +36,6 @@ export default connect(
 )(App);
 
 const styles = {
-  controlContainer: {
-    display: 'flex',
-    height: '25%',
-    width: '100%',
-  },
-
-  controlItems: {
-    fontSize: '20vh',
-    width: '20%',
-  },
-
-  icon: {
-    cursor: 'pointer',
-    display: 'block',
-    textAlign: 'center',
-  },
-
   parent: {
     display: 'flex',
     flexWrap: 'wrap',
