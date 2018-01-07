@@ -1,7 +1,6 @@
 'use strict';
 
 const path = require('path');
-const BundleAnalyzer = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
   entry: './client/index',
@@ -19,13 +18,17 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
+            plugins: [ 'transform-object-rest-spread' ],
             presets: ['react', 'env'],
-            plugins: [require('babel-plugin-transform-object-rest-spread')],
           },
         }
       },
 
       {test: /\.(png|svg|jpg|gif|html)$/, use: ['file-loader?name=[name].[ext]'],}
     ]
+  },
+
+  devServer: {
+    port: 5000,
   },
 };
