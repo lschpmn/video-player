@@ -24,7 +24,15 @@ module.exports = {
         }
       },
 
-      {test: /\.(png|svg|jpg|gif|html)$/, use: ['file-loader?name=[name].[ext]'],}
+      {
+        test: /\.(png|svg|jpg|gif|html|ttf|woff2|woff|eot)$/,
+        use: ['file-loader?name=[name].[ext]'],
+      },
+
+      {
+        test: /\.css$/,
+        use: [ 'style-loader', 'css-loader' ]
+      },
     ]
   },
 
