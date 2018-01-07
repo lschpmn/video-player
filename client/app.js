@@ -15,11 +15,11 @@ class App extends Component {
     >
       <div style={styles.parent}>
     
-        <div style={{height: '80%', width: '100%'}}>
+        <div style={{height: '90%', width: '100%'}}>
           <h4>Playlist</h4>
         </div>
 
-        <div style={{height: '20%', width: '100%'}}>
+        <div style={{height: '10%', width: '100%'}}>
           <Controls changePlay={changePlay} play={play} />
         </div>
       </div>

@@ -8,44 +8,25 @@ export default class Controls extends Component {
     const { changePlay, play } = this.props;
 
     return <div style={styles.container}>
-      <div style={styles.controlItems}>
-        <Glyphicon glyph='fast-backward' style={styles.icon} />
-      </div>
-
-      <div style={styles.controlItems}>
-        <Glyphicon glyph='backward' style={styles.icon} />
-      </div>
-
-      <div style={styles.controlItems} onClick={() => changePlay(!play)}>
-        <Glyphicon glyph={play ? 'pause' : 'play'} style={styles.icon} />
-      </div>
-
-      <div style={styles.controlItems}>
-        <Glyphicon glyph='forward' style={styles.icon} />
-      </div>
-
-      <div style={styles.controlItems}>
-        <Glyphicon glyph='fast-forward' style={styles.icon} />
-      </div>
+      <Glyphicon glyph={play ? 'pause' : 'play'} style={styles.icon} onClick={() => changePlay(!play)} />
     </div>
   }
 }
 
 const styles = {
   container: {
+    backgroundColor: '#2196F3',
+    color: 'white',
     display: 'flex',
-    height: '25%',
+    height: '100%',
     width: '100%',
-  },
-
-  controlItems: {
-    fontSize: '15vh',
-    width: '20%',
   },
 
   icon: {
     cursor: 'pointer',
     display: 'block',
+    fontSize: '9vh',
     textAlign: 'center',
+    top: 0,
   },
 };
