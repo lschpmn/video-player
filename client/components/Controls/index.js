@@ -29,7 +29,7 @@ const styles = {
     backgroundColor: '#2196F3',
     color: 'white',
     display: 'flex',
-    height: '100%',
+    height: '3rem',
     width: '100%',
   },
 
