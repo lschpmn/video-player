@@ -15,11 +15,11 @@ class App extends Component {
     >
       <div style={styles.parent}>
     
-        <div style={{height: '90%', width: '100%'}}>
+        <div style={styles.top}>
           <h4>Playlist</h4>
         </div>
 
-        <div style={{height: '10%', width: '100%'}}>
+        <div style={styles.bottom}>
           <Controls changePlay={changePlay} play={play} />
         </div>
       </div>
@@ -36,9 +36,20 @@ export default connect(
 )(App);
 
 const styles = {
+  bottom: {
+    alignSelf: 'flex-end',
+    width: '100%',
+  },
+
   parent: {
+    alignItems: 'stretch',
     display: 'flex',
-    flexWrap: 'wrap',
+    flexDirection: 'column',
     height: '100%',
+  },
+
+  top: {
+    flexGrow: 1,
+    width: '100%',
   },
 };

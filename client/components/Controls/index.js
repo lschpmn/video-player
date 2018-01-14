@@ -1,6 +1,9 @@
 'use strict';
 
 import React, { Component } from 'react';
+import Slider from 'material-ui/Slider';
+
+import './controls-style.css';
 
 export default class Controls extends Component {
   render() {
@@ -14,12 +17,15 @@ export default class Controls extends Component {
           style={styles.icon}
         />
       </div>
+
+      <Slider className='main-slider' style={styles.slider} />
     </div>
   }
 }
 
 const styles = {
   container: {
+    alignItems: 'stretch',
     backgroundColor: '#2196F3',
     color: 'white',
     display: 'flex',
@@ -30,8 +36,13 @@ const styles = {
   icon: {
     cursor: 'pointer',
     display: 'block',
-    fontSize: '10vh',
+    fontSize: '2rem',
     marginLeft: 10,
+    width: '2rem',
+  },
+
+  slider: {
+    flexGrow: 1,
   },
 
   verticalCenter: {
