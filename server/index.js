@@ -24,13 +24,35 @@ list.on('update', _player => {
   _player.on('status', console.log);
 });
 
-app.post('/api/play-media', (req, res) => {
+app.post('/api/play', (req, res) => {
   console.log(req.body);
   const { filePath } = req.body;
   const path = addFile(filePath);
   res.end(path);
 
   player.play(path, console.log);
+});
+
+app.post('/api/pause', (req, res) => {
+  player.pause(err => {
+    console.log(err);
+
+    res.end(err || 'success');
+  });
+});
+
+app.post('/api/resume', (req, res) => {
+  player.resume(err => {
+    console.log(err);
+
+    res.end(err || 'success');
+  });
+});
+
+app.post('/api/status', (req, res) => {
+  player.status(status => {
+    res.end(JSON.stringify(status, null, 2));
+  });
 });
 
 app.listen(3001, () => console.log('Server started on port 3001'));
