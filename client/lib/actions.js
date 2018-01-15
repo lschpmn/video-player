@@ -14,5 +14,9 @@ export function changeMedia(dispatch) {
 }
 
 export function changePlay(dispatch) {
-  return isPlaying => dispatch({type: PLAY, data: isPlaying});
+  return isPlaying => {
+    dispatch({type: PLAY, data: isPlaying});
+
+    axios.post('http://localhost:3001/api/pause');
+  }
 }

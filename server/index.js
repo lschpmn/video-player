@@ -11,6 +11,7 @@ const files = {};
 const ipAddress = os.networkInterfaces()['Wi-Fi'].find(net => net.family === 'IPv4').address;
 const list = chromecasts();
 let player;
+let status;
 
 console.log(ipAddress);
 
@@ -21,11 +22,15 @@ list.on('update', _player => {
   console.log(`Found player: ${_player.name}`);
   player = _player;
 
-  _player.on('status', console.log);
+  _player.on('status', _status => {
+    status = _status;
+    console.log(status);
+  });
 });
 
 app.post('/api/play', (req, res) => {
   console.log(req.body);
+  list.update();
   const { filePath } = req.body;
   const path = addFile(filePath);
   res.end(path);
@@ -35,23 +40,32 @@ app.post('/api/play', (req, res) => {
 
 app.post('/api/pause', (req, res) => {
   player.pause(err => {
-    console.log(err);
+    if (err) {
+      console.log(err);
+      res.status(500).end(err);
+    }
 
-    res.end(err || 'success');
+    console.log('Paused');
+    res.send(status);
   });
 });
 
 app.post('/api/resume', (req, res) => {
   player.resume(err => {
-    console.log(err);
+    if (err) {
+      console.log(err);
+      res.status(500).end(err);
+    }
 
-    res.end(err || 'success');
+    console.log('Resume');
+    res.send(status);
   });
 });
 
-app.post('/api/status', (req, res) => {
+app.get('/api/status', (req, res) => {
   player.status(status => {
-    res.end(JSON.stringify(status, null, 2));
+    console.log(status);
+    res.send(JSON.stringify(status, null, 2));
   });
 });
 
