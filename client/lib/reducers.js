@@ -7,8 +7,7 @@ function media(state={}, action) {
   switch(action.type) {
     case CHANGE_MEDIA:
       return {
-        path: action.data, 
-        timestamp: Date.now(),
+        path: action.data,
       };
     default:
       return state;
