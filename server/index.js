@@ -9,23 +9,28 @@ const os = require('os');
 const app = express();
 const files = {};
 const ipAddress = os.networkInterfaces()['Wi-Fi'].find(net => net.family === 'IPv4').address;
+const list = chromecasts();
+let player;
+
+console.log(ipAddress);
 
 app.use(bodyParser.json());
 app.use(cors());
 
+list.on('update', _player => {
+  console.log(`Found player: ${_player.name}`);
+  player = _player;
+
+  _player.on('status', console.log);
+});
+
 app.post('/api/play-media', (req, res) => {
   console.log(req.body);
   const { filePath } = req.body;
-  addFile(filePath);
-  res.end();
-  
-  const list = chromecasts();
-  list.on('update', player => {
-    const path = `http://${ipAddress}:3001/api/${files[filePath]}.mp4`;
-    console.log(`Playing on ${path}`);
-    
-    player.play(path, console.log);
-  });
+  const path = addFile(filePath);
+  res.end(path);
+
+  player.play(path, console.log);
 });
 
 app.listen(3001, () => console.log('Server started on port 3001'));
@@ -42,7 +47,10 @@ function addFile(filePath) {
     }));
     
     console.log(`Adding ${filePath} to static server`);
-    
-    files[filePath] = tmpName;
+
+    files[filePath] = `http://${ipAddress}:3001/api/${tmpName}.mp4`;
+    console.log(`url: ${files[filePath]}`);
   }
+  
+  return files[filePath];
 }
