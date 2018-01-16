@@ -2,18 +2,20 @@
 
 import React, { Component } from 'react';
 import Slider from 'material-ui/Slider';
+import { PLAY } from '../../lib/actions';
 
 import './controls-style.css';
 
 export default class Controls extends Component {
   render() {
-    const { changePlay, play } = this.props;
+    const { pause, resume, status } = this.props;
+    const isPlaying = status.playerState === PLAY;
 
     return <div style={styles.container}>
       <div style={styles.verticalCenter}>
         <i
-          className={`fa fa-${play ? 'pause' : 'play'}`}
-          onClick={() => changePlay(!play)}
+          className={`fa fa-${isPlaying ? 'pause' : 'play'}`}
+          onClick={() => isPlaying ? pause() : resume()}
           style={styles.icon}
         />
       </div>

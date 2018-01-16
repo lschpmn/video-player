@@ -33,9 +33,12 @@ app.post('/api/play', (req, res) => {
   list.update();
   const { filePath } = req.body;
   const path = addFile(filePath);
-  res.end(path);
 
-  player.play(path, console.log);
+  player.play(path, (err, status) => {
+    if (err) return res.status(500).send(err);
+
+    res.send(status);
+  });
 });
 
 app.post('/api/pause', (req, res) => {
@@ -54,12 +57,11 @@ app.post('/api/resume', (req, res) => {
   player.resume(err => {
     if (err) {
       console.log(err);
-      res.status(500).end(err);
     }
-
-    console.log('Resume');
-    res.send(status);
   });
+
+  console.log('Resume');
+  res.end();
 });
 
 app.get('/api/status', (req, res) => {

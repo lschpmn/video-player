@@ -2,16 +2,17 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { changeMedia, changePlay } from './lib/actions';
+import { play, pause, resume } from './lib/actions';
 import Controls from './components/Controls';
 import FileUpload from './components/FileUpload';
 
 class App extends Component {
   render() {
-    const { changePlay, changeMedia, play } = this.props;
+    const { play, pause, resume, status } = this.props;
+    console.log(status);
     
     return <FileUpload
-      changeMedia={filePath => changeMedia(filePath)}
+      play={play}
     >
       <div style={styles.parent}>
     
@@ -20,7 +21,7 @@ class App extends Component {
         </div>
 
         <div style={styles.bottom}>
-          <Controls changePlay={changePlay} play={play} />
+          <Controls pause={pause} resume={resume} status={status} />
         </div>
       </div>
     </FileUpload>;
@@ -30,8 +31,9 @@ class App extends Component {
 export default connect(
   state => state,
   dispatch => ({
-    changeMedia: changeMedia(dispatch),
-    changePlay: changePlay(dispatch),
+    play: play(dispatch),
+    pause: pause(dispatch),
+    resume: resume(dispatch),
   })
 )(App);
 

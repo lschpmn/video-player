@@ -2,21 +2,56 @@
 
 import axios from 'axios';
 
-export const CHANGE_MEDIA = 'CHANGE_MEDIA';
-export const PLAY = 'PLAY';
-  
-export function changeMedia(dispatch) {
+export const PLAY = 'PLAYING';
+export const UPDATE_STATUS = 'UPDATE_STATUS';
+
+const HOST = 'http://localhost:3000/api/';
+
+export function play(dispatch) {
   return filePath => {
-    dispatch({type: CHANGE_MEDIA, data: filePath});
-    
-    axios.post('http://localhost:3000/api/play', {filePath});
-  }
+    axios.post(HOST + 'play', {filePath})
+      .then(res => {
+        const { currentTime, volume, videoInfo } = res.data;
+        const { contentId, duration} = res.data.media;
+        const status = {
+          contentId,
+          currentTime,
+          duration,
+          playerState: PLAY,
+          volume, videoInfo
+        };
+
+        dispatch({
+          type: UPDATE_STATUS,
+          data: status,
+        });
+      })
+      .catch(console.log);
+  };
 }
 
-export function changePlay(dispatch) {
-  return isPlaying => {
-    dispatch({type: PLAY, data: isPlaying});
+export function pause(dispatch) {
+  return () => {
+    axios.post(HOST + 'pause')
+      .then(res => {
+        dispatch({
+          type: UPDATE_STATUS,
+          data: { playerState: res.data.playerState },
+        })
+      })
+      .catch(console.log);
+  };
+}
 
-    axios.post('http://localhost:3000/api/pause');
-  }
+export function resume(dispatch) {
+  return () => {
+    axios.post(HOST + 'resume')
+      .then(res => {
+        dispatch({
+          type: UPDATE_STATUS,
+          data: { playerState: PLAY },
+        })
+      })
+      .catch(console.log);
+  };
 }

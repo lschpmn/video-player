@@ -22,7 +22,7 @@ export default class FileUpload extends Component {
     }
     
     console.log(files);
-    this.props.changeMedia(files[0].path);
+    this.props.play(files[0].path);
   }
   
   eventNoop(event) {
@@ -37,5 +37,5 @@ export default class FileUpload extends Component {
 }
 
 FileUpload.propTypes = {
-  changeMedia: PropTypes.func
+  play: PropTypes.func
 };

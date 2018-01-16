@@ -1,29 +1,26 @@
 'use strict';
 
 import { combineReducers } from 'redux';
-import { CHANGE_MEDIA, PLAY } from './actions';
+import { UPDATE_STATUS } from './actions';
 
-function media(state={}, action) {
+const defaultState = {
+  contentId: '',
+  currentTime: 0,
+  duration: 0,
+  playerState: 'PAUSED',
+  volume: { level: 1, muted: false },
+  videoInfo: { width: 0, height: 0, },
+};
+
+function status(state=defaultState, action) {
   switch(action.type) {
-    case CHANGE_MEDIA:
-      return {
-        path: action.data,
-      };
+    case UPDATE_STATUS:
+      return {...state, ...action.data};
     default:
       return state;
   }
 }
 
-function play(state=false, action) {
-  switch(action.type) {
-    case PLAY:
-      return action.data;
-    default:
-        return state;
-  }
-}
-
 export default combineReducers({
-  media,
-  play,
+  status,
 });
