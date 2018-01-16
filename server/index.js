@@ -69,7 +69,7 @@ app.get('/api/status', (req, res) => {
   });
 });
 
-app.listen(3001, () => console.log('Server started on port 3001'));
+app.listen(3000, () => console.log('Server started on port 3000'));
 
 function addFile(filePath) {
   if (!files[filePath]) {
@@ -84,7 +84,7 @@ function addFile(filePath) {
     
     console.log(`Adding ${filePath} to static server`);
 
-    files[filePath] = `http://${ipAddress}:3001/api/${tmpName}.mp4`;
+    files[filePath] = `http://${ipAddress}:3000/api/${tmpName}.mp4`;
     console.log(`url: ${files[filePath]}`);
   }
   

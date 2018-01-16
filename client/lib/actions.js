@@ -9,7 +9,7 @@ export function changeMedia(dispatch) {
   return filePath => {
     dispatch({type: CHANGE_MEDIA, data: filePath});
     
-    axios.post('http://localhost:3001/api/play', {filePath});
+    axios.post('http://localhost:3000/api/play', {filePath});
   }
 }
 
@@ -17,6 +17,6 @@ export function changePlay(dispatch) {
   return isPlaying => {
     dispatch({type: PLAY, data: isPlaying});
 
-    axios.post('http://localhost:3001/api/pause');
+    axios.post('http://localhost:3000/api/pause');
   }
 }
