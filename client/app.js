@@ -7,6 +7,10 @@ import Controls from './components/Controls';
 import FileUpload from './components/FileUpload';
 
 class App extends Component {
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+  }
+
   render() {
     const { play, pause, resume, status } = this.props;
     console.log(status);

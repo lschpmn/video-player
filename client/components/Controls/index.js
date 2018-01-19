@@ -9,13 +9,15 @@ import './controls-style.css';
 export default class Controls extends Component {
   render() {
     const { pause, resume, status } = this.props;
+    const isMediaLoaded = status.contentId !== '';
     const isPlaying = status.playerState === PLAY;
+    const click = isPlaying ? pause : resume;
 
     return <div style={styles.container}>
       <div style={styles.verticalCenter}>
         <i
           className={`fa fa-${isPlaying ? 'pause' : 'play'}`}
-          onClick={() => isPlaying ? pause() : resume()}
+          onClick={() => isMediaLoaded && click()}
           style={styles.icon}
         />
       </div>

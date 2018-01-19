@@ -3,6 +3,7 @@
 import axios from 'axios';
 
 export const PLAY = 'PLAYING';
+export const PAUSE = 'PAUSED';
 export const UPDATE_STATUS = 'UPDATE_STATUS';
 
 const HOST = 'http://localhost:3000/api/';

@@ -1,13 +1,13 @@
 'use strict';
 
 import { combineReducers } from 'redux';
-import { UPDATE_STATUS } from './actions';
+import { PAUSE, UPDATE_STATUS } from './actions';
 
 const defaultState = {
   contentId: '',
   currentTime: 0,
   duration: 0,
-  playerState: 'PAUSED',
+  playerState: PAUSE,
   volume: { level: 1, muted: false },
   videoInfo: { width: 0, height: 0, },
 };
