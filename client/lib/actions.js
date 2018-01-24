@@ -11,20 +11,10 @@ const HOST = 'http://localhost:3000/api/';
 export function play(dispatch) {
   return filePath => {
     axios.post(HOST + 'play', {filePath})
-      .then(res => {
-        const { currentTime, volume, videoInfo } = res.data;
-        const { contentId, duration} = res.data.media;
-        const status = {
-          contentId,
-          currentTime,
-          duration,
-          playerState: PLAY,
-          volume, videoInfo
-        };
-
+      .then(({data}) => {
         dispatch({
           type: UPDATE_STATUS,
-          data: status,
+          data,
         });
       })
       .catch(console.log);
@@ -52,6 +42,20 @@ export function resume(dispatch) {
           type: UPDATE_STATUS,
           data: { playerState: PLAY },
         })
+      })
+      .catch(console.log);
+  };
+}
+
+export function status(dispatch) {
+  return () => {
+    axios.post(HOST + 'status')
+      .then(res => {
+        console.log(res);
+        dispatch({
+          type: UPDATE_STATUS,
+          data: res.data,
+        });
       })
       .catch(console.log);
   };

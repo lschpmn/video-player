@@ -6,6 +6,8 @@ const cors = require('cors');
 const express = require('express');
 const os = require('os');
 
+const PLAY = 'PLAYING';
+const PAUSE = 'PAUSED';
 const app = express();
 const files = {};
 const ipAddress = os.networkInterfaces()['Wi-Fi'].find(net => net.family === 'IPv4').address;
@@ -23,7 +25,7 @@ list.on('update', _player => {
   player = _player;
 
   _player.on('status', _status => {
-    status = _status;
+    status = statusMapper(_status);
     console.log(status);
   });
 });
@@ -37,7 +39,7 @@ app.post('/api/play', (req, res) => {
   player.play(path, (err, status) => {
     if (err) return res.status(500).send(err);
 
-    res.send(status);
+    res.send(statusMapper(status));
   });
 });
 
@@ -67,7 +69,7 @@ app.post('/api/resume', (req, res) => {
 app.get('/api/status', (req, res) => {
   player.status(status => {
     console.log(status);
-    res.send(JSON.stringify(status, null, 2));
+    res.send(JSON.stringify(statusMapper(status), null, 2));
   });
 });
 
@@ -91,4 +93,27 @@ function addFile(filePath) {
   }
   
   return files[filePath];
+}
+
+function statusMapper(serverStatus) {
+  if (!serverStatus) return null;
+  const { currentTime, playerState, volume, videoInfo } = serverStatus;
+  let status = {
+    currentTime,
+    playerState: playerState === PAUSE ? PAUSE : PLAY,
+    videoInfo,
+    volume,
+  };
+
+  if (serverStatus.media) {
+    const { contentId, duration} = serverStatus.media;
+
+    status = {
+      ...status,
+      contentId,
+      duration,
+    };
+  }
+
+  return status;
 }
