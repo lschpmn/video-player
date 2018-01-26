@@ -5,10 +5,28 @@ import { connect } from 'react-redux';
 import { play, pause, resume } from './lib/actions';
 import Controls from './components/Controls';
 import FileUpload from './components/FileUpload';
+import { PLAY } from './lib/actions';
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      statusTimeoutId: null,
+    };
+  }
+
   componentWillReceiveProps(nextProps) {
     console.log(nextProps);
+
+    if (nextProps.status.playerState === PLAY && !this.state.statusTimeoutId) this.getStatus();
+  }
+
+  getStatus() {
+    const id = setTimeout(() => this.getStatus(), 1000);//stand in
+
+    this.setState({
+      statusTimeoutId: id,
+    });
   }
 
   render() {
