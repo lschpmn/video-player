@@ -41,10 +41,10 @@ app.post('/api/play', (req, res) => {
   const { filePath } = req.body;
   const path = addFile(filePath);
 
-  player.play(path, (err, status) => {
+  player.play(path, (err, _status) => {
     if (err) return res.status(500).send(err);
 
-    res.send(statusMapper(status));
+    res.send(statusMapper(_status));
   });
 });
 
@@ -56,11 +56,12 @@ app.post('/api/pause', (req, res) => {
     }
 
     console.log('Paused');
-    res.send(status);
+    respondWithStatus(res);
   });
 });
 
 app.post('/api/resume', (req, res) => {
+  //callback is only called if there's an error
   player.resume(err => {
     if (err) {
       console.log(err);
@@ -68,19 +69,21 @@ app.post('/api/resume', (req, res) => {
   });
 
   console.log('Resume');
-  res.end();
+  respondWithStatus(res);
+});
+
+app.post('/api/seek', (req, res) => {
+  console.log(`Seek to ${req.body.seconds} seconds`);
+
+  player.seek(req.body.seconds, (err, _status) => {
+
+    status = statusMapper(_status);
+    res.send(status);
+  });
 });
 
 app.get('/api/status', (req, res) => {
-  player.status((err, status) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).send(err);
-    }
-
-    console.log(status);
-    res.send(JSON.stringify(statusMapper(status), null, 2));
-  });
+  respondWithStatus(res);
 });
 
 app.listen(3000, () => console.log('Server started on port 3000'));
@@ -103,6 +106,19 @@ function addFile(filePath) {
   }
   
   return files[filePath];
+}
+
+function respondWithStatus(res) {
+  player.status((err, _status) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+
+    status = statusMapper(_status);
+    console.log(status);
+    res.send(status);
+  });
 }
 
 function statusMapper(serverStatus) {

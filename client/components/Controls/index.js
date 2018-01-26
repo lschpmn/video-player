@@ -1,14 +1,15 @@
 'use strict';
 
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import Slider from 'material-ui/Slider';
-import { PLAY } from '../../lib/actions';
+import { pause, PLAY, resume, seek } from '../../lib/actions';
 
 import './controls-style.css';
 
-export default class Controls extends Component {
+class Controls extends Component {
   render() {
-    const { pause, resume, status } = this.props;
+    const { pause, resume, status, seek } = this.props;
     const isMediaLoaded = status.contentId !== '';
     const isPlaying = status.playerState === PLAY;
     const click = isPlaying ? pause : resume;
@@ -23,10 +24,19 @@ export default class Controls extends Component {
         />
       </div>
 
-      <Slider className='main-slider' style={styles.slider} value={playPercent} onChange={console.log} />
+      <Slider className='main-slider' style={styles.slider} value={playPercent} onChange={(e, val) => seek(val * status.duration)} />
     </div>
   }
 }
+
+export default connect(
+  state => state,
+  dispatch => ({
+    pause: pause(dispatch),
+    resume: resume(dispatch),
+    seek: seek(dispatch),
+  }),
+)(Controls);
 
 const styles = {
   container: {

@@ -2,10 +2,9 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { play, pause, resume, getStatus } from './lib/actions';
+import { getStatus, play, PLAY } from './lib/actions';
 import Controls from './components/Controls';
 import FileUpload from './components/FileUpload';
-import { PLAY } from './lib/actions';
 
 class App extends Component {
   constructor(props) {
@@ -16,10 +15,8 @@ class App extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
-
     if (nextProps.status.playerState === PLAY && !this.state.statusTimeoutId) this.getStatus();
-    if (nextProps.status.playerState !== PLAY && this.state.statusTimeoutId) {
+    else if (nextProps.status.playerState !== PLAY && this.state.statusTimeoutId) {
       clearTimeout(this.state.statusTimeoutId);
       this.setState({
         statusTimeoutId: null,
@@ -39,7 +36,7 @@ class App extends Component {
   }
 
   render() {
-    const { play, pause, resume, status } = this.props;
+    const { play, status } = this.props;
     console.log(status);
     
     return <FileUpload
@@ -52,7 +49,7 @@ class App extends Component {
         </div>
 
         <div style={styles.bottom}>
-          <Controls pause={pause} resume={resume} status={status} />
+          <Controls />
         </div>
       </div>
     </FileUpload>;
@@ -62,10 +59,8 @@ class App extends Component {
 export default connect(
   state => state,
   dispatch => ({
-    play: play(dispatch),
-    pause: pause(dispatch),
-    resume: resume(dispatch),
     getStatus: getStatus(dispatch),
+    play: play(dispatch),
   })
 )(App);
 

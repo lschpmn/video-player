@@ -8,15 +8,18 @@ export const UPDATE_STATUS = 'UPDATE_STATUS';
 
 const HOST = 'http://localhost:3000/api/';
 
+export function getStatus(dispatch) {
+  return () => {
+    axios.get(HOST + 'status')
+      .then(({data}) => update(data, dispatch))
+      .catch(console.log);
+  };
+}
+
 export function play(dispatch) {
   return filePath => {
     axios.post(HOST + 'play', {filePath})
-      .then(({data}) => {
-        dispatch({
-          type: UPDATE_STATUS,
-          data,
-        });
-      })
+      .then(({data}) => update(data, dispatch))
       .catch(console.log);
   };
 }
@@ -24,12 +27,7 @@ export function play(dispatch) {
 export function pause(dispatch) {
   return () => {
     axios.post(HOST + 'pause')
-      .then(res => {
-        dispatch({
-          type: UPDATE_STATUS,
-          data: { playerState: res.data.playerState },
-        })
-      })
+      .then(({data}) => update(data, dispatch))
       .catch(console.log);
   };
 }
@@ -37,25 +35,22 @@ export function pause(dispatch) {
 export function resume(dispatch) {
   return () => {
     axios.post(HOST + 'resume')
-      .then(res => {
-        dispatch({
-          type: UPDATE_STATUS,
-          data: { playerState: PLAY },
-        })
-      })
+      .then(({data}) => update(data, dispatch))
       .catch(console.log);
   };
 }
 
-export function getStatus(dispatch) {
-  return () => {
-    axios.get(HOST + 'status')
-      .then(({data}) => {
-        dispatch({
-          type: UPDATE_STATUS,
-          data,
-        });
-      })
+export function seek(dispatch) {
+  return seconds => {
+    axios.post(HOST + 'seek', {seconds})
+      .then(({data}) => update(data, dispatch))
       .catch(console.log);
   };
+}
+
+function update(data, dispatch) {
+  dispatch({
+    type: UPDATE_STATUS,
+    data,
+  });
 }
