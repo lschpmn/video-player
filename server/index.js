@@ -30,6 +30,11 @@ list.on('update', _player => {
   });
 });
 
+app.use((req, res, next) => {
+  res.set('Cache-Control', 'no-cache');
+  next();
+});
+
 app.post('/api/play', (req, res) => {
   console.log(req.body);
   list.update();
@@ -67,7 +72,12 @@ app.post('/api/resume', (req, res) => {
 });
 
 app.get('/api/status', (req, res) => {
-  player.status(status => {
+  player.status((err, status) => {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+
     console.log(status);
     res.send(JSON.stringify(statusMapper(status), null, 2));
   });

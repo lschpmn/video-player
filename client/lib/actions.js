@@ -47,9 +47,9 @@ export function resume(dispatch) {
   };
 }
 
-export function status(dispatch) {
+export function getStatus(dispatch) {
   return () => {
-    axios.post(HOST + 'status')
+    axios.get(HOST + 'status')
       .then(res => {
         console.log(res);
         dispatch({

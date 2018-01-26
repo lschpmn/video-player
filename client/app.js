@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { play, pause, resume } from './lib/actions';
+import { play, pause, resume, getStatus } from './lib/actions';
 import Controls from './components/Controls';
 import FileUpload from './components/FileUpload';
 import { PLAY } from './lib/actions';
@@ -19,10 +19,19 @@ class App extends Component {
     console.log(nextProps);
 
     if (nextProps.status.playerState === PLAY && !this.state.statusTimeoutId) this.getStatus();
+    if (nextProps.status.playerState !== PLAY && this.state.statusTimeoutId) {
+      clearTimeout(this.state.statusTimeoutId);
+      this.setState({
+        statusTimeoutId: null,
+      });
+    }
   }
 
   getStatus() {
-    const id = setTimeout(() => this.getStatus(), 1000);//stand in
+    const id = setTimeout(() => {
+      this.props.getStatus();
+      this.getStatus();
+    }, 1000);
 
     this.setState({
       statusTimeoutId: id,
@@ -56,6 +65,7 @@ export default connect(
     play: play(dispatch),
     pause: pause(dispatch),
     resume: resume(dispatch),
+    getStatus: getStatus(dispatch),
   })
 )(App);
 

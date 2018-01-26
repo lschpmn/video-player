@@ -24,3 +24,13 @@ function status(state=defaultState, action) {
 export default combineReducers({
   status,
 });
+
+/**
+ * @typedef {Object} Status
+ * @property {String} contentId
+ * @property {Number} currentTime
+ * @property {Number} duration
+ * @property {String} playerState
+ * @property {{level: Number, muted: Boolean}} volume
+ * @property {{width:Number, height: Number}} videoInfo
+ */
