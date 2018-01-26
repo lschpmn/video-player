@@ -50,11 +50,10 @@ export function resume(dispatch) {
 export function getStatus(dispatch) {
   return () => {
     axios.get(HOST + 'status')
-      .then(res => {
-        console.log(res);
+      .then(({data}) => {
         dispatch({
           type: UPDATE_STATUS,
-          data: res.data,
+          data,
         });
       })
       .catch(console.log);

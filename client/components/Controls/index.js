@@ -12,6 +12,7 @@ export default class Controls extends Component {
     const isMediaLoaded = status.contentId !== '';
     const isPlaying = status.playerState === PLAY;
     const click = isPlaying ? pause : resume;
+    const playPercent = status.currentTime / (status.duration || 1);
 
     return <div style={styles.container}>
       <div style={styles.verticalCenter}>
@@ -22,7 +23,7 @@ export default class Controls extends Component {
         />
       </div>
 
-      <Slider className='main-slider' style={styles.slider} />
+      <Slider className='main-slider' style={styles.slider} value={playPercent} onChange={console.log} />
     </div>
   }
 }
