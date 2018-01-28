@@ -14,6 +14,10 @@ class App extends Component {
     };
   }
 
+  componentDidMount() {
+    this.getStatus();
+  }
+
   componentWillReceiveProps(nextProps) {
     if (nextProps.status.playerState === PLAY && !this.state.statusTimeoutId) this.getStatus();
     else if (nextProps.status.playerState !== PLAY && this.state.statusTimeoutId) {
@@ -25,8 +29,10 @@ class App extends Component {
   }
 
   getStatus() {
+    this.props.getStatus();
+
     const id = setTimeout(() => {
-      this.props.getStatus();
+      if (this.props.status.playerState !== PLAY) return;
       this.getStatus();
     }, 1000);
 
