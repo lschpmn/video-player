@@ -8,8 +8,29 @@ import { pause, PLAY, resume, seek } from '../../lib/actions';
 import './controls-style.css';
 
 class Controls extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      seekId: null,
+    };
+
+    this.seek = this.seek.bind(this);
+  }
+
+  seek(val) {
+    if (this.state.seekId) clearTimeout(this.state.seekId);
+    const { duration } = this.props.status;
+
+    const seekId = setTimeout(() => this.props.seek(val * duration), 250);
+
+    this.setState({
+      seekId,
+    });
+  }
+
   render() {
-    const { pause, resume, status, seek } = this.props;
+    const { pause, resume, status } = this.props;
     const isMediaLoaded = status.contentId !== '';
     const isPlaying = status.playerState === PLAY;
     const click = isPlaying ? pause : resume;
@@ -24,7 +45,12 @@ class Controls extends Component {
         />
       </div>
 
-      <Slider className='main-slider' style={styles.slider} value={playPercent} onChange={(e, val) => seek(val * status.duration)} />
+      <Slider
+        className='main-slider'
+        onChange={(e, val) => this.seek(val)}
+        style={styles.slider}
+        value={playPercent}
+      />
     </div>
   }
 }
