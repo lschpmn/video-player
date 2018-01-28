@@ -30,11 +30,12 @@ class Controls extends Component {
   }
 
   render() {
-    const { pause, resume, status } = this.props;
-    const isMediaLoaded = status.contentId !== '';
-    const isPlaying = status.playerState === PLAY;
+    const { pause, resume } = this.props;
+    const { contentId, currentTime, duration, playerState } = this.props.status;
+    const isMediaLoaded = contentId !== '';
+    const isPlaying = playerState === PLAY;
     const click = isPlaying ? pause : resume;
-    const playPercent = status.currentTime / (status.duration || 1);
+    const playPercent = currentTime / (duration || 1);
 
     return <div style={styles.container}>
       <div style={styles.verticalCenter}>
@@ -45,6 +46,10 @@ class Controls extends Component {
         />
       </div>
 
+      <div style={{...styles.verticalCenter, padding: '0 5px'}}>
+        {`${getTimeString(currentTime)}/${getTimeString(duration)}`}
+      </div>
+
       <Slider
         className='main-slider'
         onChange={(e, val) => this.seek(val)}
@@ -53,6 +58,27 @@ class Controls extends Component {
       />
     </div>
   }
+}
+
+function getTimeString(time) {
+  let currentTime = Math.round(time);
+  let hour;
+  let min;
+  let sec;
+
+  sec = currentTime % 60;
+  currentTime -= sec;
+
+  min = (currentTime % 3600) / 60;
+  currentTime -= min * 60;
+
+  hour = Math.round(currentTime / 3600);
+
+  return `${hour ? hour + ':' : ''}${leadZero(min)}:${leadZero(sec)}`;
+}
+
+function leadZero(num) {
+  return ('0' + num).slice(-2);
 }
 
 export default connect(
