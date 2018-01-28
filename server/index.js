@@ -26,7 +26,6 @@ list.on('update', _player => {
 
   _player.on('status', _status => {
     status = statusMapper(_status);
-    console.log(status);
   });
 });
 

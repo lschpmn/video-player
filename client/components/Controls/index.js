@@ -18,7 +18,7 @@ class Controls extends Component {
     this.seek = this.seek.bind(this);
   }
 
-  seek(val) {
+  seek(e, val) {
     if (this.state.seekId) clearTimeout(this.state.seekId);
     const { duration } = this.props.status;
 
@@ -52,7 +52,7 @@ class Controls extends Component {
 
       <Slider
         className='main-slider'
-        onChange={(e, val) => this.seek(val)}
+        onChange={this.seek}
         style={styles.slider}
         value={playPercent}
       />
