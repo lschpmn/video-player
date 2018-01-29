@@ -12,7 +12,13 @@ export function getStatus(dispatch) {
   return () => {
     axios.get(HOST + 'status')
       .then(({data}) => update(data, dispatch))
-      .catch(console.log);
+      .catch(err => {
+        console.log(err);
+        dispatch({
+          type: UPDATE_STATUS,
+          data: {playerState: PAUSE},
+        });
+      });
   };
 }
 
