@@ -32,7 +32,7 @@ class Controls extends Component {
 
   render() {
     const { pause, resume } = this.props;
-    const { contentId, currentTime, duration, playerState } = this.props.status;
+    const { contentId, currentTime, duration, playerState, volume } = this.props.status;
     const isMediaLoaded = contentId !== '';
     const isPlaying = playerState === PLAY;
     const click = isPlaying ? pause : resume;
@@ -47,7 +47,10 @@ class Controls extends Component {
         />
       </div>
 
-      <Sound style={{...styles.verticalCenter, padding: '0 5px'}} />
+      <Sound
+        style={{...styles.verticalCenter, padding: '0 5px'}}
+        volume={volume}
+      />
 
       <div style={{...styles.verticalCenter, padding: '0 5px'}}>
         {`${getTimeString(currentTime)}/${getTimeString(duration)}`}
