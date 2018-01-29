@@ -4,6 +4,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Slider from 'material-ui/Slider';
 import { pause, PLAY, resume, seek } from '../../lib/actions';
+import Sound from './Sound';
 
 import './controls-style.css';
 
@@ -45,6 +46,8 @@ class Controls extends Component {
           style={styles.icon}
         />
       </div>
+
+      <Sound style={{...styles.verticalCenter, padding: '0 5px'}} />
 
       <div style={{...styles.verticalCenter, padding: '0 5px'}}>
         {`${getTimeString(currentTime)}/${getTimeString(duration)}`}
