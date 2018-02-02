@@ -1,5 +1,6 @@
 'use strict';
 
+import Chip from 'material-ui/Chip';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Slider from 'material-ui/Slider';
@@ -14,6 +15,7 @@ class Controls extends Component {
 
     this.state = {
       seekId: null,
+      showTime: false,
     };
 
     this.seek = this.seek.bind(this);
@@ -38,6 +40,8 @@ class Controls extends Component {
     const click = isPlaying ? pause : resume;
     const playPercent = currentTime / (duration || 1);
 
+    console.log(this.state.showTime);
+
     return <div style={styles.container}>
       <div style={styles.verticalCenter}>
         <i
@@ -59,6 +63,9 @@ class Controls extends Component {
       <Slider
         className='main-slider'
         onChange={this.seek}
+        onMouseEnter={() => this.setState({ showTime: true })}
+        onMouseMove={e => console.log(e.clientX)}
+        onMouseLeave={() => this.setState({ showTime: false })}
         style={styles.slider}
         value={playPercent}
       />
