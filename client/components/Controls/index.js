@@ -7,8 +7,6 @@ import Slider from 'material-ui/Slider';
 import { pause, PLAY, resume, seek } from '../../lib/actions';
 import Sound from './Sound';
 
-import './controls-style.css';
-
 class Controls extends Component {
   constructor(props) {
     super(props);
@@ -61,11 +59,11 @@ class Controls extends Component {
       </div>
 
       <Slider
-        className='main-slider'
         onChange={this.seek}
         onMouseEnter={() => this.setState({ showTime: true })}
-        onMouseMove={e => console.log(e.clientX)}
+        onMouseMove={e => console.log(e.screenX)}
         onMouseLeave={() => this.setState({ showTime: false })}
+        sliderStyle={styles.sliderStyle}
         style={styles.slider}
         value={playPercent}
       />
@@ -122,7 +120,15 @@ const styles = {
   },
 
   slider: {
+    display: 'flex',
+    flexDirection: 'column',
     flexGrow: 1,
+    justifyContent: 'center',
+  },
+
+  sliderStyle: {
+    margin: '0 1rem',
+    width: 'inherit'
   },
 
   verticalCenter: {
