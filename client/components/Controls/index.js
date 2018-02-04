@@ -14,20 +14,17 @@ class Controls extends Component {
     this.state = {
       seekId: null,
       showTime: false,
+      x: 0,
+      val: 0,
     };
 
     this.seek = this.seek.bind(this);
   }
 
-  seek(e, val) {
-    if (this.state.seekId) clearTimeout(this.state.seekId);
+  seek() {
+    this.setState({showTime: false});
     const { duration } = this.props.status;
-
-    const seekId = setTimeout(() => this.props.seek(val * duration), 250);
-
-    this.setState({
-      seekId,
-    });
+    this.props.seek(this.state.val * duration);
   }
 
   render() {
@@ -37,8 +34,6 @@ class Controls extends Component {
     const isPlaying = playerState === PLAY;
     const click = isPlaying ? pause : resume;
     const playPercent = currentTime / (duration || 1);
-
-    console.log(this.state.showTime);
 
     return <div style={styles.container}>
       <div style={styles.verticalCenter}>
@@ -58,15 +53,23 @@ class Controls extends Component {
         {`${getTimeString(currentTime)}/${getTimeString(duration)}`}
       </div>
 
-      <Slider
-        onChange={this.seek}
-        onMouseEnter={() => this.setState({ showTime: true })}
-        onMouseMove={e => console.log(e.screenX)}
-        onMouseLeave={() => this.setState({ showTime: false })}
-        sliderStyle={styles.sliderStyle}
-        style={styles.slider}
-        value={playPercent}
-      />
+      <div style={styles.slider} onMouseMove={e => this.state.showTime && this.setState({x: e.pageX})} >
+        {this.state.showTime && this.slider &&
+          <Chip style={{...styles.chip, left: `calc(${this.state.x}px - 2rem)`}}>
+            {getTimeString(this.state.val * duration)}
+          </Chip>
+        }
+
+        <Slider
+          onChange={(e, val) => this.setState({ val })}
+          onDragStart={() => this.setState({ showTime: true })}
+          onDragStop={this.seek}
+          ref={ref => ref && (this.slider = ref.track)}
+          sliderStyle={styles.sliderStyle}
+          value={playPercent}
+        />
+      </div>
+
     </div>
   }
 }
@@ -102,6 +105,12 @@ export default connect(
 )(Controls);
 
 const styles = {
+  chip: {
+    bottom: '3rem',
+    position: 'fixed',
+    width: '4rem',
+  },
+
   container: {
     alignItems: 'stretch',
     backgroundColor: '#2196F3',
@@ -124,6 +133,7 @@ const styles = {
     flexDirection: 'column',
     flexGrow: 1,
     justifyContent: 'center',
+    position: 'relative',
   },
 
   sliderStyle: {
