@@ -45,7 +45,6 @@ class Controls extends Component {
       </div>
 
       <Sound
-        style={{...styles.verticalCenter, padding: '0 5px'}}
         volume={volume}
       />
 

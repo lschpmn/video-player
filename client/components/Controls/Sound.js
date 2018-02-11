@@ -9,19 +9,28 @@ export default class Sound extends Component {
 
     this.state = {
       show: false,
+      val: 1,
     };
   }
 
   render() {
     const { level } = this.props.volume;
+    const { val } = this.state;
     
     return <div
       onMouseEnter={() => this.setState({show: true})}
       onMouseLeave={() => this.setState({show: false})}
-      style={this.props.style}
+      style={{...styles.container, ...this.props.style}}
     >
+
       {this.state.show &&
-        <Slider value={level} />
+        <Slider
+          axis={'y'}
+          onChange={(e, val) => this.setState({val})}
+          style={styles.slider}
+          sliderStyle={{marginTop: '1rem',}}
+          value={val}
+        />
       }
 
       <i
@@ -33,11 +42,29 @@ export default class Sound extends Component {
 }
 
 const styles = {
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    position: 'relative',
+    width: '3rem',
+  },
+
   icon: {
     cursor: 'pointer',
     display: 'block',
     fontSize: '2rem',
-    marginLeft: 10,
+    margin: '0 auto',
     width: '2rem',
+  },
+
+  slider: {
+    backgroundColor: 'black',
+    bottom: '3rem',
+    height: '5rem',
+    left: '1rem',
+    opacity: 0.6,
+    paddingBottom: '1rem',
+    position: 'absolute',
   },
 };
