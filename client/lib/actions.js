@@ -8,6 +8,20 @@ export const UPDATE_STATUS = 'UPDATE_STATUS';
 
 const HOST = 'http://localhost:3000/api/';
 
+export function changeVolume(dispatch) {
+  return volume => {
+    axios.post(HOST + 'volume', { volume })
+      .then(({data}) => update(data, dispatch))
+      .catch(err => {
+        console.log(err);
+        dispatch({
+          type: UPDATE_STATUS,
+          data: {playerState: PAUSE},
+        });
+      });
+  };
+}
+
 export function getStatus(dispatch) {
   return () => {
     axios.get(HOST + 'status')

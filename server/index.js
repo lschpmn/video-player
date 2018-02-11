@@ -81,6 +81,14 @@ app.post('/api/seek', (req, res) => {
   });
 });
 
+app.post('/api/volume', (req, res) => {
+  console.log(`Set volume to ${req.body.volume}`);
+
+  player.volume(req.body.volume, console.log);
+
+  res.end();
+});
+
 app.get('/api/status', (req, res) => {
   respondWithStatus(res);
 });
