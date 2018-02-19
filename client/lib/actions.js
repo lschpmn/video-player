@@ -12,13 +12,7 @@ export function changeVolume(dispatch) {
   return volume => {
     axios.post(HOST + 'volume', { volume })
       .then(({data}) => update(data, dispatch))
-      .catch(err => {
-        console.log(err);
-        dispatch({
-          type: UPDATE_STATUS,
-          data: {playerState: PAUSE},
-        });
-      });
+      .catch(err => error(err, dispatch));
   };
 }
 
@@ -26,13 +20,7 @@ export function getStatus(dispatch) {
   return () => {
     axios.get(HOST + 'status')
       .then(({data}) => update(data, dispatch))
-      .catch(err => {
-        console.log(err);
-        dispatch({
-          type: UPDATE_STATUS,
-          data: {playerState: PAUSE},
-        });
-      });
+      .catch(err => error(err, dispatch));
   };
 }
 
@@ -40,7 +28,7 @@ export function play(dispatch) {
   return filePath => {
     axios.post(HOST + 'play', {filePath})
       .then(({data}) => update(data, dispatch))
-      .catch(console.log);
+      .catch(err => error(err, dispatch));
   };
 }
 
@@ -48,7 +36,7 @@ export function pause(dispatch) {
   return () => {
     axios.post(HOST + 'pause')
       .then(({data}) => update(data, dispatch))
-      .catch(console.log);
+      .catch(err => error(err, dispatch));
   };
 }
 
@@ -56,7 +44,7 @@ export function resume(dispatch) {
   return () => {
     axios.post(HOST + 'resume')
       .then(({data}) => update(data, dispatch))
-      .catch(console.log);
+      .catch(err => error(err, dispatch));
   };
 }
 
@@ -64,8 +52,16 @@ export function seek(dispatch) {
   return seconds => {
     axios.post(HOST + 'seek', {seconds})
       .then(({data}) => update(data, dispatch))
-      .catch(console.log);
+      .catch(err => error(err, dispatch));
   };
+}
+
+function error(err, dispatch) {
+  console.log(err);
+  dispatch({
+    type: UPDATE_STATUS,
+    data: { playerState: PAUSE },
+  });
 }
 
 function update(data, dispatch) {
