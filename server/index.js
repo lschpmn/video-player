@@ -51,7 +51,7 @@ app.post('/api/pause', (req, res) => {
   player.pause(err => {
     if (err) {
       console.log(err);
-      res.status(500).end(err);
+      return res.status(500).end(err);
     }
 
     console.log('Paused');
