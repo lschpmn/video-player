@@ -9,13 +9,17 @@ export default class Sound extends Component {
 
     this.state = {
       show: false,
-      val: 1,
     };
+  }
+
+  changeVolume(volume) {
+    if (this._id) clearTimeout(this._id);
+
+    this._id = setTimeout(() => this.props.changeVolume(volume), 200);
   }
 
   render() {
     const { level } = this.props.volume;
-    const { val } = this.state;
     
     return <div
       onMouseEnter={() => this.setState({show: true})}
@@ -26,10 +30,10 @@ export default class Sound extends Component {
       {this.state.show &&
         <Slider
           axis={'y'}
-          onChange={(e, val) => this.setState({val})}
+          onChange={(e, val) => this.changeVolume(val)}
           style={styles.slider}
           sliderStyle={{marginTop: '1rem',}}
-          value={val}
+          value={level}
         />
       }
 

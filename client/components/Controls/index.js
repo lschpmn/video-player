@@ -4,7 +4,7 @@ import Chip from 'material-ui/Chip';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Slider from 'material-ui/Slider';
-import { pause, PLAY, resume, seek } from '../../lib/actions';
+import { changeVolume, pause, PLAY, resume, seek } from '../../lib/actions';
 import Sound from './Sound';
 
 class Controls extends Component {
@@ -28,7 +28,7 @@ class Controls extends Component {
   }
 
   render() {
-    const { pause, resume } = this.props;
+    const { changeVolume, pause, resume } = this.props;
     const { contentId, currentTime, duration, playerState, volume } = this.props.status;
     const isMediaLoaded = contentId !== '';
     const isPlaying = playerState === PLAY;
@@ -45,6 +45,7 @@ class Controls extends Component {
       </div>
 
       <Sound
+        changeVolume={changeVolume}
         volume={volume}
       />
 
@@ -97,6 +98,7 @@ function leadZero(num) {
 export default connect(
   state => state,
   dispatch => ({
+    changeVolume: changeVolume(dispatch),
     pause: pause(dispatch),
     resume: resume(dispatch),
     seek: seek(dispatch),
