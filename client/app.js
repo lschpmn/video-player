@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { getStatus, play, PLAY } from './lib/actions';
+import { getStatus, play, PLAY, pause, PAUSE, resume } from './lib/actions';
 import Controls from './components/Controls';
 import FileUpload from './components/FileUpload';
 
@@ -16,6 +16,7 @@ class App extends Component {
 
   componentDidMount() {
     this.getStatus();
+    document.addEventListener('keydown', e => e.key === ' ' && this.playPause());
   }
 
   componentWillReceiveProps(nextProps) {
@@ -39,6 +40,11 @@ class App extends Component {
     this.setState({
       statusTimeoutId: id,
     });
+  }
+
+  playPause() {
+    if (this.props.status.playerState === PLAY) this.props.pause();
+    if (this.props.status.playerState === PAUSE) this.props.resume();
   }
 
   render() {
@@ -66,7 +72,9 @@ export default connect(
   state => state,
   dispatch => ({
     getStatus: getStatus(dispatch),
+    pause: pause(dispatch),
     play: play(dispatch),
+    resume: resume(dispatch),
   })
 )(App);
 
