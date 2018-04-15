@@ -18,7 +18,7 @@ function createWindow () {
     protocol: 'file:',
     slashes: true
   }));*/
-  win.loadURL('http:localhost:5000');
+  win.loadURL('http://localhost:5000');
 
   // Open the DevTools.
   win.webContents.openDevTools();

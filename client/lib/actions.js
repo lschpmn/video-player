@@ -19,7 +19,7 @@ export function changeVolume(dispatch) {
 export function getStatus(dispatch) {
   return () => {
     axios.get(HOST + 'status')
-      .then(({data}) => update(data, dispatch))
+      .then(({data}) => data ? update(data, dispatch) : update({ playerState: PAUSE }, dispatch))
       .catch(err => error(err, dispatch));
   };
 }
