@@ -25,9 +25,22 @@ export default class Chromecast {
     });
   }
 
-  private response = response => {
+  private response = (response: Response) => {
     console.log(response);
   }
 }
 
 const chromecast = new Chromecast();
+
+type Response = {
+  answers: {
+    class: string,
+    // The name
+    data: string,
+    flush: boolean,
+    // Network name, ignore
+    name: string,
+    ttl: number,
+    type: string,
+  }[],
+};
