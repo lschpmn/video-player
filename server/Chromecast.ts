@@ -51,7 +51,7 @@ type ChromeCast = {
 type Response = {
   answers: {
     class: string,
-    // The name
+    // The name and address
     data: string,
     flush: boolean,
     // Network name, ignore
