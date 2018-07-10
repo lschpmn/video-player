@@ -8,6 +8,7 @@ const chromecastInfo = {
 
 export default class Chromecast {
   private readonly client: any;
+  chromecasts: ChromeCast[];
 
   constructor() {
     this.client = new Client();
@@ -18,7 +19,7 @@ export default class Chromecast {
 
   private connect() {
     mdns.query({
-      questions:[{
+      questions: [{
         name: chromecastInfo.serviceName,
         type: chromecastInfo.serviceType,
       }]
@@ -26,11 +27,26 @@ export default class Chromecast {
   }
 
   private response = (response: Response) => {
-    console.log(response);
+    this.chromecasts = response.answers
+      .map(answer => {
+        const nameArray = answer.data.split('-');
+        const name = `${nameArray[0]} ${nameArray[1]}`;
+
+        return {
+          address: answer.data,
+          name,
+        };
+      });
+    console.log(this.chromecasts);
   }
 }
 
 const chromecast = new Chromecast();
+
+type ChromeCast = {
+  address: string,
+  name: string,
+}
 
 type Response = {
   answers: {
