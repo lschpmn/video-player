@@ -1,4 +1,5 @@
 const Client = require('castv2-client').Client;
+const DefaultMediaReceiver = require('castv2-client').DefaultMediaReceiver;
 const mdns = require('multicast-dns')();
 
 const chromecastInfo = {
@@ -9,6 +10,7 @@ const chromecastInfo = {
 export default class ChromecastController {
   private readonly client: any;
   chromecasts: Chromecast[];
+  player: Player;
 
   constructor() {
     this.client = new Client();
@@ -18,6 +20,20 @@ export default class ChromecastController {
 
   private async connect() {
     this.chromecasts = await getChromecasts();
+  }
+
+  private async getPlayer(address: string): Promise<any> {
+    if (this.player) return Promise.resolve(this.player);
+
+    return new Promise((resolve, reject) => {
+      this.client.connect(address, () => {
+        this.client.launch(DefaultMediaReceiver, (err, player) => {
+          if (err) return reject(err);
+          this.player = player;
+          resolve(player);
+        });
+      });
+    });
   }
 }
 
@@ -54,6 +70,10 @@ const chromecastController = new ChromecastController();
 type Chromecast = {
   address: string,
   name: string,
+}
+
+interface Player {
+
 }
 
 type Response = {
