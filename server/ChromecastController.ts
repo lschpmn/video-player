@@ -9,7 +9,7 @@ const chromecastInfo = {
 
 export default class ChromecastController {
   private readonly client: any;
-  chromecasts: Chromecast[];
+  addresses: string[];
   player: Player;
 
   constructor() {
@@ -18,8 +18,12 @@ export default class ChromecastController {
     this.connect().catch(console.log);
   }
 
+  async getStatus() {
+    this.player.getStatus();
+  }
+
   private async connect() {
-    this.chromecasts = await getChromecasts();
+    this.addresses = await getChromecasts();
   }
 
   private async getPlayer(address: string): Promise<any> {
@@ -37,10 +41,10 @@ export default class ChromecastController {
   }
 }
 
-function getChromecasts(): Promise<Chromecast[]> {
+function getChromecasts(): Promise<string[]> {
   return new Promise((resolve, reject) => {
     mdns.once('response', (response: Response) => {
-      resolve(responseMapper(response));
+      resolve(response.answers.map(answer => answer.data));
     });
 
     mdns.query({
@@ -52,28 +56,11 @@ function getChromecasts(): Promise<Chromecast[]> {
   });
 }
 
-function responseMapper(response: Response): Chromecast[] {
-  return response.answers
-    .map(answer => {
-      const nameArray = answer.data.split('-');
-      const name = `${nameArray[0]} ${nameArray[1]}`;
-
-      return {
-        address: answer.data,
-        name,
-      };
-    });
-}
-
 const chromecastController = new ChromecastController();
 
-type Chromecast = {
-  address: string,
-  name: string,
-}
-
 interface Player {
-
+  close: () => void,
+  getStatus: () => void,
 }
 
 type Response = {
