@@ -5,6 +5,7 @@
     "module": "commonjs",
     "inlineSources": true,
     "sourceMap": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "jsx": "preserve"
   }
 }

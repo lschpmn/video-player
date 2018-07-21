@@ -1,18 +1,27 @@
 'use strict';
 
-import React, { Component } from 'react';
+import React, { Component, CSSProperties } from 'react';
 import { connect } from 'react-redux';
 import { getStatus, play, PLAY, pause, PAUSE, resume } from './lib/actions';
 import Controls from './components/Controls';
 import FileUpload from './components/FileUpload';
 
-class App extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      statusTimeoutId: null,
-    };
-  }
+type Props = {
+  getStatus: () => void,
+  pause: () => void,
+  play: boolean,
+  resume: () => void,
+  status: any,
+};
+
+type State = {
+  statusTimeoutId: number,
+};
+
+class App extends Component<Props, State> {
+  state = {
+    statusTimeoutId: null,
+  };
 
   componentDidMount() {
     this.getStatus();
@@ -38,7 +47,7 @@ class App extends Component {
     }, 1000);
 
     this.setState({
-      statusTimeoutId: id,
+      statusTimeoutId: (id as any) as number, //because the type system went stupid
     });
   }
 
@@ -78,7 +87,7 @@ export default connect(
   })
 )(App);
 
-const styles = {
+const styles: { [s:string]: CSSProperties } = {
   bottom: {
     alignSelf: 'flex-end',
     width: '100%',

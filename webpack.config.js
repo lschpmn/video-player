@@ -10,6 +10,10 @@ module.exports = {
     path: path.join(__dirname, 'dist'),
   },
 
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js', '.json']
+  },
+
   module: {
     rules: [
       {
@@ -32,6 +36,11 @@ module.exports = {
       {
         test: /\.css$/,
         use: [ 'style-loader', 'css-loader' ]
+      },
+
+      {
+        test: /\.tsx?$/,
+        loader: 'ts-loader',
       },
     ]
   },
