@@ -7,6 +7,7 @@ export const PAUSE = 'PAUSED';
 export const UPDATE_STATUS = 'UPDATE_STATUS';
 
 const HOST = 'http://localhost:3000/api/';
+const NEW_HOST = 'http://localhost:3001/api/';
 
 export function changeVolume(dispatch) {
   return volume => {
