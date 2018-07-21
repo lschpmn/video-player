@@ -1,6 +1,6 @@
 'use strict';
 
-import React, { Component, CSSProperties } from 'react';
+import * as React from 'react';
 import { connect } from 'react-redux';
 import { getStatus, play, PLAY, pause, PAUSE, resume } from './lib/actions';
 import Controls from './components/Controls';
@@ -18,7 +18,7 @@ type State = {
   statusTimeoutId: number,
 };
 
-class App extends Component<Props, State> {
+class App extends React.Component<Props, State> {
   state = {
     statusTimeoutId: null,
   };
@@ -87,7 +87,7 @@ export default connect(
   })
 )(App);
 
-const styles: { [s:string]: CSSProperties } = {
+const styles: { [s:string]: React.CSSProperties } = {
   bottom: {
     alignSelf: 'flex-end',
     width: '100%',

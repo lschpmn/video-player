@@ -40,7 +40,18 @@ module.exports = {
 
       {
         test: /\.tsx?$/,
-        loader: 'ts-loader',
+        use: [
+          {
+            loader: 'babel-loader',
+            options: {
+              plugins: [ 'transform-object-rest-spread' ],
+              presets: ['react', 'env'],
+            },
+          },
+          {
+            loader: 'ts-loader',
+          }
+        ],
       },
     ]
   },
