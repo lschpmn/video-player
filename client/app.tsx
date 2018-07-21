@@ -44,10 +44,10 @@ class App extends Component<Props, State> {
     const id = setTimeout(() => {
       if (this.props.status.playerState !== PLAY) return;
       this.getStatus();
-    }, 1000);
+    }, 1000) as any; //because the type system went stupid
 
     this.setState({
-      statusTimeoutId: (id as any) as number, //because the type system went stupid
+      statusTimeoutId: id,
     });
   }
 
