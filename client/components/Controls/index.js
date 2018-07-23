@@ -4,7 +4,7 @@ import Chip from 'material-ui/Chip';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import Slider from 'material-ui/Slider';
-import { changeVolume, pause, PLAY, resume, seek } from '../../lib/actions';
+import { changeVolume, pause, PLAY, resume, seek } from '../../lib/player-actions';
 import Sound from './Sound';
 
 class Controls extends Component {

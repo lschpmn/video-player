@@ -1,7 +1,7 @@
 'use strict';
 
 import { combineReducers } from 'redux';
-import { PAUSE, UPDATE_STATUS } from './actions';
+import { PAUSE, UPDATE_STATUS } from './player-actions';
 
 const defaultState = {
   contentId: '',

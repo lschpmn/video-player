@@ -2,8 +2,9 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getStatus, play, PLAY, pause, PAUSE, resume } from './lib/actions';
+import { getStatus, play, PLAY, pause, PAUSE, resume } from './lib/player-actions';
 import Controls from './components/Controls';
+import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
 
 type Props = {
@@ -66,7 +67,7 @@ class App extends React.Component<Props, State> {
       <div style={styles.parent}>
         <div style={styles.top}>
           <div style={{ flex: 1 }}>
-            File Structure
+            <FileStructure />
           </div>
 
           <div style={{ flex: 4 }}>
