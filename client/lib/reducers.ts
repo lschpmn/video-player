@@ -10,7 +10,7 @@ type Action = {
 };
 
 const defaultStateExplorer = {
-
+  pwd: '/',
 };
 
 function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {

@@ -1,5 +1,5 @@
 export type ExplorerState = {
-
+  pwd: string,
 };
 
 export type PlayerState = {

@@ -1,8 +1,10 @@
+import {  } from 'fs-jetpack';
+
 const express = require('express');
 
 const app = express();
 
-app.get('/api/status:address', (req, res) => {
+app.get('/api/file:path', (req, res) => {
 
 });
 
