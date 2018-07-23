@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const HOST = 'http://localhost:5001/api';
+const HOST = 'http://localhost:3001/api';
 const GET_FILES = 'file/GET_FILES';
 
 export async function getFiles(path: string) {

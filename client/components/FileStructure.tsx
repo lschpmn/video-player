@@ -3,7 +3,7 @@ import { getFiles } from '../lib/file-actions';
 
 export default class FileStructure extends React.Component {
   componentDidMount() {
-    getFiles('/');
+    getFiles('a');
   }
 
   render() {
