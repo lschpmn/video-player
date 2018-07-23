@@ -11,7 +11,7 @@ module.exports = {
   },
 
   resolve: {
-    extensions: ['.ts', '.tsx', '.js', '.json']
+    extensions: ['.ts', '.tsx', '.js', '.json'],
   },
 
   module: {
@@ -22,10 +22,10 @@ module.exports = {
         use: {
           loader: 'babel-loader',
           options: {
-            plugins: [ 'transform-object-rest-spread' ],
+            plugins: ['transform-object-rest-spread'],
             presets: ['react', 'env'],
           },
-        }
+        },
       },
 
       {
@@ -35,7 +35,7 @@ module.exports = {
 
       {
         test: /\.css$/,
-        use: [ 'style-loader', 'css-loader' ]
+        use: ['style-loader', 'css-loader'],
       },
 
       {
@@ -44,16 +44,16 @@ module.exports = {
           {
             loader: 'babel-loader',
             options: {
-              plugins: [ 'transform-object-rest-spread' ],
+              plugins: ['transform-object-rest-spread'],
               presets: ['react', 'env'],
             },
           },
           {
             loader: 'ts-loader',
-          }
+          },
         ],
       },
-    ]
+    ],
   },
 
   devServer: {
