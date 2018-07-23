@@ -2,8 +2,25 @@
 
 import { combineReducers } from 'redux';
 import { PAUSE, UPDATE_STATUS } from './player-actions';
+import { ExplorerState, PlayerState } from '../types';
 
-const defaultState = {
+type Action = {
+  type: string,
+  payload: any,
+};
+
+const defaultStateExplorer = {
+
+};
+
+function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
+  switch(action.type) {
+    default:
+      return state;
+  }
+}
+
+const defaultStateStatus: PlayerState = {
   contentId: '',
   currentTime: 0,
   duration: 0,
@@ -12,7 +29,7 @@ const defaultState = {
   videoInfo: { width: 0, height: 0, },
 };
 
-function status(state=defaultState, action) {
+function status(state: PlayerState = defaultStateStatus, action) {
   switch(action.type) {
     case UPDATE_STATUS:
       return {...state, ...action.data};
@@ -22,6 +39,7 @@ function status(state=defaultState, action) {
 }
 
 export default combineReducers({
+  explorer,
   status,
 });
 
