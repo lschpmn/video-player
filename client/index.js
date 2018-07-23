@@ -1,5 +1,7 @@
 'use strict';
 
+require("babel-core/register");
+require('babel-polyfill');
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import React from 'react';
 import { render } from 'react-dom';

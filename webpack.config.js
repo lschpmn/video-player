@@ -3,7 +3,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './client/index',
+  entry: ['babel-polyfill', './client/index'],
 
   output: {
     filename: 'vendor.js',
