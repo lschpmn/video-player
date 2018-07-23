@@ -64,9 +64,18 @@ class App extends React.Component<Props, State> {
       play={play}
     >
       <div style={styles.parent}>
-    
         <div style={styles.top}>
-          <h4>Playlist</h4>
+          <div style={{ flex: 1 }}>
+            File Structure
+          </div>
+
+          <div style={{ flex: 4 }}>
+            Explorer
+          </div>
+
+          <div style={{ flex: 1 }}>
+            Currently Playing
+          </div>
         </div>
 
         <div style={styles.bottom}>
@@ -101,6 +110,8 @@ const styles: { [s:string]: React.CSSProperties } = {
   },
 
   top: {
+    display: 'flex',
+    flexDirection: 'row',
     flexGrow: 1,
     width: '100%',
   },
