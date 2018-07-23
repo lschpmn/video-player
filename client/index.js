@@ -18,6 +18,7 @@ import './index.html';
 import App from './app';
 
 let store = createStore(reducers);
+store.subscribe(() => console.log(store.getState()));
 
 render((
   <Provider store={store}>

@@ -58,9 +58,8 @@ class App extends React.Component<Props, State> {
   }
 
   render() {
-    const { play, status } = this.props;
-    console.log(status);
-    
+    const { play } = this.props;
+
     return <FileUpload
       play={play}
     >
