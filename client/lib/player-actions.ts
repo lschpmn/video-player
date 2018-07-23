@@ -1,5 +1,3 @@
-'use strict';
-
 import axios from 'axios';
 
 export const PLAY = 'PLAYING';
