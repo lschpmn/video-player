@@ -1,9 +1,10 @@
 import * as React from 'react';
-import { getFiles } from '../lib/file-actions';
+import { getDrives, getFiles } from '../lib/file-actions';
 
 export default class FileStructure extends React.Component {
-  componentDidMount() {
-    getFiles('C:/');
+  async componentDidMount() {
+    const drives = await getDrives();
+    console.log(drives);
   }
 
   render() {
