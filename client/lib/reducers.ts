@@ -11,13 +11,20 @@ type Action = {
 };
 
 const defaultStateExplorer = {
-  pwd: '/',
+  structure: {},
 };
 
 function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
   switch(action.type) {
-    case GET_DRIVES:
-      return {};
+    case GET_DRIVES:{
+      const drives: string[] = action.payload;
+      const driveObj = {};
+      for (let drive of drives) {
+        driveObj[drive.replace(':', '')] = true;
+      }
+
+      return driveObj;
+    }
     default:
       return state;
   }

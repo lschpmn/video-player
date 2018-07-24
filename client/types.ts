@@ -1,6 +1,10 @@
 export type ExplorerState = {
-  pwd: string,
+  structure: FileEntry,
 };
+
+export interface FileEntry {
+  [s:string]: boolean | FileEntry,
+}
 
 export type PlayerState = {
   contentId: string,
