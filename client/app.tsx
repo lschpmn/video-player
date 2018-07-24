@@ -94,6 +94,7 @@ export default connect(
     play: play(dispatch),
     resume: resume(dispatch),
   })
+// @ts-ignore
 )(App);
 
 const styles: { [s:string]: React.CSSProperties } = {

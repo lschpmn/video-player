@@ -1,6 +1,7 @@
 'use strict';
 
 import { combineReducers } from 'redux';
+import { GET_DRIVES } from './file-actions';
 import { PAUSE, UPDATE_STATUS } from './player-actions';
 import { ExplorerState, PlayerState } from '../types';
 
@@ -15,6 +16,8 @@ const defaultStateExplorer = {
 
 function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
   switch(action.type) {
+    case GET_DRIVES:
+      return {};
     default:
       return state;
   }

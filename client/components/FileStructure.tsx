@@ -1,9 +1,14 @@
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { getDrives, getFiles } from '../lib/file-actions';
 
-export default class FileStructure extends React.Component {
+type Props = {
+  getDrives: () => Promise<any>;
+};
+
+class FileStructure extends React.Component<Props> {
   async componentDidMount() {
-    const drives = await getDrives();
+    const drives = await this.props.getDrives();
     console.log(drives);
   }
 
@@ -13,3 +18,11 @@ export default class FileStructure extends React.Component {
     </div>;
   }
 }
+
+export default connect(
+  state => state,
+  {
+    getDrives,
+  }
+// @ts-ignore
+)(FileStructure);
