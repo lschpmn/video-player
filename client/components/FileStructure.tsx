@@ -18,8 +18,7 @@ class FileStructure extends React.Component<Props> {
   render() {
     const { structure } = this.props;
 
-    return <div>
-      File Structure
+    return <div style={{ margin: 10 }}>
       {
         Object
           .entries(structure)

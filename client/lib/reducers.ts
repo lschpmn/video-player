@@ -19,9 +19,7 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
     case GET_DRIVES:{
       const drives: string[] = action.payload;
       const driveObj = {};
-      for (let drive of drives) {
-        driveObj[drive.replace(':', '')] = true;
-      }
+      for (let drive of drives) driveObj[drive] = true;
 
       return {
         ...state,
