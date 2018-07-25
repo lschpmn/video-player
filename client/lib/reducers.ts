@@ -23,7 +23,10 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
         driveObj[drive.replace(':', '')] = true;
       }
 
-      return driveObj;
+      return {
+        ...state,
+        structure: driveObj,
+      };
     }
     default:
       return state;
