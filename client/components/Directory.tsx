@@ -1,29 +1,30 @@
 import * as React from 'react';
-import { Card, CardText } from 'material-ui/Card';
 
 type Props = {
   name: string,
+  onClick: (path: string) => void,
 };
 
 export default class Directory extends React.Component<Props> {
   render() {
     const { name } = this.props;
 
-    return <div>
-      <Card containerStyle={styles.container}>
-        <CardText style={styles.card}>{name}</CardText>
-      </Card>
+    return <div
+      onMouseDown={() => this.props.onClick(name + '/')}
+      style={styles.container}
+    >
+      {name}
     </div>;
   }
 }
 
 const styles = {
   card: {
-    padding: '0.5rem',
+    padding: '0.25rem',
     margin: '1rem 0',
   },
 
   container: {
-    padding: 0,
+    padding: '0.5rem 0',
   },
 };

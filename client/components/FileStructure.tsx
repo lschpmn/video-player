@@ -6,6 +6,7 @@ import { FileEntry } from '../types';
 
 type Props = {
   getDrives: () => Promise<any>,
+  getFiles: (path: string) => void,
   structure: FileEntry,
 };
 
@@ -15,6 +16,10 @@ class FileStructure extends React.Component<Props> {
     console.log(drives);
   }
 
+  getFiles = (path: string) => {
+    this.props.getFiles(path);
+  };
+
   render() {
     const { structure } = this.props;
 
@@ -22,7 +27,7 @@ class FileStructure extends React.Component<Props> {
       {
         Object
           .entries(structure)
-          .map(([directory]) => <Directory key={directory} name={directory} />)
+          .map(([directory]) => <Directory key={directory} name={directory} onClick={this.getFiles} />)
       }
     </div>;
   }
@@ -34,6 +39,7 @@ export default connect(
   }),
   {
     getDrives,
+    getFiles,
   }
 // @ts-ignore
 )(FileStructure);

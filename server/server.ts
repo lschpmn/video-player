@@ -24,7 +24,7 @@ app.get(PREFIX + '/list/:path', async (req: Request, res: Response) => {
   const path = decodeURIComponent(req.params.path);
   const files = await list(path);
 
-  console.log('files');
+  console.log(`files for path ${path}`);
   console.log(files);
   res.send(files);
 });

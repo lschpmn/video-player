@@ -5,7 +5,7 @@ export const GET_DRIVES = 'file/GET_DRIVES';
 export const GET_FILES = 'file/GET_FILES';
 
 export function getDrives() {
-  return async (dispatch) => {
+  return async dispatch => {
     const response = await axios.get(HOST + '/get-drives');
 
     return dispatch({
@@ -15,8 +15,15 @@ export function getDrives() {
   };
 }
 
-export async function getFiles(path: string) {
-  const url = HOST + '/list/' + encodeURIComponent(path);
-  const result = await axios.get(url);
-  console.log(result);
+export function getFiles(path: string) {
+  return async dispatch => {
+    const url = HOST + '/list/' + encodeURIComponent(path);
+    const response = await axios.get(url);
+    console.log(response);
+
+    return dispatch({
+      type: GET_FILES,
+      payload: response.data,
+    });
+  };
 }
