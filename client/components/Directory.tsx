@@ -10,7 +10,7 @@ export default class Directory extends React.Component<Props> {
     const { name } = this.props;
 
     return <div>
-      <Card containerStyle={{ padding: 0 }}>
+      <Card containerStyle={styles.container}>
         <CardText style={styles.card}>{name}</CardText>
       </Card>
     </div>;
@@ -21,5 +21,9 @@ const styles = {
   card: {
     padding: '0.5rem',
     margin: '1rem 0',
+  },
+
+  container: {
+    padding: 0,
   },
 };
