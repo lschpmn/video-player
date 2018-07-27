@@ -32,7 +32,7 @@ class FileStructure extends React.Component<Props> {
               key={drive}
               name={drive}
               onClick={this.getFiles}
-              parent={[drive]}
+              parents={[]}
             />
           ))
       }

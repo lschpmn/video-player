@@ -5,7 +5,7 @@ import { Directory } from '../types';
 type Props = {
   name: string,
   onClick: typeof getFiles,
-  parent: string[],
+  parents: string[],
   directory: Directory | boolean,
 };
 
@@ -19,14 +19,14 @@ export default class DirectoryTab extends React.Component<Props, State> {
   };
 
   onClick = () => {
-    const { directory, name, parent } = this.props;
+    const { directory, name, parents } = this.props;
     debugger;
 
-    if (typeof directory === 'boolean') this.props.onClick(name + '/', parent);
+    if (typeof directory === 'boolean') this.props.onClick(name + '/', parents);
   };
 
   render() {
-    const { directory, name, parent } = this.props;
+    const { directory, name, parents } = this.props;
 
     return <div
       onMouseDown={this.onClick}
@@ -42,7 +42,7 @@ export default class DirectoryTab extends React.Component<Props, State> {
               key={parentDirectory}
               name={parentDirectory}
               onClick={this.props.onClick}
-              parent={[parentDirectory, name]}
+              parents={[...parents, parentDirectory, name]}
             />
           ))
         }
