@@ -26,12 +26,12 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
       };
     }
     case GET_FILES: {
-      const { parents, path, files } = action.payload;
+      const { location, files } = action.payload;
       const directory: Directory = {};
 
       files.forEach(file => directory[file] = true);
 
-      const newDrives = set(cloneDeep(state.drives), parents, directory);
+      const newDrives = set(cloneDeep(state.drives), location, directory);
 
       return {
         ...state,

@@ -3,9 +3,8 @@ import { getFiles } from '../lib/file-actions';
 import { Directory } from '../types';
 
 type Props = {
-  name: string,
+  location: string[],
   onClick: typeof getFiles,
-  parents: string[],
   directory: Directory | boolean,
 };
 
@@ -18,31 +17,32 @@ export default class DirectoryTab extends React.Component<Props, State> {
     open: false,
   };
 
-  onClick = () => {
-    const { directory, name, parents } = this.props;
-    debugger;
+  onClick = e => {
+    e.stopPropagation();
+    const { directory, location } = this.props;
 
-    if (typeof directory === 'boolean') this.props.onClick(name + '/', parents);
+    this.setState({ open: !this.state.open });
+    if (typeof directory === 'boolean') this.props.onClick(location);
   };
 
   render() {
-    const { directory, name, parents } = this.props;
+    const { directory, location } = this.props;
+    const name = location.slice(-1)[0];
 
     return <div
       onMouseDown={this.onClick}
       style={styles.container}
     >
       {name}
-      {typeof directory === 'object' &&
+      {typeof directory === 'object' && this.state.open &&
         Object
           .entries(directory)
           .map(([parentDirectory, directory]: [string, Directory | boolean]) => (
             <DirectoryTab
               directory={directory}
               key={parentDirectory}
-              name={parentDirectory}
               onClick={this.props.onClick}
-              parents={[...parents, parentDirectory, name]}
+              location={[...location, parentDirectory]}
             />
           ))
         }
@@ -51,12 +51,7 @@ export default class DirectoryTab extends React.Component<Props, State> {
 }
 
 const styles = {
-  card: {
-    padding: '0.25rem',
-    margin: '1rem 0',
-  },
-
   container: {
-    padding: '0.5rem 0',
+    padding: '0.2rem 0 0.2rem 0.5rem',
   },
 };

@@ -15,14 +15,14 @@ class FileStructure extends React.Component<Props> {
     this.props.getDrives();
   }
 
-  getFiles = (path: string, parent: string[]) => {
-    return this.props.getFiles(path, parent);
+  getFiles = (location: string[]) => {
+    return this.props.getFiles(location);
   };
 
   render() {
     const { drives } = this.props;
 
-    return <div style={{ margin: 10 }}>
+    return <div style={styles.container}>
       {
         Object
           .entries(drives)
@@ -30,15 +30,23 @@ class FileStructure extends React.Component<Props> {
             <DirectoryTab
               directory={directory}
               key={drive}
-              name={drive}
               onClick={this.getFiles}
-              parents={[]}
+              location={[drive]}
             />
           ))
       }
     </div>;
   }
 }
+
+const styles = {
+  container: {
+    height: '100%',
+    margin: '0 0.5rem',
+    overflow: 'auto',
+    width: '100%',
+  },
+};
 
 export default connect(
   (state: any) => ({

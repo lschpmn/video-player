@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { join } from 'path';
 
 const HOST = 'http://localhost:3001/api/files';
 export const GET_DRIVES = 'file/GET_DRIVES';
@@ -15,11 +16,11 @@ export function getDrives() {
   };
 }
 
-export function getFiles(path: string, parents: string[]) {
+export function getFiles(location: string[]) {
   return async dispatch => {
+    const path = join(...location) + '/';
     console.log('getFiles');
     console.log(path);
-    console.log(parents);
 
     const url = HOST + '/list/' + encodeURIComponent(path);
     const response = await axios.get(url);
@@ -27,8 +28,7 @@ export function getFiles(path: string, parents: string[]) {
     return dispatch({
       type: GET_FILES,
       payload: {
-        parents,
-        path,
+        location,
         files: response.data,
       },
     });
