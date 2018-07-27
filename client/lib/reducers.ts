@@ -2,7 +2,7 @@ import { cloneDeep, set } from 'lodash';
 import { combineReducers } from 'redux';
 import { GET_DRIVES, GET_FILES } from './file-actions';
 import { PAUSE, UPDATE_STATUS } from './player-actions';
-import { ExplorerState, FileEntry, PlayerState } from '../types';
+import { ExplorerState, Directory, PlayerState } from '../types';
 
 type Action = {
   type: string,
@@ -10,7 +10,7 @@ type Action = {
 };
 
 const defaultStateExplorer = {
-  structure: {},
+  drives: {},
 };
 
 function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
@@ -22,22 +22,22 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
 
       return {
         ...state,
-        structure: driveObj,
+        drives: driveObj,
       };
     }
     case GET_FILES: {
       const { parents, path, files } = action.payload;
-      const fileEntry: FileEntry = {};
+      const directory: Directory = {};
 
       for (let file of files) {
-        fileEntry[file] = true;
+        directory[file] = true;
       }
 
-      const newStructure = set(cloneDeep(state.structure), parents, fileEntry);
+      const newDrives = set(cloneDeep(state.drives), parents, directory);
 
       return {
         ...state,
-        structure: newStructure,
+        drives: newDrives,
       };
     }
     default:

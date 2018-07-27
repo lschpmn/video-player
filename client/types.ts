@@ -1,9 +1,9 @@
 export type ExplorerState = {
-  structure: FileEntry,
+  drives: Directory,
 };
 
-export interface FileEntry {
-  [s:string]: boolean | FileEntry,
+export interface Directory {
+  [s:string]: boolean | Directory,
 }
 
 export type PlayerState = {

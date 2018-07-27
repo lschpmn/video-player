@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getDrives, getFiles } from '../lib/file-actions';
-import Directory from './Directory';
-import { FileEntry } from '../types';
+import DirectoryTab from './DirectoryTab';
+import { Directory } from '../types';
 
 type Props = {
   getDrives: typeof getDrives,
   getFiles: typeof getFiles,
-  structure: FileEntry,
+  drives: DirectoryTab,
 };
 
 class FileStructure extends React.Component<Props> {
@@ -20,18 +20,19 @@ class FileStructure extends React.Component<Props> {
   };
 
   render() {
-    const { structure } = this.props;
+    const { drives } = this.props;
 
     return <div style={{ margin: 10 }}>
       {
         Object
-          .entries(structure)
-          .map(([directory]) => (
-            <Directory
-              key={directory}
-              name={directory}
+          .entries(drives)
+          .map(([drive, directory]: [string, Directory | boolean]) => (
+            <DirectoryTab
+              directory={directory}
+              key={drive}
+              name={drive}
               onClick={this.getFiles}
-              parent={[directory]}
+              parent={[drive]}
             />
           ))
       }
@@ -41,7 +42,7 @@ class FileStructure extends React.Component<Props> {
 
 export default connect(
   (state: any) => ({
-    structure: state.explorer.structure,
+    drives: state.explorer.drives,
   }),
   {
     getDrives,

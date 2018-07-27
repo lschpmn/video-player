@@ -1,13 +1,23 @@
 import * as React from 'react';
 import { getFiles } from '../lib/file-actions';
+import { Directory } from '../types';
 
 type Props = {
   name: string,
   onClick: typeof getFiles,
   parent: string[],
+  directory: Directory | boolean,
 };
 
-export default class Directory extends React.Component<Props> {
+type State = {
+  open: boolean,
+};
+
+export default class DirectoryTab extends React.Component<Props, State> {
+  state = {
+    open: false,
+  };
+
   render() {
     const { name, parent } = this.props;
 
