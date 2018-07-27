@@ -17,6 +17,10 @@ export function getDrives() {
 
 export function getFiles(path: string, parents: string[]) {
   return async dispatch => {
+    console.log('getFiles');
+    console.log(path);
+    console.log(parents);
+
     const url = HOST + '/list/' + encodeURIComponent(path);
     const response = await axios.get(url);
 

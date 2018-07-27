@@ -18,14 +18,34 @@ export default class DirectoryTab extends React.Component<Props, State> {
     open: false,
   };
 
+  onClick = () => {
+    const { directory, name, parent } = this.props;
+    debugger;
+
+    if (typeof directory === 'boolean') this.props.onClick(name + '/', parent);
+  };
+
   render() {
-    const { name, parent } = this.props;
+    const { directory, name, parent } = this.props;
 
     return <div
-      onMouseDown={() => this.props.onClick(name + '/', parent)}
+      onMouseDown={this.onClick}
       style={styles.container}
     >
       {name}
+      {typeof directory === 'object' &&
+        Object
+          .entries(directory)
+          .map(([parentDirectory, directory]: [string, Directory | boolean]) => (
+            <DirectoryTab
+              directory={directory}
+              key={parentDirectory}
+              name={parentDirectory}
+              onClick={this.props.onClick}
+              parent={[parentDirectory, name]}
+            />
+          ))
+        }
     </div>;
   }
 }
