@@ -10,7 +10,7 @@ import FileUpload from './components/FileUpload';
 type Props = {
   getStatus: () => void,
   pause: () => void,
-  play: boolean,
+  play: (path: string) => void,
   resume: () => void,
   status: any,
 };
@@ -65,15 +65,15 @@ class App extends React.Component<Props, State> {
     >
       <div style={styles.parent}>
         <div style={styles.top}>
-          <div style={{ flex: 1 }}>
+          <div style={{ width: '20%' }}>
             <FileStructure />
           </div>
 
-          <div style={{ flex: 4 }}>
-            Explorer
+          <div style={{ width: '60%' }}>
+            <div style={{ marginLeft: '1rem' }}>Explorer</div>
           </div>
 
-          <div style={{ flex: 1 }}>
+          <div style={{ width: '20%' }}>
             Currently Playing
           </div>
         </div>
