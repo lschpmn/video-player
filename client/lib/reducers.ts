@@ -29,9 +29,7 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
       const { parents, path, files } = action.payload;
       const directory: Directory = {};
 
-      for (let file of files) {
-        directory[file] = true;
-      }
+      files.forEach(file => directory[file] = true);
 
       const newDrives = set(cloneDeep(state.drives), parents, directory);
 
