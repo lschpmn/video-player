@@ -1,16 +1,18 @@
 import * as React from 'react';
+import { getFiles } from '../lib/file-actions';
 
 type Props = {
   name: string,
-  onClick: (path: string) => void,
+  onClick: typeof getFiles,
+  parent: string[],
 };
 
 export default class Directory extends React.Component<Props> {
   render() {
-    const { name } = this.props;
+    const { name, parent } = this.props;
 
     return <div
-      onMouseDown={() => this.props.onClick(name + '/')}
+      onMouseDown={() => this.props.onClick(name + '/', parent)}
       style={styles.container}
     >
       {name}

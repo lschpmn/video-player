@@ -1,9 +1,8 @@
-'use strict';
-
+import { cloneDeep, set } from 'lodash';
 import { combineReducers } from 'redux';
-import { GET_DRIVES } from './file-actions';
+import { GET_DRIVES, GET_FILES } from './file-actions';
 import { PAUSE, UPDATE_STATUS } from './player-actions';
-import { ExplorerState, PlayerState } from '../types';
+import { ExplorerState, FileEntry, PlayerState } from '../types';
 
 type Action = {
   type: string,
@@ -15,8 +14,8 @@ const defaultStateExplorer = {
 };
 
 function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
-  switch(action.type) {
-    case GET_DRIVES:{
+  switch (action.type) {
+    case GET_DRIVES: {
       const drives: string[] = action.payload;
       const driveObj = {};
       for (let drive of drives) driveObj[drive] = true;
@@ -24,6 +23,21 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
       return {
         ...state,
         structure: driveObj,
+      };
+    }
+    case GET_FILES: {
+      const { parents, path, files } = action.payload;
+      const fileEntry: FileEntry = {};
+
+      for (let file of files) {
+        fileEntry[file] = true;
+      }
+
+      const newStructure = set(cloneDeep(state.structure), parents, fileEntry);
+
+      return {
+        ...state,
+        structure: newStructure,
       };
     }
     default:
@@ -41,9 +55,9 @@ const defaultStateStatus: PlayerState = {
 };
 
 function status(state: PlayerState = defaultStateStatus, action) {
-  switch(action.type) {
+  switch (action.type) {
     case UPDATE_STATUS:
-      return {...state, ...action.data};
+      return { ...state, ...action.data };
     default:
       return state;
   }

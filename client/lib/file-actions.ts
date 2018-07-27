@@ -15,15 +15,18 @@ export function getDrives() {
   };
 }
 
-export function getFiles(path: string) {
+export function getFiles(path: string, parents: string[]) {
   return async dispatch => {
     const url = HOST + '/list/' + encodeURIComponent(path);
     const response = await axios.get(url);
-    console.log(response);
 
     return dispatch({
       type: GET_FILES,
-      payload: response.data,
+      payload: {
+        parents,
+        path,
+        files: response.data,
+      },
     });
   };
 }
