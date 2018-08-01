@@ -1,5 +1,5 @@
 import { exec } from 'child_process';
-import { listAsync as list } from 'fs-jetpack';
+import { inspectAsync as inspect, listAsync as list } from 'fs-jetpack';
 import { NextFunction, Request, Response } from 'express';
 
 const cors = require('cors');
@@ -28,7 +28,18 @@ app.get(PREFIX + '/list/:path', async (req: Request, res: Response, next: NextFu
     console.log(`files for path ${path}`);
     console.log(files);
     res.send(files);
-  } catch(err) {
+  } catch (err) {
+    next(err);
+  }
+});
+
+app.get(`${PREFIX}/inspect/:path`, async (req: Request, res: Response, next: NextFunction) => {esoltu
+  try {
+    const path = decodeURIComponent(req.params.path);
+    const file = await inspect(path);
+
+    res.send(file);
+  } catch (err) {
     next(err);
   }
 });
