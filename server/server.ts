@@ -33,7 +33,7 @@ app.get(PREFIX + '/list/:path', async (req: Request, res: Response, next: NextFu
   }
 });
 
-app.get(`${PREFIX}/inspect/:path`, async (req: Request, res: Response, next: NextFunction) => {esoltu
+app.get(`${PREFIX}/inspect/:path`, async (req: Request, res: Response, next: NextFunction) => {
   try {
     const path = decodeURIComponent(req.params.path);
     const file = await inspect(path);
