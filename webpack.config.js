@@ -5,6 +5,8 @@ const path = require('path');
 module.exports = {
   entry: ['babel-polyfill', './client/index'],
 
+  mode: 'development',
+
   output: {
     filename: 'vendor.js',
     path: path.join(__dirname, 'dist'),
@@ -58,7 +60,7 @@ module.exports = {
 
   devtool: 'source-map',
 
-  devServer: {
+  serve: {
     port: 5000,
   },
 };
