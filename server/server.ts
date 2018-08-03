@@ -13,7 +13,7 @@ app.use('/api/files', filesRouter);
 
 filesRouter.get('/get-drives', (req: Request, res: Response) => {
   exec(' wmic logicaldisk get caption', (err, stdout) => {
-    if (err) res.status(500).send(err);
+    if (err) return res.status(500).send(err);
 
     const drives = stdout.match(/\w:/g);
     console.log(drives);
