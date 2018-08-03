@@ -1,16 +1,17 @@
 import { exec } from 'child_process';
 import { inspectAsync as inspect, listAsync as list } from 'fs-jetpack';
-import { NextFunction, Request, Response } from 'express';
+import { NextFunction, Request, Response, Router } from 'express';
 
 const cors = require('cors');
 const express = require('express');
 
-const PREFIX = '/api/files';
 const app = express();
+const filesRouter = Router();
 
 app.use(cors());
+app.use('/api/files', filesRouter);
 
-app.get(PREFIX + '/get-drives', (req: Request, res: Response) => {
+filesRouter.get('/get-drives', (req: Request, res: Response) => {
   exec(' wmic logicaldisk get caption', (err, stdout) => {
     if (err) res.status(500).send(err);
 
@@ -20,7 +21,7 @@ app.get(PREFIX + '/get-drives', (req: Request, res: Response) => {
   });
 });
 
-app.get(PREFIX + '/list/:path', async (req: Request, res: Response, next: NextFunction) => {
+filesRouter.get('/list/:path', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const path = decodeURIComponent(req.params.path);
     const files = await list(path);
@@ -33,7 +34,7 @@ app.get(PREFIX + '/list/:path', async (req: Request, res: Response, next: NextFu
   }
 });
 
-app.get(`${PREFIX}/inspect/:path`, async (req: Request, res: Response, next: NextFunction) => {
+filesRouter.get('/inspect/:path', async (req: Request, res: Response, next: NextFunction) => {
   try {
     const path = decodeURIComponent(req.params.path);
     const file = await inspect(path);
