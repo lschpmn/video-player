@@ -1,7 +1,7 @@
 'use strict';
 
 import React, { Component } from 'react';
-import { Slider } from 'material-ui';
+import Slider from 'material-ui/Slider';
 
 export default class Sound extends Component {
   constructor(props) {
