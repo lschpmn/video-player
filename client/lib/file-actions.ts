@@ -4,6 +4,7 @@ import { join } from 'path';
 const HOST = 'http://localhost:3001/api/files';
 export const GET_DRIVES = 'file/GET_DRIVES';
 export const GET_FILES = 'file/GET_FILES';
+export const INSPECT_FILE = 'INSPECT_FILE';
 
 export function getDrives() {
   return async dispatch => {
@@ -22,8 +23,7 @@ export function getFiles(location: string[]) {
     console.log('getFiles');
     console.log(path);
 
-    const url = HOST + '/list/' + encodeURIComponent(path);
-    const response = await axios.get(url);
+    const response = await axios.get(`${HOST}/list/${encodeURIComponent(path)}`);
 
     return dispatch({
       type: GET_FILES,
@@ -32,5 +32,31 @@ export function getFiles(location: string[]) {
         files: response.data,
       },
     });
+  };
+}
+
+export function inspectFile(path: string) {
+  return async dispatch => {
+    try {
+      const response = await axios.get(`${HOST}/inspect/${encodeURIComponent(path)}`);
+
+      return dispatch({
+        type: INSPECT_FILE,
+        payload: {
+          path,
+          inspection: response.data,
+        },
+      });
+    } catch (err) {
+      return dispatch({
+        type: INSPECT_FILE,
+        payload: {
+          path,
+          inspection: {
+            type: 'forbidden',
+          },
+        },
+      });
+    }
   };
 }

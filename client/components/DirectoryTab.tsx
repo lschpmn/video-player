@@ -1,8 +1,10 @@
 import * as React from 'react';
-import { getFiles } from '../lib/file-actions';
+import { getFiles, inspectFile } from '../lib/file-actions';
 import { Directory } from '../types';
+import { join } from 'path';
 
 type Props = {
+  inspectFile: typeof inspectFile,
   location: string[],
   onClick: typeof getFiles,
   directory: Directory | boolean,
@@ -16,6 +18,14 @@ export default class DirectoryTab extends React.Component<Props, State> {
   state = {
     open: false,
   };
+
+  async componentDidMount() {
+    if (this.props.location.length === 1) return;
+    const path = join(...this.props.location);
+
+    const response = await this.props.inspectFile(path);
+    console.log(response);
+  }
 
   onClick = e => {
     e.stopPropagation();
@@ -40,6 +50,7 @@ export default class DirectoryTab extends React.Component<Props, State> {
           .map(([parentDirectory, directory]: [string, Directory | boolean]) => (
             <DirectoryTab
               directory={directory}
+              inspectFile={this.props.inspectFile}
               key={parentDirectory}
               onClick={this.props.onClick}
               location={[...location, parentDirectory]}

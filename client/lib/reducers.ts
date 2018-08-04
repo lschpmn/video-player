@@ -1,6 +1,6 @@
 import { cloneDeep, set } from 'lodash';
 import { combineReducers } from 'redux';
-import { GET_DRIVES, GET_FILES } from './file-actions';
+import { GET_DRIVES, GET_FILES, INSPECT_FILE } from './file-actions';
 import { PAUSE, UPDATE_STATUS } from './player-actions';
 import { ExplorerState, Directory, PlayerState } from '../types';
 
@@ -11,6 +11,7 @@ type Action = {
 
 const defaultStateExplorer = {
   drives: {},
+  inspections: {},
 };
 
 function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
@@ -36,6 +37,17 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
       return {
         ...state,
         drives: newDrives,
+      };
+    }
+    case INSPECT_FILE: {
+      const { inspection, path } = action.payload;
+
+      return {
+        ...state,
+        inspections: {
+          ...state.inspections,
+          [path]: inspection
+        },
       };
     }
     default:

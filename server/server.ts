@@ -39,6 +39,9 @@ filesRouter.get('/inspect/:path', async (req: Request, res: Response, next: Next
     const path = decodeURIComponent(req.params.path);
     const file = await inspect(path);
 
+    console.log(`for ${path}`);
+    console.log(file);
+
     res.send(file);
   } catch (err) {
     next(err);

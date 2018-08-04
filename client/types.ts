@@ -1,5 +1,11 @@
 export type ExplorerState = {
   drives: Directory,
+  inspections: {
+    [s:string]: {
+      size: number,
+      type: 'dir' | 'file' | 'forbidden',
+    },
+  },
 };
 
 export interface Directory {
