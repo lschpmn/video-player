@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { getFiles, inspectFile } from '../lib/file-actions';
-import { Directory } from '../types';
+import { Directory, Inspections } from '../types';
 import { join } from 'path';
 
 type Props = {
@@ -8,23 +8,37 @@ type Props = {
   location: string[],
   onClick: typeof getFiles,
   directory: Directory | boolean,
+  inspections: Inspections,
 };
 
 type State = {
   open: boolean,
+  show: boolean,
 };
 
 export default class DirectoryTab extends React.Component<Props, State> {
   state = {
     open: false,
+    show: false,
   };
 
-  async componentDidMount() {
-    if (this.props.location.length === 1) return;
-    const path = join(...this.props.location);
+  componentDidMount() {
+    const { inspectFile, location } = this.props;
+    if (location.length === 1) return this.setState({ show: true });
 
-    const response = await this.props.inspectFile(path);
-    console.log(response);
+    const path = join(...location);
+    inspectFile(path);
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    const { inspections, location } = this.props;
+    const path = join(...location);
+    const inspect = inspections[path];
+    const prevInspect = prevProps.inspections[path];
+
+    if (inspect && !prevInspect
+      && inspect.type === 'dir'
+      && location.slice(-1)[0][0] !== '.') this.setState({ show: true });
   }
 
   onClick = e => {
@@ -37,11 +51,15 @@ export default class DirectoryTab extends React.Component<Props, State> {
 
   render() {
     const { directory, location } = this.props;
+    const { show } = this.state;
     const name = location.slice(-1)[0];
 
     return <div
       onMouseDown={this.onClick}
-      style={styles.container}
+      style={{
+        ...styles.container,
+        display: show ? 'block' : 'none',
+      }}
     >
       {name}
       {typeof directory === 'object' && this.state.open &&
@@ -51,6 +69,7 @@ export default class DirectoryTab extends React.Component<Props, State> {
             <DirectoryTab
               directory={directory}
               inspectFile={this.props.inspectFile}
+              inspections={this.props.inspections}
               key={parentDirectory}
               onClick={this.props.onClick}
               location={[...location, parentDirectory]}

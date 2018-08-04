@@ -1,16 +1,18 @@
 export type ExplorerState = {
   drives: Directory,
-  inspections: {
-    [s:string]: {
-      size: number,
-      type: 'dir' | 'file' | 'forbidden',
-    },
-  },
+  inspections: Inspections,
 };
 
 export interface Directory {
   [s:string]: boolean | Directory,
 }
+
+export type Inspections = {
+  [s:string]: {
+    size: number,
+    type: 'dir' | 'file' | 'forbidden',
+  },
+};
 
 export type PlayerState = {
   contentId: string,

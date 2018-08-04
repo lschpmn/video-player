@@ -2,13 +2,14 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { inspectFile, getDrives, getFiles } from '../lib/file-actions';
 import DirectoryTab from './DirectoryTab';
-import { Directory } from '../types';
+import { Directory, Inspections } from '../types';
 
 type Props = {
   inspectFile: typeof inspectFile,
   getDrives: typeof getDrives,
   getFiles: typeof getFiles,
   drives: DirectoryTab,
+  inspections: Inspections,
 };
 
 class FileStructure extends React.Component<Props> {
@@ -31,6 +32,7 @@ class FileStructure extends React.Component<Props> {
             <DirectoryTab
               directory={directory}
               inspectFile={this.props.inspectFile}
+              inspections={this.props.inspections}
               key={drive}
               onClick={this.getFiles}
               location={[drive]}
@@ -53,6 +55,7 @@ const styles = {
 export default connect(
   (state: any) => ({
     drives: state.explorer.drives,
+    inspections: state.explorer.inspections,
   }),
   {
     inspectFile,
