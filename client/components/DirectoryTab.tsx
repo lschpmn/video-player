@@ -23,11 +23,11 @@ export default class DirectoryTab extends React.Component<Props, State> {
   };
 
   componentDidMount() {
-    const { inspectFile, location } = this.props;
-    if (location.length === 1) return this.setState({ show: true });
-
+    const { inspectFile, inspections, location } = this.props;
     const path = join(...location);
-    inspectFile(path);
+    const shouldOpen = this.shouldOpen();
+    if (shouldOpen) this.setState({ show: true });
+    else if (!inspections[path]) inspectFile(path);
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -37,8 +37,7 @@ export default class DirectoryTab extends React.Component<Props, State> {
     const prevInspect = prevProps.inspections[path];
 
     if (inspect && !prevInspect
-      && inspect.type === 'dir'
-      && location.slice(-1)[0][0] !== '.') this.setState({ show: true });
+      && this.shouldOpen()) this.setState({ show: true });
   }
 
   onClick = e => {
@@ -48,6 +47,17 @@ export default class DirectoryTab extends React.Component<Props, State> {
     this.setState({ open: !this.state.open });
     if (typeof directory === 'boolean') this.props.onClick(location);
   };
+
+  shouldOpen() {
+    const { inspections, location } = this.props;
+    const path = join(...location);
+    const inspect = inspections[path];
+
+    return location.length === 1 ||
+      inspect &&
+      inspect.type === 'dir' &&
+      location.slice(-1)[0][0] !== '.';
+  }
 
   render() {
     const { directory, location } = this.props;
