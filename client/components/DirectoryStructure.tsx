@@ -16,7 +16,7 @@ type State = {
   show: boolean,
 };
 
-export default class DirectoryTab extends React.Component<Props, State> {
+export default class DirectoryStructure extends React.Component<Props, State> {
   state = {
     open: false,
     show: false,
@@ -76,7 +76,7 @@ export default class DirectoryTab extends React.Component<Props, State> {
         Object
           .entries(directory)
           .map(([parentDirectory, directory]: [string, Directory | boolean]) => (
-            <DirectoryTab
+            <DirectoryStructure
               directory={directory}
               inspectFile={this.props.inspectFile}
               inspections={this.props.inspections}
