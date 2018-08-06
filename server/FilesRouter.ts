@@ -2,10 +2,11 @@ import { exec } from 'child_process';
 import { Request, Response, Router, static as expressStatic } from 'express';
 import { address } from 'ip';
 import { inspectAsync as inspect, listAsync as list } from 'fs-jetpack';
+import { errorHandler } from './utils';
 
 const ipAddress = address();
 const filesRouter = Router();
-const fileUrlMap: { [s:string]: string } = {};
+const fileUrlMap: { [s: string]: string } = {};
 
 filesRouter.get('/get-drives', (req: Request, res: Response) => {
   exec(' wmic logicaldisk get caption', (err, stdout) => {
@@ -51,12 +52,5 @@ filesRouter.get('/inspect/:path', errorHandler(async (req: Request, res: Respons
 
   res.send(file);
 }));
-
-function errorHandler(handler) {
-  return (req, res, next) => {
-    handler(req, res)
-      .catch(err => next(err));
-  }
-}
 
 export default filesRouter;

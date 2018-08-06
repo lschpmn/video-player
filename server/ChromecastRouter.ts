@@ -1,16 +1,13 @@
-import { NextFunction, Request, Response, Router } from 'express';
+import { Request, Response, Router } from 'express';
 import ChromecastController from './ChromecastController';
+import { errorHandler } from './utils';
 
 const chromecastController = new ChromecastController();
 const chromecastRouter = Router();
 
-chromecastRouter.post('/play', (req: Request, res: Response, next: NextFunction) => {
-  try {
-    console.log(req.body);
-    res.send('good job!');
-  } catch (err) {
-    next(err);
-  }
-});
+chromecastRouter.post('/play', errorHandler((req: Request, res: Response) => {
+  console.log(req.body);
+  res.send('good job!');
+}));
 
 export default chromecastRouter;
