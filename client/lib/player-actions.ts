@@ -27,7 +27,13 @@ export function getStatus(dispatch) {
 export function play(path) {
   return async dispatch => {
     const fileUrl = await axios.get(f(`/get-file-url/${encodeURIComponent(path)}`));
-    console.log(fileUrl)
+    console.log(fileUrl.data);
+
+    //not ready yet
+    /*return dispatch({
+      type: UPDATE_STATUS,
+      payload: status,
+    });*/
   };
 }
 
