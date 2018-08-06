@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { join } from 'path';
 
-const HOST = 'http://localhost:3001/api/files';
+const HOST = 'http://localhost:3000/api/files';
 export const GET_DRIVES = 'file/GET_DRIVES';
 export const GET_FILES = 'file/GET_FILES';
 export const INSPECT_FILE = 'INSPECT_FILE';
