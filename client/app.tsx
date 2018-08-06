@@ -88,12 +88,10 @@ class App extends React.Component<Props, State> {
 
 export default connect(
   state => state,
-  dispatch => ({
-    getStatus: getStatus(dispatch),
-    pause: pause(dispatch),
-    play: play(dispatch),
-    resume: resume(dispatch),
-  })
+  {
+    getStatus: () => ({type: 'wtf do you want?'}),
+    play,
+  }
 // @ts-ignore
 )(App);
 

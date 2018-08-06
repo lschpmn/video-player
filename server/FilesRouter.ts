@@ -1,8 +1,11 @@
-import { Request, Response, Router } from 'express';
 import { exec } from 'child_process';
+import { Request, Response, Router, static as expressStatic } from 'express';
+import { address } from 'ip';
 import { inspectAsync as inspect, listAsync as list } from 'fs-jetpack';
 
+const ipAddress = address();
 const filesRouter = Router();
+const fileUrlMap: { [s:string]: string } = {};
 
 filesRouter.get('/get-drives', (req: Request, res: Response) => {
   exec(' wmic logicaldisk get caption', (err, stdout) => {
@@ -14,8 +17,20 @@ filesRouter.get('/get-drives', (req: Request, res: Response) => {
   });
 });
 
-filesRouter.get('/get-file-url/:path', errorHandler((req: Request, res: Response) => {
+filesRouter.get('/get-file-url/:path', errorHandler(async (req: Request, res: Response) => {
+  const path = decodeURIComponent(req.params.path);
 
+  if (fileUrlMap[path]) return res.send(fileUrlMap[path]);
+
+  const tmpName = Math.random().toString(36).slice(-2);
+
+  filesRouter.use(`/${tmpName}.mp4`, expressStatic(path, {
+    setHeaders: res => res.type('video/mp4'),
+  }));
+
+  fileUrlMap[path] = `http://${ipAddress}:3000/api/files/${tmpName}.mp4`;
+  console.log(`url: ${fileUrlMap[path]}`);
+  res.send(fileUrlMap[path]);
 }));
 
 filesRouter.get('/list/:path', errorHandler(async (req: Request, res: Response) => {
