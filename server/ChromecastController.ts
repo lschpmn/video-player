@@ -64,11 +64,6 @@ function getChromecasts(): Promise<string[]> {
   });
 }
 
-const chromecastController = new ChromecastController();
-chromecastController.getStatus()
-  .then(console.log)
-  .catch(console.log);
-
 interface Player {
   close: () => void,
   getStatus: () => void,
