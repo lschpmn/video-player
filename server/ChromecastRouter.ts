@@ -7,7 +7,7 @@ const chromecastRouter = Router();
 
 chromecastRouter.post('/play', errorHandler((req: Request, res: Response) => {
   console.log(req.body);
-  res.send('good job!');
+  res.send(chromecastController.addresses);
 }));
 
 export default chromecastRouter;

@@ -4,6 +4,7 @@ export const PLAY = 'PLAYING';
 export const PAUSE = 'PAUSED';
 export const UPDATE_STATUS = 'UPDATE_STATUS';
 
+const c = path => `http://localhost:3000/api/cast${path}`;
 const f = path => `http://localhost:3000/api/files${path}`;
 const HOST = 'http://localhost:3000/api/cast/';
 const NEW_HOST = 'http://localhost:3001/api/';
@@ -26,8 +27,11 @@ export function getStatus(dispatch) {
 
 export function play(path) {
   return async dispatch => {
-    const fileUrl = await axios.get(f(`/get-file-url/${encodeURIComponent(path)}`));
-    console.log(fileUrl.data);
+    const urlResponse = await axios.get(f(`/get-file-url/${encodeURIComponent(path)}`));
+    console.log(urlResponse.data);
+
+    const playResponse = await axios.get(c(`/play/${encodeURIComponent(urlResponse.data)}`));
+    console.log(playResponse.data);
 
     //not ready yet
     /*return dispatch({
