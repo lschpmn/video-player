@@ -10,7 +10,7 @@ const PLAY = 'PLAYING';
 const PAUSE = 'PAUSED';
 const app = express();
 const files = {};
-const ipAddress = os.networkInterfaces()['Wi-Fi'].find(net => net.family === 'IPv4').address;
+const ipAddress = require('ip').address();
 const list = chromecasts();
 let player;
 let status;

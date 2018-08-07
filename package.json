@@ -25,6 +25,7 @@
     "express": "^4.16.3",
     "file-loader": "^1.1.11",
     "font-awesome": "^4.7.0",
+    "ip": "1.1.5",
     "material-ui": "^0.20.0",
     "multicast-dns": "^7.0.0",
     "prop-types": "^15.6.1",
