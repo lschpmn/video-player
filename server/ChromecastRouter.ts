@@ -5,9 +5,11 @@ import { errorHandler } from './utils';
 const chromecastController = new ChromecastController();
 const chromecastRouter = Router();
 
-chromecastRouter.post('/play', errorHandler((req: Request, res: Response) => {
+chromecastRouter.post('/start', errorHandler((req: Request, res: Response) => {
   console.log(req.body);
-  res.send(chromecastController.addresses);
+  const addr = chromecastController.addresses;
+  console.log(addr);
+  res.send(addr || 'wtf?');
 }));
 
 export default chromecastRouter;

@@ -3,7 +3,7 @@
 import * as React from 'react';
 
 type Props = {
-  play: (path: string) => void,
+  start: (path: string) => void,
 };
 
 export default class FileUpload extends React.Component<Props> {
@@ -18,7 +18,7 @@ export default class FileUpload extends React.Component<Props> {
     }
     
     console.log(files);
-    this.props.play(files[0].path);
+    this.props.start(files[0].path);
   };
   
   eventNoop = (event) => {

@@ -1,3 +1,11 @@
+export interface Command {
+  address: string,
+}
+
+export interface CommandStart extends Command{
+  url: string,
+}
+
 export type ExplorerState = {
   drives: Directory,
   inspections: Inspections,

@@ -25,12 +25,14 @@ export function getStatus(dispatch) {
   };
 }
 
-export function play(path) {
+export function start(path) {
   return async dispatch => {
     const urlResponse = await axios.get(f(`/get-file-url/${encodeURIComponent(path)}`));
     console.log(urlResponse.data);
 
-    const playResponse = await axios.get(c(`/play/${encodeURIComponent(urlResponse.data)}`));
+    const playResponse = await axios.post(c('/start'), {
+      url: urlResponse.data,
+    });
     console.log(playResponse.data);
 
     //not ready yet

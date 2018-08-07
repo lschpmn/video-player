@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getStatus, play, PLAY, pause, PAUSE, resume } from './lib/player-actions';
+import { getStatus, PLAY, pause, PAUSE, resume, start } from './lib/player-actions';
 import Controls from './components/Controls';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
@@ -10,8 +10,8 @@ import FileUpload from './components/FileUpload';
 type Props = {
   getStatus: () => void,
   pause: () => void,
-  play: (path: string) => void,
   resume: () => void,
+  start: (path: string) => void,
   status: any,
 };
 
@@ -58,10 +58,10 @@ class App extends React.Component<Props, State> {
   }
 
   render() {
-    const { play } = this.props;
+    const { start } = this.props;
 
     return <FileUpload
-      play={play}
+      start={start}
     >
       <div style={styles.parent}>
         <div style={styles.top}>
@@ -90,7 +90,7 @@ export default connect(
   state => state,
   {
     getStatus: () => ({type: 'wtf do you want?'}),
-    play,
+    start,
   }
 // @ts-ignore
 )(App);
