@@ -8,44 +8,51 @@ const chromecastInfo = {
 };
 
 export default class ChromecastController {
+  address: string;
   private readonly client: any;
-  addresses: string[];
-  player: Player;
-  playerAddress: string;
+  private player: Player;
 
   constructor() {
     this.client = new Client();
+  }
 
-    this.connect().catch(console.log);
+  async changeAddress(address: string): Promise<void> {
+    await this.getPlayer(address);
   }
 
   async getStatus() {
-    try {
-      this.player.getStatus();
-      
-    } catch (err) {
-      await this.getPlayer(this.playerAddress);
-      return this.getStatus();
+    const player = await this.getPlayer();
+
+    player.getStatus((err, status) => {
+      if (err) throw err;
+      return status;
+    });
+  }
+
+  start(url: string, address?: string) {
+    const player = this.getPlayer(address);
+  }
+
+  private async getPlayer(address?: string): Promise<Player> {
+    if (this.player && (address === this.address || !address)) return Promise.resolve(this.player);
+
+    if (!this.player && !address) {
+      const a = await getChromecasts();
+      console.log(a);
+      address = await getChromecasts()[0];
+      if (!address) throw new Error('No Chromecast address found');
     }
-  }
-
-  private async connect() {
-    this.addresses = await getChromecasts();
-  }
-
-  private async getPlayer(address: string): Promise<any> {
-    if (this.player && address === this.playerAddress) return Promise.resolve(this.player);
 
     return new Promise((resolve, reject) => {
       this.client.connect(address, () => {
         this.client.launch(DefaultMediaReceiver, (err, player) => {
           if (err) return reject(err);
           this.player = player;
-          this.playerAddress = address;
+          this.address = address;
           resolve(player);
         });
       });
-    });
+    }) as Promise<Player>;
   }
 }
 
@@ -66,7 +73,7 @@ function getChromecasts(): Promise<string[]> {
 
 interface Player {
   close: () => void,
-  getStatus: () => void,
+  getStatus: (callback: (err: Error | null, status: any) => void) => void,
 }
 
 type Response = {

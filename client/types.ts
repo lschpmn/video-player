@@ -3,6 +3,7 @@ export interface Command {
 }
 
 export interface CommandStart extends Command{
+  address: string,
   url: string,
 }
 

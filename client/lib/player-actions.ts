@@ -25,7 +25,7 @@ export function getStatus(dispatch) {
   };
 }
 
-export function start(path) {
+export function start(path: string) {
   return async dispatch => {
     const urlResponse = await axios.get(f(`/get-file-url/${encodeURIComponent(path)}`));
     console.log(urlResponse.data);
