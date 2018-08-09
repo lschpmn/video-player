@@ -37,9 +37,9 @@ export default class ChromecastController {
     if (this.player && (address === this.address || !address)) return Promise.resolve(this.player);
 
     if (!this.player && !address) {
-      const a = await getChromecasts();
-      console.log(a);
-      address = await getChromecasts()[0];
+      const chromecasts = await getChromecasts();
+      console.log(chromecasts);
+      address = chromecasts[0];
       if (!address) throw new Error('No Chromecast address found');
     }
 
