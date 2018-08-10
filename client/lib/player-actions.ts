@@ -31,6 +31,7 @@ export function start(path: string) {
     console.log(urlResponse.data);
 
     const playResponse = await axios.post(c('/start'), {
+      address: 'Chromecast-Ultra-39bb708d7a3a1ac3d41d25afede84f0f._googlecast._tcp.local',
       url: urlResponse.data,
     });
     console.log(playResponse.data);

@@ -23,6 +23,12 @@ export type Inspections = {
   },
 };
 
+export interface Player {
+  close: () => void,
+  getStatus: (callback: (err: Error | null, status: any) => void) => void,
+  load: (media: any, options: { autoplay: boolean }, callback: (err: Error, status: any) => void) => void;
+}
+
 export type PlayerState = {
   contentId: string,
   currentTime: number,

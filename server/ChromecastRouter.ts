@@ -9,7 +9,8 @@ const chromecastRouter = Router();
 chromecastRouter.post('/start', errorHandler(async (req: Request, res: Response) => {
   const { address, url } = req.body as CommandStart;
 
-  const status = await chromecastController.getStatus();
+  console.log(`Got start command`);
+  const status = await chromecastController.start(url, address);
   console.log(status);
   res.send(status);
 
