@@ -58,7 +58,7 @@ export default class ChromecastController {
   }
 
   private errorHandler(err) {
-    if (this.errorHandler) this.errorHandler(err);
+    if (this.tmpErrorHandler) this.tmpErrorHandler(err);
   }
 
   private async getPlayer(address?: string): Promise<Player> {
