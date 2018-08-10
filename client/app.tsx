@@ -6,6 +6,7 @@ import { getStatus, PLAY, pause, PAUSE, resume, start } from './lib/player-actio
 import Controls from './components/Controls';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
+import { setupChromecast } from './lib/Chromecast';
 
 type Props = {
   getStatus: () => void,
@@ -24,9 +25,12 @@ class App extends React.Component<Props, State> {
     statusTimeoutId: null,
   };
 
-  componentDidMount() {
-    this.getStatus();
+  async componentDidMount() {
+    // this.getStatus();
     document.addEventListener('keydown', e => e.key === ' ' && this.playPause());
+
+    await setupChromecast();
+    console.log('Chromecast ready');
   }
 
   componentWillReceiveProps(nextProps) {
