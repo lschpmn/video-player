@@ -18,8 +18,7 @@
   window['__onGCastApiAvailable'] = function(isAvailable) {
     window._IS_AVAILABLE = isAvailable;
     cast.framework.CastContext.getInstance().setOptions({
-      receiverApplicationId:
-      chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID
+      receiverApplicationId: chrome.cast.media.DEFAULT_MEDIA_RECEIVER_APP_ID,
     });
   };
 </script>
