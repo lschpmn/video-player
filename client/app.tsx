@@ -6,7 +6,6 @@ import { getStatus, PLAY, pause, PAUSE, resume, start } from './lib/player-actio
 import Controls from './components/Controls';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
-import { setupChromecast } from './lib/Chromecast';
 
 type Props = {
   getStatus: () => void,
