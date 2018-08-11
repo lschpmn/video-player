@@ -1,4 +1,5 @@
 import axios from 'axios';
+import * as Chromecast from './Chromecast';
 
 export const PLAY = 'PLAYING';
 export const PAUSE = 'PAUSED';
@@ -20,12 +21,15 @@ export function changeVolume(dispatch) {
 export function getStatus() {
   return async dispatch => {
     try {
-      const status = await axios.post(c('/status'), {
+      const status = Chromecast.getStatus();
+      console.log(status);
+
+      /*const status = await axios.post(c('/status'), {
         address: 'Chromecast-Ultra-39bb708d7a3a1ac3d41d25afede84f0f._googlecast._tcp.local',
       });
 
       console.log('status');
-      console.log(status);
+      console.log(status);*/
     } catch (err) {
       console.error(err);
     }

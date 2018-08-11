@@ -26,11 +26,11 @@ class App extends React.Component<Props, State> {
   };
 
   async componentDidMount() {
-    this.getStatus();
+    setTimeout(() => this.getStatus(), 2000);
     document.addEventListener('keydown', e => e.key === ' ' && this.playPause());
 
-    await setupChromecast();
-    console.log('Chromecast ready');
+    // await setupChromecast();
+    // console.log('Chromecast ready');
   }
 
   componentWillReceiveProps(nextProps) {
@@ -79,6 +79,10 @@ class App extends React.Component<Props, State> {
 
           <div style={{ width: '20%' }}>
             Currently Playing
+            <div
+              dangerouslySetInnerHTML={{__html:'<google-cast-launcher/>'}}
+              style={styles.chromecastButton}
+            />
           </div>
         </div>
 
@@ -103,6 +107,13 @@ const styles: { [s:string]: React.CSSProperties } = {
   bottom: {
     alignSelf: 'flex-end',
     width: '100%',
+  },
+
+  chromecastButton: {
+    float: 'right',
+    height: '3rem',
+    margin: '1rem',
+    width: '3rem',
   },
 
   parent: {
