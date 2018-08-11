@@ -13,6 +13,12 @@ declare const chrome: {
   cast: {
     media: {
       DEFAULT_MEDIA_RECEIVER_APP_ID: string,
+      LoadRequest: (mediaInfo: {}) => {},
+      MediaInfo: (url: string, contentType: string) => {},
     },
   },
 };
+
+declare interface MediaInfo {
+
+}

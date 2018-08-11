@@ -28,15 +28,16 @@ export default class ChromecastController {
   async getStatus(address?: string) {
     const player = await this.getPlayer(address);
 
-    player.getStatus((err, status) => {
-      if (err) throw err;
-      return status;
+    return new Promise((resolve, reject) => {
+      player.getStatus((err, status) => {
+        if (err) reject(err);
+        resolve(status);
+      });
     });
   }
 
   async start(url: string, address?: string) {
     return new Promise(async (resolve, reject) => {
-      console.log('grabbing player');
       const player = await this.getPlayer(address);
 
       const media = {
@@ -45,7 +46,6 @@ export default class ChromecastController {
         streamType: 'BUFFERED',
       };
 
-      console.log('got player, starting media');
       player.load(media, { autoplay: true }, (err, status) => {
         if (err) reject(err);
 
@@ -62,7 +62,11 @@ export default class ChromecastController {
   }
 
   private async getPlayer(address?: string): Promise<Player> {
-    if (this.player && (address === this.address || !address)) return Promise.resolve(this.player);
+    console.log('Grabbing player');
+    if (this.player && (address === this.address || !address)) {
+      console.log('Got player');
+      return Promise.resolve(this.player);
+    }
 
     if (!this.player && !address) {
       const chromecasts = await getChromecasts();
@@ -80,6 +84,7 @@ export default class ChromecastController {
           this.player = player;
           this.address = address;
           this.tmpErrorHandler = null;
+          console.log('Got player');
           resolve(player);
         });
       });

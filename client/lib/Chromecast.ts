@@ -19,3 +19,7 @@ export function setupChromecast() {
     }
   });
 }
+
+export async function start(url: string) {
+
+}

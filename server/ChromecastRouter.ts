@@ -19,4 +19,12 @@ chromecastRouter.post('/start', errorHandler(async (req: Request, res: Response)
   // res.send('please wait');
 }));
 
+chromecastRouter.post('/status', errorHandler(async (req: Request, res: Response) => {
+  const status = await chromecastController.getStatus(req.body.address);
+
+  console.log('Chromecast status');
+  console.log(status);
+  res.send(status);
+}));
+
 export default chromecastRouter;

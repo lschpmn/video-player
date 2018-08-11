@@ -26,7 +26,7 @@ class App extends React.Component<Props, State> {
   };
 
   async componentDidMount() {
-    // this.getStatus();
+    this.getStatus();
     document.addEventListener('keydown', e => e.key === ' ' && this.playPause());
 
     await setupChromecast();
@@ -93,7 +93,7 @@ class App extends React.Component<Props, State> {
 export default connect(
   state => state,
   {
-    getStatus: () => ({type: 'wtf do you want?'}),
+    getStatus,
     start,
   }
 // @ts-ignore
