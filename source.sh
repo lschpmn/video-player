@@ -3,4 +3,4 @@
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 PATH=$PATH:$DIR/node_modules/.bin/
 alias server-watch="nodemon -w ./server -e ts -x ./node_modules/.bin/ts-node server/server.ts < /dev/null"
-alias start="server-watch & electron . | grep -v ProductRegistryImpl & webpack-serve &"
+alias start="server-watch & webpack-serve &"
