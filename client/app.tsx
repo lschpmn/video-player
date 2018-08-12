@@ -110,9 +110,9 @@ const styles: { [s:string]: React.CSSProperties } = {
 
   chromecastButton: {
     float: 'right',
-    height: '3rem',
+    height: '2.5rem',
     margin: '1rem',
-    width: '3rem',
+    width: '2.5rem',
   },
 
   parent: {
