@@ -30,7 +30,7 @@
     "ip": "1.1.5",
     "lodash": "4.17.10",
     "material-ui": "0.20.2",
-    "multicast-dns": "7.0.0",
+    "multicast-dns": "7.0.1",
     "react": "16.4.2",
     "react-dom": "16.4.2",
     "react-redux": "5.0.7",
@@ -50,7 +50,7 @@
     "@types/ip": "0.0.31",
     "@types/lodash": "4.14.116",
     "@types/material-ui": "0.21.5",
-    "@types/react": "16.4.9",
+    "@types/react": "16.4.11",
     "@types/react-redux": "6.0.6"
   }
 }
