@@ -3,6 +3,7 @@ import ChromecastController from './ChromecastController';
 import { errorHandler } from './utils';
 import { CommandStart } from '../client/types';
 
+const chromecastScanner = require('chromecast-scanner');
 const chromecastController = new ChromecastController();
 const chromecastRouter = Router();
 
@@ -10,7 +11,10 @@ chromecastRouter.post('/start', errorHandler(async (req: Request, res: Response)
   const { address, url } = req.body as CommandStart;
 
   console.log(`Got start command`);
-  const status = await chromecastController.start(url, address);
+  const actualAddress = await getAddress();
+  console.log(actualAddress);
+
+  const status = await chromecastController.start(url, actualAddress);
   console.log(status);
   res.send(status);
 
@@ -28,3 +32,13 @@ chromecastRouter.post('/status', errorHandler(async (req: Request, res: Response
 }));
 
 export default chromecastRouter;
+
+async function getAddress(): Promise<string> {
+  return new Promise((resolve, reject) => {
+    chromecastScanner((err, service) => {
+      if (err) return reject(err);
+
+      resolve(service.data);
+    });
+  }) as Promise<string>;
+}

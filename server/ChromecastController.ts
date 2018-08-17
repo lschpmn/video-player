@@ -11,7 +11,7 @@ const chromecastInfo = {
 
 export default class ChromecastController {
   address: string;
-  private readonly client: any;
+  private client: any;
   private tmpErrorHandler?: (err: Error) => void;
   private player: Player;
 
@@ -37,6 +37,7 @@ export default class ChromecastController {
   }
 
   async start(url: string, address?: string) {
+    this.client = new Client();
     return new Promise(async (resolve, reject) => {
       const player = await this.getPlayer(address);
 
@@ -47,7 +48,7 @@ export default class ChromecastController {
       };
 
       player.load(media, { autoplay: true }, (err, status) => {
-        if (err) reject(err);
+        if (err) return reject(err);
 
         console.log('play status');
         console.log(status);
@@ -78,7 +79,9 @@ export default class ChromecastController {
     return new Promise((resolve, reject) => {
       this.tmpErrorHandler = reject;
 
+      console.log(`address ${address}`);
       this.client.connect(address, () => {
+        console.log('connected');
         this.client.launch(DefaultMediaReceiver, (err, player) => {
           if (err) return reject(err);
           this.player = player;

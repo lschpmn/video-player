@@ -27,9 +27,6 @@ class App extends React.Component<Props, State> {
   async componentDidMount() {
     setTimeout(() => this.getStatus(), 2000);
     document.addEventListener('keydown', e => e.key === ' ' && this.playPause());
-
-    // await setupChromecast();
-    // console.log('Chromecast ready');
   }
 
   componentWillReceiveProps(nextProps) {
