@@ -2,5 +2,5 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 PATH=$PATH:$DIR/node_modules/.bin/
-alias server-watch="nodemon -w ./server -e ts -x ./node_modules/.bin/ts-node server/server.ts < /dev/null"
-alias start="server-watch & electron . | grep -v "ERROR:CONSOLE" & webpack-serve &"
+alias start-server="nodemon -w ./server -e ts -x ts-node server/server.ts < /dev/null"
+alias start="webpack-dev-server & start-server & electron . | grep -v "ERROR:CONSOLE" &"
