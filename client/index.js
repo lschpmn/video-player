@@ -18,7 +18,7 @@ import 'font-awesome/css/font-awesome.min.css';
 injectTapEventPlugin();
 
 import './index.html';
-import App from './app';
+import App from './apps';
 
 const store = createStore(reducers, applyMiddleware(thunk));
 store.subscribe(() => console.log(store.getState()));
