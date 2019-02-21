@@ -1,5 +1,3 @@
-'use strict';
-
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { getStatus, PLAY, pause, PAUSE, resume, start } from './lib/player-actions';
@@ -91,12 +89,16 @@ class App extends React.Component<Props, State> {
 }
 
 export default connect(
-  state => state,
+  state => ({
+    //@ts-ignore
+    status: state.status,
+  }),
   {
     getStatus,
     start,
+    resume,
+    pause,
   }
-// @ts-ignore
 )(App);
 
 const styles: { [s:string]: React.CSSProperties } = {

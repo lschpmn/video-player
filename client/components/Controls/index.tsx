@@ -1,5 +1,3 @@
-'use strict';
-
 import Chip from 'material-ui/Chip';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
@@ -7,7 +5,8 @@ import Slider from 'material-ui/Slider';
 import { changeVolume, pause, PLAY, resume, seek } from '../../lib/player-actions';
 import Sound from './Sound';
 
-class Controls extends Component {
+class Controls extends Component<any, any> {
+  slider: any;
   constructor(props) {
     super(props);
 
@@ -64,6 +63,7 @@ class Controls extends Component {
           onChange={(e, val) => this.setState({ val })}
           onDragStart={() => this.setState({ showTime: true })}
           onDragStop={this.seek}
+          //@ts-ignore
           ref={ref => ref && (this.slider = ref.track)}
           sliderStyle={styles.sliderStyle}
           value={playPercent}
@@ -110,8 +110,7 @@ const styles = {
     bottom: '3rem',
     position: 'fixed',
     width: '4rem',
-  },
-
+  } as React.CSSProperties,
   container: {
     alignItems: 'stretch',
     backgroundColor: '#2196F3',
@@ -119,32 +118,28 @@ const styles = {
     display: 'flex',
     height: '3rem',
     width: '100%',
-  },
-
+  } as React.CSSProperties,
   icon: {
     cursor: 'pointer',
     display: 'block',
     fontSize: '2rem',
     marginLeft: 10,
     width: '2rem',
-  },
-
+  } as React.CSSProperties,
   slider: {
     display: 'flex',
     flexDirection: 'column',
     flexGrow: 1,
     justifyContent: 'center',
     position: 'relative',
-  },
-
+  } as React.CSSProperties,
   sliderStyle: {
     margin: '0 1rem',
     width: 'inherit'
-  },
-
+  } as React.CSSProperties,
   verticalCenter: {
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center'
-  },
+  } as React.CSSProperties,
 };

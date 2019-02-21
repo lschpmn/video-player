@@ -1,11 +1,10 @@
 {
   "compilerOptions": {
-    "target": "esnext",
+    "target": "es6",
     "moduleResolution": "node",
-    "module": "commonjs",
     "inlineSources": true,
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
-    "jsx": "preserve"
+    "jsx": "react"
   }
 }

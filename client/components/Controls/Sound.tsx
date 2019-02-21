@@ -1,9 +1,8 @@
-'use strict';
-
 import React, { Component } from 'react';
 import Slider from 'material-ui/Slider';
 
-export default class Sound extends Component {
+export default class Sound extends Component<any, any> {
+  _id: any;
   constructor(props) {
     super(props);
 
@@ -52,16 +51,14 @@ const styles = {
     justifyContent: 'center',
     position: 'relative',
     width: '3rem',
-  },
-
+  } as React.CSSProperties,
   icon: {
     cursor: 'pointer',
     display: 'block',
     fontSize: '2rem',
     margin: '0 auto',
     width: '2rem',
-  },
-
+  } as React.CSSProperties,
   slider: {
     backgroundColor: 'black',
     bottom: '3rem',
@@ -70,5 +67,5 @@ const styles = {
     opacity: 0.6,
     paddingBottom: '1rem',
     position: 'absolute',
-  },
+  } as React.CSSProperties,
 };

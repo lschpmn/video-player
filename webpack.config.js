@@ -3,9 +3,11 @@
 const path = require('path');
 
 module.exports = {
-  entry: ['babel-polyfill', './client/index'],
+  entry: './client/index',
 
   mode: 'development',
+
+  target: 'electron-renderer',
 
   output: {
     filename: 'vendor.js',
@@ -19,48 +21,21 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            plugins: ['transform-object-rest-spread'],
-            presets: ['react', 'env'],
-          },
-        },
-      },
-
-      {
         test: /\.(png|svg|jpg|gif|html|ttf|woff2|woff|eot)$/,
         use: ['file-loader?name=[name].[ext]'],
       },
 
       {
-        test: /\.css$/,
-        use: ['style-loader', 'css-loader'],
-      },
-
-      {
-        test: /\.tsx?$/,
-        use: [
-          {
-            loader: 'babel-loader',
-            options: {
-              plugins: ['transform-object-rest-spread'],
-              presets: ['react', 'env'],
-            },
-          },
-          {
-            loader: 'ts-loader',
-          },
-        ],
+        test: /.tsx?$/,
+        exclude: /node_modules/,
+        loader: 'ts-loader',
       },
     ],
   },
 
   devtool: 'source-map',
 
-  serve: {
+  devServer:  {
     port: 5000,
   },
 };
