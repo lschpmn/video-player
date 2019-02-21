@@ -19,7 +19,7 @@ type State = {
   statusTimeoutId: number,
 };
 
-class Apps extends React.Component<Props, State> {
+class App extends React.Component<Props, State> {
   state = {
     statusTimeoutId: null,
   };
@@ -97,7 +97,7 @@ export default connect(
     start,
   }
 // @ts-ignore
-)(Apps);
+)(App);
 
 const styles: { [s:string]: React.CSSProperties } = {
   bottom: {
