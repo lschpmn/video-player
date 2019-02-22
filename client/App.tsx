@@ -13,14 +13,8 @@ type Props = {
   status: any,
 };
 
-type State = {
-  statusTimeoutId: number,
-};
-
-class App extends React.Component<Props, State> {
-  state = {
-    statusTimeoutId: null,
-  };
+class App extends React.Component<Props> {
+  statusTimeoutId?: number;
 
   async componentDidMount() {
     setTimeout(() => this.getStatus(), 2000);
@@ -28,26 +22,20 @@ class App extends React.Component<Props, State> {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.status.playerState === PLAY && !this.state.statusTimeoutId) this.getStatus();
-    else if (nextProps.status.playerState !== PLAY && this.state.statusTimeoutId) {
-      clearTimeout(this.state.statusTimeoutId);
-      this.setState({
-        statusTimeoutId: null,
-      });
+    if (nextProps.status.playerState === PLAY && !this.statusTimeoutId) this.getStatus();
+    else if (nextProps.status.playerState !== PLAY && this.statusTimeoutId) {
+      clearTimeout(this.statusTimeoutId);
+      this.statusTimeoutId = null;
     }
   }
 
   getStatus() {
     this.props.getStatus();
 
-    const id = setTimeout(() => {
+    this.statusTimeoutId = setTimeout(() => {
       if (this.props.status.playerState !== PLAY) return;
       this.getStatus();
     }, 1000) as any; //because the type system went stupid
-
-    this.setState({
-      statusTimeoutId: id,
-    });
   }
 
   playPause() {
@@ -73,10 +61,6 @@ class App extends React.Component<Props, State> {
 
           <div style={{ width: '20%' }}>
             Currently Playing
-            <div
-              dangerouslySetInnerHTML={{__html:'<google-cast-launcher/>'}}
-              style={styles.chromecastButton}
-            />
           </div>
         </div>
 
@@ -101,30 +85,27 @@ export default connect(
   }
 )(App);
 
-const styles: { [s:string]: React.CSSProperties } = {
+const styles = {
   bottom: {
     alignSelf: 'flex-end',
     width: '100%',
-  },
-
+  } as React.CSSProperties,
   chromecastButton: {
     float: 'right',
     height: '2.5rem',
     margin: '1rem',
     width: '2.5rem',
-  },
-
+  } as React.CSSProperties,
   parent: {
     alignItems: 'stretch',
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-  },
-
+  } as React.CSSProperties,
   top: {
     display: 'flex',
     flexDirection: 'row',
     flexGrow: 1,
     width: '100%',
-  },
+  } as React.CSSProperties,
 };
