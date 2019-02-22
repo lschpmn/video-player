@@ -1,7 +1,9 @@
+import Pause from '@material-ui/icons/Pause';
+import PlayArrow from '@material-ui/icons/PlayArrow';
 import Chip from 'material-ui/Chip';
+import Slider from 'material-ui/Slider';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import Slider from 'material-ui/Slider';
 import { changeVolume, pause, PLAY, resume, seek } from '../../lib/player-actions';
 import Sound from './Sound';
 
@@ -36,11 +38,12 @@ class Controls extends Component<any, any> {
 
     return <div style={styles.container}>
       <div style={styles.verticalCenter}>
-        <i
-          className={`fa fa-${isPlaying ? 'pause' : 'play'}`}
-          onClick={() => isMediaLoaded && click()}
-          style={styles.icon}
-        />
+        <div onMouseDown={() => isMediaLoaded && click()}>
+          {isPlaying
+            ? <PlayArrow style={styles.icon} />
+            : <Pause style={styles.icon} />
+          }
+        </div>
       </div>
 
       <Sound

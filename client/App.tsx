@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { getStatus, PLAY, pause, PAUSE, resume, start } from './lib/player-actions';
 import Controls from './components/Controls';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
+import { getStatus, pause, PAUSE, PLAY, resume, start } from './lib/player-actions';
 
 type Props = {
   getStatus: () => void,

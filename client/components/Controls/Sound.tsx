@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import VolumeUp from '@material-ui/icons/VolumeUp';
 import Slider from 'material-ui/Slider';
+import React, { Component } from 'react';
 
 export default class Sound extends Component<any, any> {
   _id: any;
@@ -36,10 +37,7 @@ export default class Sound extends Component<any, any> {
         />
       }
 
-      <i
-        className={'fa fa-volume-up'}
-        style={styles.icon}
-      />
+      <VolumeUp style={styles.icon} />
     </div>
   }
 }
