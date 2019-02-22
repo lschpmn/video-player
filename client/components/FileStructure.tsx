@@ -2,13 +2,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { inspectFile, getDrives, getFiles } from '../lib/file-actions';
 import DirectoryStructure from './DirectoryStructure';
-import { Directory, Inspections } from '../types';
+import { Directory, ExplorerState, Inspections } from '../types';
 
 type Props = {
   inspectFile: typeof inspectFile,
   getDrives: typeof getDrives,
   getFiles: typeof getFiles,
-  drives: DirectoryStructure,
+  drives: Directory,
   inspections: Inspections,
 };
 
@@ -16,10 +16,6 @@ class FileStructure extends React.Component<Props> {
   componentDidMount() {
     this.props.getDrives();
   }
-
-  getFiles = (location: string[]) => {
-    return this.props.getFiles(location);
-  };
 
   render() {
     const { drives } = this.props;
@@ -34,7 +30,7 @@ class FileStructure extends React.Component<Props> {
               inspectFile={this.props.inspectFile}
               inspections={this.props.inspections}
               key={drive}
-              onClick={this.getFiles}
+              onClick={this.props.getFiles}
               location={[drive]}
             />
           ))
@@ -53,7 +49,7 @@ const styles = {
 };
 
 export default connect(
-  (state: any) => ({
+  (state: { explorer: ExplorerState }) => ({
     drives: state.explorer.drives,
     inspections: state.explorer.inspections,
   }),
@@ -62,5 +58,4 @@ export default connect(
     getDrives,
     getFiles,
   }
-// @ts-ignore
 )(FileStructure);

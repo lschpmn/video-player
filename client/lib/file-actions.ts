@@ -6,7 +6,7 @@ export const GET_DRIVES = 'file/GET_DRIVES';
 export const GET_FILES = 'file/GET_FILES';
 export const INSPECT_FILE = 'INSPECT_FILE';
 
-export function getDrives() {
+export function getDrives(): object {
   return async dispatch => {
     const response = await axios.get(HOST + '/get-drives');
 
@@ -17,7 +17,7 @@ export function getDrives() {
   };
 }
 
-export function getFiles(location: string[]) {
+export function getFiles(location: string[]): object {
   return async dispatch => {
     const path = (join(...location) + '/').replace(':.', ':');
     console.log('getFiles');
@@ -35,7 +35,7 @@ export function getFiles(location: string[]) {
   };
 }
 
-export function inspectFile(path: string) {
+export function inspectFile(path: string): object {
   return async dispatch => {
     try {
       const response = await axios.get(`${HOST}/inspect/${encodeURIComponent(path)}`);
