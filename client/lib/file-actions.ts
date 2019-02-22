@@ -19,7 +19,7 @@ export function getDrives() {
 
 export function getFiles(location: string[]) {
   return async dispatch => {
-    const path = join(...location) + '/';
+    const path = (join(...location) + '/').replace(':.', ':');
     console.log('getFiles');
     console.log(path);
 

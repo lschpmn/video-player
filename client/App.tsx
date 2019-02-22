@@ -51,15 +51,15 @@ class App extends React.Component<Props> {
     >
       <div style={styles.parent}>
         <div style={styles.top}>
-          <div style={{ width: '20%' }}>
+          <div style={{ flex: 1 }}>
             <FileStructure />
           </div>
 
-          <div style={{ width: '60%' }}>
+          <div style={{ flex: 3 }}>
             <div style={{ marginLeft: '1rem' }}>Explorer</div>
           </div>
 
-          <div style={{ width: '20%' }}>
+          <div style={{ flex: 1 }}>
             Currently Playing
           </div>
         </div>
