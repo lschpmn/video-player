@@ -1,8 +1,8 @@
 import { cloneDeep, set } from 'lodash';
 import { combineReducers } from 'redux';
+import { Directory, ExplorerState, PlayerState } from '../types';
 import { GET_DRIVES, GET_FILES, INSPECT_FILE } from './file-actions';
 import { PAUSE, UPDATE_STATUS } from './player-actions';
-import { ExplorerState, Directory, PlayerState } from '../types';
 
 type Action = {
   type: string,
@@ -10,6 +10,7 @@ type Action = {
 };
 
 const defaultStateExplorer = {
+  currentLocation: [],
   drives: {},
   inspections: {},
 };
@@ -36,6 +37,7 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
 
       return {
         ...state,
+        currentLocation: location,
         drives: newDrives,
       };
     }

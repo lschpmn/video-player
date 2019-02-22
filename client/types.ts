@@ -8,6 +8,7 @@ export interface CommandStart extends Command{
 }
 
 export type ExplorerState = {
+  currentLocation: string[],
   drives: Directory,
   inspections: Inspections,
 };
