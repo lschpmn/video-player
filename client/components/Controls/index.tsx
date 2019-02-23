@@ -40,8 +40,8 @@ class Controls extends Component<any, any> {
       <div style={styles.verticalCenter}>
         <div onMouseDown={() => isMediaLoaded && click()}>
           {isPlaying
-            ? <PlayArrow style={styles.icon} />
-            : <Pause style={styles.icon} />
+            ? <Pause style={styles.icon} />
+            : <PlayArrow style={styles.icon} />
           }
         </div>
       </div>
