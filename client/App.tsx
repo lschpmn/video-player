@@ -1,6 +1,8 @@
+import blue from '@material-ui/core/colors/blue';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Controls from './components/Controls';
+import Explorer from './components/Explorer';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
 import { getStatus, pause, PAUSE, PLAY, resume, start } from './lib/player-actions';
@@ -50,13 +52,15 @@ class App extends React.Component<Props> {
       start={start}
     >
       <div style={styles.parent}>
+        <div style={{...styles.top, backgroundColor: blue['500'], flex: 1}}>
+        </div>
         <div style={styles.top}>
-          <div style={{ flex: 1 }}>
+          <div style={{ flex: 1, overflow: 'auto' }}>
             <FileStructure />
           </div>
 
           <div style={{ flex: 3 }}>
-            <div style={{ marginLeft: '1rem' }}>Explorer</div>
+            <Explorer />
           </div>
 
           <div style={{ flex: 1 }}>
@@ -105,7 +109,7 @@ const styles = {
   top: {
     display: 'flex',
     flexDirection: 'row',
-    flexGrow: 1,
+    flex: 9,
     width: '100%',
   } as React.CSSProperties,
 };

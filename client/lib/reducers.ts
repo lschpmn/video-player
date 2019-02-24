@@ -79,13 +79,3 @@ export default combineReducers({
   explorer,
   status,
 });
-
-/**
- * @typedef {Object} Status
- * @property {String} contentId
- * @property {Number} currentTime
- * @property {Number} duration
- * @property {String} playerState
- * @property {{level: Number, muted: Boolean}} volume
- * @property {{width:Number, height: Number}} videoInfo
- */

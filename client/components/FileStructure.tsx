@@ -41,10 +41,7 @@ class FileStructure extends React.Component<Props> {
 
 const styles = {
   container: {
-    height: '100%',
     margin: '0 0.5rem',
-    overflow: 'auto',
-    width: '100%',
   },
 };
 

@@ -44,3 +44,8 @@ export type PlayerState = {
     height: number,
   },
 };
+
+export type ReducerState = {
+  explorer: ExplorerState,
+  status: PlayerState,
+};
