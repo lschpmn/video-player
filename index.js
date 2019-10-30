@@ -5,7 +5,13 @@ const { app, BrowserWindow } = require('electron');
 let win;
 
 function createWindow() {
-  win = new BrowserWindow({ width: 800, height: 600 });
+  win = new BrowserWindow({
+    height: 600,
+    webPreferences: {
+      nodeIntegration: true,
+    },
+    width: 800,
+  });
 
   win.loadURL('http://localhost:5000');
 
