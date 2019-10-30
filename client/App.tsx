@@ -55,16 +55,16 @@ class App extends React.Component<Props> {
         <div style={{...styles.top, backgroundColor: blue['500'], flex: 1}}>
         </div>
         <div style={styles.top}>
-          <div style={{ flex: 1, overflow: 'auto' }}>
-            <FileStructure />
+          <div style={{ flex: 1 }}>
+            Currently Playing
           </div>
 
           <div style={{ flex: 3 }}>
             <Explorer />
           </div>
 
-          <div style={{ flex: 1 }}>
-            Currently Playing
+          <div style={{ flex: 1, overflow: 'auto' }}>
+            <FileStructure />
           </div>
         </div>
 
