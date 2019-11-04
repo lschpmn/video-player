@@ -6,11 +6,11 @@ let win;
 
 function createWindow() {
   win = new BrowserWindow({
-    height: 600,
+    height: 720,
     webPreferences: {
       nodeIntegration: true,
     },
-    width: 800,
+    width: 1280,
   });
 
   win.loadURL('http://localhost:5000');

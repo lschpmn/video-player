@@ -1,13 +1,14 @@
 import axios from 'axios';
+import { PORT } from '../../constants';
 
 export const PLAY = 'PLAYING';
 export const PAUSE = 'PAUSED';
 export const UPDATE_STATUS = 'UPDATE_STATUS';
 
-const c = path => `http://localhost:3000/api/cast${path}`;
-const f = path => `http://localhost:3000/api/files${path}`;
-const HOST = 'http://localhost:3000/api/cast/';
-const NEW_HOST = 'http://localhost:3001/api/';
+const c = path => `http://localhost:${PORT}/api/cast${path}`;
+const f = path => `http://localhost:${PORT}/api/files${path}`;
+const HOST = `http://localhost:${PORT}/api/cast/`;
+const NEW_HOST = `http://localhost:${PORT}/api/`;
 
 export function changeVolume(dispatch) {
   return volume => {

@@ -59,12 +59,3 @@ export default class ChromecastEmitter {
     });
   }
 }
-
-async function start() {
-  const chromecasts = await ChromecastEmitter.GetChromecasts();
-  console.log(chromecasts);
-
-  const chromecast = new ChromecastEmitter(chromecasts[0].host);
-}
-
-start().catch(console.log);

@@ -3,6 +3,7 @@ import { Request, Response, Router, static as expressStatic } from 'express';
 import { address } from 'ip';
 import { inspectAsync as inspect, listAsync as list } from 'fs-jetpack';
 import { errorHandler } from './utils';
+import { PORT } from '../constants';
 
 const ipAddress = address();
 const filesRouter = Router();
@@ -29,7 +30,7 @@ filesRouter.get('/get-file-url/:path', errorHandler(async (req: Request, res: Re
     setHeaders: res => res.type('video/mp4'),
   }));
 
-  fileUrlMap[path] = `http://${ipAddress}:3000/api/files/${tmpName}.mp4`;
+  fileUrlMap[path] = `http://${ipAddress}:${PORT}/api/files/${tmpName}.mp4`;
   console.log(`url: ${fileUrlMap[path]}`);
   res.send(fileUrlMap[path]);
 }));
