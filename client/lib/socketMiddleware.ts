@@ -3,9 +3,13 @@ import { PORT } from '../../constants';
 
 const socket = io(`http://localhost:${PORT}`);
 
-export default store => next => action => {
-  console.log(action.type);
-  if (action.type.includes('@server')) socket.emit('dispatch', action);
+export default store => {
+  socket.on('dispatch', action => store.dispatch(action));
 
-  return next(action);
+  return next => action => {
+    console.log(action);
+    if (action.type.includes('@server')) socket.emit('dispatch', action);
+
+    return next(action);
+  };
 };

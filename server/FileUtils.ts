@@ -4,8 +4,9 @@ import { inspectAsync, listAsync } from 'fs-jetpack';
 import { address } from 'ip';
 import { PORT } from '../constants';
 
+export const FilesRouter = Router();
+
 const ipAddress = address();
-const filesRouter = Router();
 const fileUrlMap: { [s: string]: string } = {};
 
 export function getDrives() {
@@ -20,13 +21,21 @@ export function getDrives() {
   });
 }
 
+export async function getFiles(location: string) {
+  const files = await listAsync(location);
+
+  console.log(`files for path ${location}`);
+  console.log(files);
+  return files;
+}
+
 export async function getFileUrl(path: string) {
 
   if (fileUrlMap[path]) return fileUrlMap[path];
 
   const tmpName = Math.random().toString(36).slice(-2);
 
-  filesRouter.use(`/${tmpName}.mp4`, expressStatic(path, {
+  FilesRouter.use(`/${tmpName}.mp4`, expressStatic(path, {
     setHeaders: res => res.type('video/mp4'),
   }));
 
@@ -35,19 +44,17 @@ export async function getFileUrl(path: string) {
   return fileUrlMap[path]
 }
 
-export async function list(path: string) {
-  const files = await listAsync(path);
+export async function inspectFile(path: string) {
+  try {
+    const file = await inspectAsync(path);
 
-  console.log(`files for path ${path}`);
-  console.log(files);
-  return files;
-}
+    console.log(`for ${path}`);
+    console.log(file);
 
-export async function inspect(path: string) {
-  const file = await inspectAsync(path);
-
-  console.log(`for ${path}`);
-  console.log(file);
-
-  return file;
+    return file;
+  } catch (err) {
+    return {
+      type: 'forbidden',
+    };
+  }
 }

@@ -1,7 +1,7 @@
 import { cloneDeep, set } from 'lodash';
 import { combineReducers } from 'redux';
 import { Directory, ExplorerState, PlayerState } from '../types';
-import { GET_DRIVES, GET_FILES, INSPECT_FILE } from './file-actions';
+import { GET_DRIVES, GET_FILES, INSPECT_FILE } from '../../constants';
 import { PAUSED, UPDATE_STATUS } from './player-actions';
 
 type Action = {

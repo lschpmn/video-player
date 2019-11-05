@@ -14,7 +14,6 @@ class Explorer extends React.Component<Props> {
     const drives = explorer.currentLocation.length
       ? Object.keys(get(explorer.drives, explorer.currentLocation))
       : Object.keys(explorer.drives);
-    console.log(drives);
 
     return <div style={styles.container}>
       {drives.map(drive =>

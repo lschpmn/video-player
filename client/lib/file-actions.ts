@@ -1,63 +1,16 @@
-import axios from 'axios';
-import { join } from 'path';
-import { PORT } from '../../constants';
+import { GET_DRIVES_SERVER, GET_FILES_SERVER, INSPECT_FILE_SERVER } from '../../constants';
 
-const HOST = `http://localhost:${PORT}/api/files`;
-export const GET_DRIVES = 'file/GET_DRIVES';
-export const GET_FILES = 'file/GET_FILES';
-export const INSPECT_FILE = 'INSPECT_FILE';
+export const getDrives = () => ({
+  type: GET_DRIVES_SERVER,
+});
 
-export function getDrives(): object {
-  return async dispatch => {
-    const response = await axios.get(HOST + '/get-drives');
 
-    return dispatch({
-      type: GET_DRIVES,
-      payload: response.data,
-    });
-  };
-}
+export const getFiles = (location: string[]) => ({
+  payload: location,
+  type: GET_FILES_SERVER,
+});
 
-export function getFiles(location: string[]): object {
-  return async dispatch => {
-    const path = (join(...location) + '/').replace(':.', ':');
-    console.log('getFiles');
-    console.log(path);
-
-    const response = await axios.get(`${HOST}/list/${encodeURIComponent(path)}`);
-
-    return dispatch({
-      type: GET_FILES,
-      payload: {
-        location,
-        files: response.data,
-      },
-    });
-  };
-}
-
-export function inspectFile(path: string): object {
-  return async dispatch => {
-    try {
-      const response = await axios.get(`${HOST}/inspect/${encodeURIComponent(path)}`);
-
-      return dispatch({
-        type: INSPECT_FILE,
-        payload: {
-          path,
-          inspection: response.data,
-        },
-      });
-    } catch (err) {
-      return dispatch({
-        type: INSPECT_FILE,
-        payload: {
-          path,
-          inspection: {
-            type: 'forbidden',
-          },
-        },
-      });
-    }
-  };
-}
+export const inspectFile = (path: string) => ({
+  payload: path,
+  type: INSPECT_FILE_SERVER,
+});
