@@ -4,7 +4,6 @@ export const getDrives = () => ({
   type: GET_DRIVES_SERVER,
 });
 
-
 export const getFiles = (location: string[]) => ({
   payload: location,
   type: GET_FILES_SERVER,

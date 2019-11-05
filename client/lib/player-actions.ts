@@ -4,7 +4,6 @@ export const PLAYING = 'PLAYING';
 export const PAUSED = 'PAUSED';
 export const UPDATE_STATUS = 'UPDATE_STATUS';
 
-
 export const changeVolume = (volume: number) => ({
   payload: volume,
   type: CHANGE_VOLUME,

@@ -1,6 +1,5 @@
 import { GET_DRIVES, GET_FILES, INSPECT_FILE, SET_CHROMECASTS } from '../constants';
 
-
 export const getDrivesAction = drives => ({
   payload: drives,
   type: GET_DRIVES,

@@ -4,13 +4,13 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import App from './App';
+import loggerMiddleware from './lib/loggerMiddleware';
 import reducers from './lib/reducers';
 import socketMiddleware from './lib/socketMiddleware';
 
 import './index.html';
 
-const store = createStore(reducers, applyMiddleware(socketMiddleware));
-store.subscribe(() => console.log(store.getState()));
+const store = createStore(reducers, applyMiddleware(loggerMiddleware, socketMiddleware));
 
 render((
   <Provider store={store}>
