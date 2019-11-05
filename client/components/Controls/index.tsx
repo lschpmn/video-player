@@ -4,42 +4,52 @@ import Chip from 'material-ui/Chip';
 import Slider from 'material-ui/Slider';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { changeVolume, pause, PLAYING, resume, seek } from '../../lib/player-actions';
-import { PLAY as PLAY_IT } from '../../../constants';
+import { changeVolume, pause, play, PLAYING, seek } from '../../lib/player-actions';
+import { PlayerState } from '../../types';
 import Sound from './Sound';
 
-class Controls extends Component<any, any> {
+type State = {
+  seekId?: number,
+  showTime: boolean,
+  x: number,
+  val: number,
+};
+
+type Props = {
+  changeVolume: typeof changeVolume,
+  pause: typeof pause,
+  play: typeof play,
+  seek: typeof seek,
+  status: PlayerState,
+};
+
+class Controls extends Component<Props, State> {
   slider: any;
-  constructor(props) {
-    super(props);
 
-    this.state = {
-      seekId: null,
-      showTime: false,
-      x: 0,
-      val: 0,
-    };
+  state = {
+    seekId: null,
+    showTime: false,
+    x: 0,
+    val: 0,
+  };
 
-    this.seek = this.seek.bind(this);
-  }
-
-  seek() {
+  seek = () => {
     this.setState({showTime: false});
     const { duration } = this.props.status;
     this.props.seek(this.state.val * duration);
-  }
+  };
 
   render() {
-    const { changeVolume, pause, resume, testPlay } = this.props;
+    const { changeVolume, pause, play } = this.props;
     const { contentId, currentTime, duration, playerState, volume } = this.props.status;
     const isMediaLoaded = contentId !== '';
     const isPlaying = playerState === PLAYING;
-    const click = isPlaying ? pause : resume;
+    const click = isPlaying ? pause : play;
     const playPercent = currentTime / (duration || 1);
 
     return <div style={styles.container}>
       <div style={styles.verticalCenter}>
-        <div onMouseDown={() => testPlay()}>
+        <div onMouseDown={() => click()}>
           {isPlaying
             ? <Pause style={styles.icon} />
             : <PlayArrow style={styles.icon} />
@@ -100,19 +110,15 @@ function leadZero(num) {
 }
 
 export default connect(
-  state => state,
-  dispatch => ({
-    changeVolume: changeVolume(dispatch),
-    pause: pause(dispatch),
-    resume: resume(dispatch),
-    seek: seek(dispatch),
-    testPlay: () => {
-      dispatch({
-        payload: Date.now(),
-        type: PLAY_IT,
-      });
-    },
+  (state: { status: PlayerState }) => ({
+    status: state.status,
   }),
+  {
+    changeVolume,
+    pause,
+    play,
+    seek,
+  }
 )(Controls);
 
 const styles = {

@@ -5,13 +5,13 @@ import Controls from './components/Controls';
 import Explorer from './components/Explorer';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
-import { getStatus, pause, PAUSED, PLAYING } from './lib/player-actions';
+import { getStatus, launch, pause, PAUSED, play, PLAYING } from './lib/player-actions';
 
 type Props = {
-  getStatus: () => void,
-  pause: () => void,
-  resume: () => void,
-  start: (path: string) => void,
+  getStatus: typeof getStatus,
+  pause: typeof pause,
+  play: typeof play,
+  launch: typeof launch,
   status: any,
 };
 
@@ -42,14 +42,14 @@ class App extends React.Component<Props> {
 
   playPause() {
     if (this.props.status.playerState === PLAYING) this.props.pause();
-    if (this.props.status.playerState === PAUSED) this.props.resume();
+    if (this.props.status.playerState === PAUSED) this.props.play();
   }
 
   render() {
-    const { start } = this.props;
+    const { launch } = this.props;
 
     return <FileUpload
-      start={start}
+      start={launch}
     >
       <div style={styles.parent}>
         <div style={{...styles.top, backgroundColor: blue['500'], flex: 1}}>
@@ -83,7 +83,9 @@ export default connect(
   }),
   {
     getStatus,
+    launch,
     pause,
+    play,
   }
 )(App);
 
