@@ -1,18 +1,21 @@
 import { Client } from 'castv2';
 import * as multicastdns from 'multicast-dns';
+import { Action } from 'redux';
 import Timeout = NodeJS.Timeout;
 
 export default class ChromecastEmitter {
-  client: typeof Client;
-  connection: any;
-  heartbeat: any;
-  heartbeatId: Timeout;
-  receiver: any;
+  private client: typeof Client;
+  private connection: any;
+  private heartbeat: any;
+  private heartbeatId: Timeout;
+  private receiver: any;
 
   static GetChromecasts(): Promise<{ host: string, name: string }[]> {
     const mdns = multicastdns();
 
     return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => reject('Timeout'), 30000);
+
       mdns.once('response', (response) => {
         console.log('mdns query answered');
         const casts = [];
@@ -28,6 +31,7 @@ export default class ChromecastEmitter {
         resolve(casts);
 
         mdns.destroy();
+        clearTimeout(timeoutId);
       });
 
       console.log('Making mdns query');
@@ -35,7 +39,7 @@ export default class ChromecastEmitter {
     });
   }
 
-  constructor(playerAddress: string) {
+  constructor(playerAddress: string, listener: (action: Action) => void) {
     this.client = new Client();
 
     this.client.connect(playerAddress, () => {

@@ -1,4 +1,4 @@
-import { GET_DRIVES, GET_FILES, INSPECT_FILE } from '../constants';
+import { GET_DRIVES, GET_FILES, INSPECT_FILE, SET_CHROMECASTS } from '../constants';
 
 
 export const getDrivesAction = drives => ({
@@ -20,4 +20,9 @@ export const inspectFileAction = (inspection, path) => ({
     path,
   },
   type: INSPECT_FILE,
+});
+
+export const setChromecasts = chromecasts => ({
+  payload: chromecasts,
+  type: SET_CHROMECASTS,
 });

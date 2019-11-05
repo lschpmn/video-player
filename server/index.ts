@@ -1,8 +1,16 @@
 import { createServer } from 'http';
 import { join } from 'path';
 import * as socketIO from 'socket.io';
-import { GET_DRIVES_SERVER, GET_FILES_SERVER, INSPECT_FILE_SERVER, PORT } from '../constants';
-import { getDrivesAction, getFilesAction, inspectFileAction } from './action-creators';
+import {
+  CONNECT,
+  GET_CHROMECASTS,
+  GET_DRIVES_SERVER,
+  GET_FILES_SERVER,
+  INSPECT_FILE_SERVER,
+  PORT,
+} from '../constants';
+import { getDrivesAction, getFilesAction, inspectFileAction, setChromecasts } from './action-creators';
+import ChromecastEmitter from './ChromecastEmitter';
 import { FilesRouter, getDrives, getFiles, inspectFile } from './FileUtils';
 
 const bodyParser = require('body-parser');
@@ -22,8 +30,10 @@ io.on('connection', socket => {
     console.log(type);
     console.log(payload);
     const dispatch = action => socket.emit('dispatch', action);
+    let chromecastEmitter;
 
     switch (type) {
+      // files
       case GET_DRIVES_SERVER:
         dispatch(getDrivesAction(await getDrives()));
         return;
@@ -33,6 +43,14 @@ io.on('connection', socket => {
         return;
       case INSPECT_FILE_SERVER:
         dispatch(inspectFileAction(await inspectFile(payload), payload));
+        return;
+
+      // player
+      case CONNECT:
+        chromecastEmitter = new ChromecastEmitter(payload, dispatch);
+        return;
+      case GET_CHROMECASTS:
+        dispatch(setChromecasts(await ChromecastEmitter.GetChromecasts()));
         return;
     }
 

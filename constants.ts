@@ -13,8 +13,11 @@ export const INSPECT_FILE_SERVER = 'INSPECT_FILE@server';
 
 //player
 export const CHANGE_VOLUME = 'CHANGE_VOLUME@server';
-export const PAUSE = 'PAUSED@server';
-export const PLAY = 'PLAYING@server';
-export const SEEK = '';
+export const CONNECT = 'CONNECT@server';
+export const GET_CHROMECASTS = 'GET_CHROMECASTS@server';
 export const GET_STATUS = 'GET_STATUS@server';
 export const LAUNCH  = 'LAUNCH@server';
+export const PAUSE = 'PAUSED@server';
+export const PLAY = 'PLAYING@server';
+export const SEEK = 'SEEK@server';
+export const SET_CHROMECASTS = 'SET_CHROMECASTS';
