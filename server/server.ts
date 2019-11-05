@@ -10,11 +10,13 @@ const express = require('express');
 const app = express();
 const server = createServer(app);
 const io = socketIO(server, {
-  origins: '*',
+  origins: '*:*',
 });
 
 io.on('connection', socket => {
-  socket.on('request', ({ type, payload }) => {
+  console.log('client connected');
+
+  socket.on('dispatch', ({ type, payload }) => {
 
   });
 });
@@ -25,4 +27,4 @@ app.use(cors());
 app.use('/api/cast', ChromecastRouter);
 app.use('/api/files', FilesRouter);
 
-app.listen(PORT, () => console.log(`server running on port ${PORT}`));
+server.listen(PORT, () => console.log(`server running on port ${PORT}`));
