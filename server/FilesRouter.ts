@@ -2,7 +2,6 @@ import { exec } from 'child_process';
 import { Request, Response, Router, static as expressStatic } from 'express';
 import { address } from 'ip';
 import { inspectAsync as inspect, listAsync as list } from 'fs-jetpack';
-import { errorHandler } from './utils';
 import { PORT } from '../constants';
 
 const ipAddress = address();
@@ -55,3 +54,13 @@ filesRouter.get('/inspect/:path', errorHandler(async (req: Request, res: Respons
 }));
 
 export default filesRouter;
+
+function errorHandler(handler) {
+  return async (req, res, next) => {
+    try {
+      await handler(req, res);
+    } catch (err) {
+      next(err);
+    }
+  }
+}

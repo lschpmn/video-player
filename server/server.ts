@@ -1,8 +1,8 @@
-import * as socketIO from 'socket.io';
 import { createServer } from 'http';
-import ChromecastRouter from './ChromecastRouter';
-import FilesRouter from './FilesRouter';
+import * as socketIO from 'socket.io';
 import { PORT } from '../constants';
+import FilesRouter from './FilesRouter';
+
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const express = require('express');
@@ -25,7 +25,6 @@ io.on('connection', socket => {
 app.use(bodyParser.json());
 app.use(cors());
 
-app.use('/api/cast', ChromecastRouter);
 app.use('/api/files', FilesRouter);
 
 server.listen(PORT, () => console.log(`server running on port ${PORT}`));
