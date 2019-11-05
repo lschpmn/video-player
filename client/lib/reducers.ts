@@ -2,7 +2,7 @@ import { cloneDeep, set } from 'lodash';
 import { combineReducers } from 'redux';
 import { Directory, ExplorerState, PlayerState } from '../types';
 import { GET_DRIVES, GET_FILES, INSPECT_FILE } from './file-actions';
-import { PAUSE, UPDATE_STATUS } from './player-actions';
+import { PAUSED, UPDATE_STATUS } from './player-actions';
 
 type Action = {
   type: string,
@@ -61,7 +61,7 @@ const defaultStateStatus: PlayerState = {
   contentId: '',
   currentTime: 0,
   duration: 0,
-  playerState: PAUSE,
+  playerState: PAUSED,
   volume: { level: 1, muted: false },
   videoInfo: { width: 0, height: 0, },
 };

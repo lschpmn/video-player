@@ -4,7 +4,8 @@ import Chip from 'material-ui/Chip';
 import Slider from 'material-ui/Slider';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { changeVolume, pause, PLAY, resume, seek } from '../../lib/player-actions';
+import { changeVolume, pause, PLAYING, resume, seek } from '../../lib/player-actions';
+import { PLAY as PLAY_IT } from '../../../constants';
 import Sound from './Sound';
 
 class Controls extends Component<any, any> {
@@ -29,16 +30,16 @@ class Controls extends Component<any, any> {
   }
 
   render() {
-    const { changeVolume, pause, resume } = this.props;
+    const { changeVolume, pause, resume, testPlay } = this.props;
     const { contentId, currentTime, duration, playerState, volume } = this.props.status;
     const isMediaLoaded = contentId !== '';
-    const isPlaying = playerState === PLAY;
+    const isPlaying = playerState === PLAYING;
     const click = isPlaying ? pause : resume;
     const playPercent = currentTime / (duration || 1);
 
     return <div style={styles.container}>
       <div style={styles.verticalCenter}>
-        <div onMouseDown={() => isMediaLoaded && click()}>
+        <div onMouseDown={() => testPlay()}>
           {isPlaying
             ? <Pause style={styles.icon} />
             : <PlayArrow style={styles.icon} />
@@ -105,6 +106,12 @@ export default connect(
     pause: pause(dispatch),
     resume: resume(dispatch),
     seek: seek(dispatch),
+    testPlay: () => {
+      dispatch({
+        payload: Date.now(),
+        type: PLAY_IT,
+      });
+    },
   }),
 )(Controls);
 

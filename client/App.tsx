@@ -5,7 +5,7 @@ import Controls from './components/Controls';
 import Explorer from './components/Explorer';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
-import { getStatus, pause, PAUSE, PLAY, resume, start } from './lib/player-actions';
+import { getStatus, pause, PAUSED, PLAYING } from './lib/player-actions';
 
 type Props = {
   getStatus: () => void,
@@ -24,8 +24,8 @@ class App extends React.Component<Props> {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (nextProps.status.playerState === PLAY && !this.statusTimeoutId) this.getStatus();
-    else if (nextProps.status.playerState !== PLAY && this.statusTimeoutId) {
+    if (nextProps.status.playerState === PLAYING && !this.statusTimeoutId) this.getStatus();
+    else if (nextProps.status.playerState !== PLAYING && this.statusTimeoutId) {
       clearTimeout(this.statusTimeoutId);
       this.statusTimeoutId = null;
     }
@@ -35,14 +35,14 @@ class App extends React.Component<Props> {
     this.props.getStatus();
 
     this.statusTimeoutId = setTimeout(() => {
-      if (this.props.status.playerState !== PLAY) return;
+      if (this.props.status.playerState !== PLAYING) return;
       this.getStatus();
     }, 1000) as any; //because the type system went stupid
   }
 
   playPause() {
-    if (this.props.status.playerState === PLAY) this.props.pause();
-    if (this.props.status.playerState === PAUSE) this.props.resume();
+    if (this.props.status.playerState === PLAYING) this.props.pause();
+    if (this.props.status.playerState === PAUSED) this.props.resume();
   }
 
   render() {
@@ -83,8 +83,6 @@ export default connect(
   }),
   {
     getStatus,
-    start,
-    resume,
     pause,
   }
 )(App);
