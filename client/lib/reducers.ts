@@ -33,12 +33,12 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
 
       files.forEach(file => directory[file] = true);
 
-      const newDrives = set(cloneDeep(state.drives), location, directory);
+      const drives = set(cloneDeep(state.drives), location, directory);
 
       return {
         ...state,
         currentLocation: location,
-        drives: newDrives,
+        drives,
       };
     }
     case INSPECT_FILE: {
@@ -48,7 +48,7 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
         ...state,
         inspections: {
           ...state.inspections,
-          [path]: inspection
+          [path]: inspection,
         },
       };
     }
@@ -63,7 +63,7 @@ const defaultStateStatus: PlayerState = {
   duration: 0,
   playerState: PAUSED,
   volume: { level: 1, muted: false },
-  videoInfo: { width: 0, height: 0, },
+  videoInfo: { width: 0, height: 0 },
 };
 
 function status(state: PlayerState = defaultStateStatus, action) {

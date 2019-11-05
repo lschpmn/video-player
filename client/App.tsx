@@ -23,9 +23,9 @@ class App extends React.Component<Props> {
     document.addEventListener('keydown', e => e.key === ' ' && this.playPause());
   }
 
-  componentWillReceiveProps(nextProps) {
-    if (nextProps.status.playerState === PLAYING && !this.statusTimeoutId) this.getStatus();
-    else if (nextProps.status.playerState !== PLAYING && this.statusTimeoutId) {
+  componentDidUpdate() {
+    if (this.props.status.playerState === PLAYING && !this.statusTimeoutId) this.getStatus();
+    else if (this.props.status.playerState !== PLAYING && this.statusTimeoutId) {
       clearTimeout(this.statusTimeoutId);
       this.statusTimeoutId = null;
     }
