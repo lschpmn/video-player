@@ -1,7 +1,7 @@
 import { cloneDeep, set } from 'lodash';
 import { combineReducers } from 'redux';
-import { Directory, ExplorerState, PlayerState } from '../types';
-import { GET_DRIVES, GET_FILES, INSPECT_FILE } from '../../constants';
+import { CONNECT, GET_CHROMECASTS, GET_DRIVES, GET_FILES, INSPECT_FILE, SET_CHROMECASTS } from '../../constants';
+import { ChromecastStoreState, Directory, ExplorerState, PlayerState } from '../types';
 import { PAUSED, UPDATE_STATUS } from './player-actions';
 
 type Action = {
@@ -14,6 +14,35 @@ const defaultStateExplorer = {
   drives: {},
   inspections: {},
 };
+
+const defaultChromecastStore = {
+  chromecasts: [],
+  loading: false,
+  selected: null,
+};
+
+function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, action: Action) {
+  switch (action.type) {
+    case CONNECT:
+      return {
+        ...state,
+        selected: action.payload,
+      };
+    case GET_CHROMECASTS:
+      return {
+        ...state,
+        loading: true,
+      };
+    case SET_CHROMECASTS:
+      return {
+        ...state,
+        chromecasts: action.payload,
+        loading: false,
+      };
+    default:
+      return state;
+  }
+}
 
 function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
   switch (action.type) {
@@ -76,6 +105,7 @@ function status(state: PlayerState = defaultStateStatus, action) {
 }
 
 export default combineReducers({
+  chromecastStore,
   explorer,
   status,
 });

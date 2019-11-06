@@ -1,11 +1,10 @@
-export interface Command {
-  address: string,
-}
+import { ChromecastInfo } from '../types';
 
-export interface CommandStart extends Command{
-  address: string,
-  url: string,
-}
+export type ChromecastStoreState = {
+  chromecasts: ChromecastInfo[],
+  loading: boolean,
+  selected?: ChromecastInfo,
+};
 
 export type ExplorerState = {
   currentLocation: string[],
@@ -46,6 +45,7 @@ export type PlayerState = {
 };
 
 export type ReducerState = {
+  chromecastStore: ChromecastStoreState,
   explorer: ExplorerState,
   status: PlayerState,
 };

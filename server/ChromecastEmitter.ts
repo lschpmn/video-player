@@ -1,6 +1,7 @@
 import { Client } from 'castv2';
 import * as multicastdns from 'multicast-dns';
 import { Action } from 'redux';
+import { ChromecastInfo } from '../types';
 import Timeout = NodeJS.Timeout;
 
 export default class ChromecastEmitter {
@@ -10,7 +11,7 @@ export default class ChromecastEmitter {
   private heartbeatId: Timeout;
   private receiver: any;
 
-  static GetChromecasts(): Promise<{ host: string, name: string }[]> {
+  static GetChromecasts(): Promise<ChromecastInfo[]> {
     const mdns = multicastdns();
 
     return new Promise((resolve, reject) => {

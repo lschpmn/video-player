@@ -5,6 +5,7 @@ import Controls from './components/Controls';
 import Explorer from './components/Explorer';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
+import Media from './components/Media';
 import { getStatus, launch, pause, PAUSED, play, PLAYING } from './lib/player-actions';
 
 type Props = {
@@ -56,7 +57,7 @@ class App extends React.Component<Props> {
         </div>
         <div style={styles.top}>
           <div style={{ flex: 1 }}>
-            Currently Playing
+            <Media />
           </div>
 
           <div style={{ flex: 3 }}>
