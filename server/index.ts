@@ -25,12 +25,12 @@ const io = socketIO(server, {
 
 io.on('connection', socket => {
   console.log('client connected');
+  let chromecastEmitter: ChromecastEmitter;
 
   socket.on('dispatch', async ({ type, payload }) => {
     console.log(type);
     console.log(payload);
     const dispatch = action => socket.emit('dispatch', action);
-    let chromecastEmitter;
 
     switch (type) {
       // files
@@ -53,7 +53,10 @@ io.on('connection', socket => {
         dispatch(setChromecasts(await ChromecastEmitter.GetChromecasts()));
         return;
     }
+  });
 
+  socket.on('disconnect', () => {
+    chromecastEmitter?.destroy();
   });
 });
 

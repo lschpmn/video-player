@@ -1,18 +1,18 @@
 import { Client } from 'castv2';
 import * as multicastdns from 'multicast-dns';
-import { ChromecastInfo } from '../types';
-import { setStatus } from './action-creators';
+import { Channel, ChromecastInfo } from '../types';
+import { closeConnection, setStatus } from './action-creators';
 import Timeout = NodeJS.Timeout;
 
 type Listener = (action: { type: string, payload: Object }) => void;
 
 export default class ChromecastEmitter {
   private client: typeof Client;
-  private connection: any;
-  private heartbeat: any;
+  private connection: Channel;
+  private heartbeat: Channel;
   private heartbeatId: Timeout;
   private listeners: Listener[] = [];
-  private receiver: any;
+  private receiver: Channel;
 
   static GetChromecasts(): Promise<ChromecastInfo[]> {
     const mdns = multicastdns();
@@ -68,6 +68,21 @@ export default class ChromecastEmitter {
         this.listener(setStatus(status));
       });
     });
+  }
+
+  destroy() {
+    if (this.connection) {
+      this.connection.send({ type: 'CLOSE' });
+      this.client.close();
+      this.connection.close();
+      this.heartbeat.close();
+      this.receiver.close();
+      clearInterval(this.heartbeatId);
+    }
+
+    this.listener(closeConnection());
+    this.listeners = [];
+    console.log('ChromecastEmitter destroyed');
   }
 
   private listener(action) {
