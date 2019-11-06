@@ -1,4 +1,4 @@
-import { GET_DRIVES, GET_FILES, INSPECT_FILE, SET_CHROMECASTS } from '../constants';
+import { GET_DRIVES, GET_FILES, INSPECT_FILE, SET_CHROMECASTS, SET_STATUS } from '../constants';
 
 export const getDrivesAction = drives => ({
   payload: drives,
@@ -11,6 +11,11 @@ export const getFilesAction = (files, location: string[]) => ({
     location,
   },
   type: GET_FILES,
+});
+
+export const setStatus = status => ({
+  payload: status,
+  type: SET_STATUS,
 });
 
 export const inspectFileAction = (inspection, path) => ({

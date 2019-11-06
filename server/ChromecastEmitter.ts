@@ -1,14 +1,17 @@
 import { Client } from 'castv2';
 import * as multicastdns from 'multicast-dns';
-import { Action } from 'redux';
 import { ChromecastInfo } from '../types';
+import { setStatus } from './action-creators';
 import Timeout = NodeJS.Timeout;
+
+type Listener = (action: { type: string, payload: Object }) => void;
 
 export default class ChromecastEmitter {
   private client: typeof Client;
   private connection: any;
   private heartbeat: any;
   private heartbeatId: Timeout;
+  private listeners: Listener[] = [];
   private receiver: any;
 
   static GetChromecasts(): Promise<ChromecastInfo[]> {
@@ -40,11 +43,12 @@ export default class ChromecastEmitter {
     });
   }
 
-  constructor(playerAddress: string, listener: (action: Action) => void) {
+  constructor(playerAddress: string, ...listeners: Listener[]) {
     this.client = new Client();
 
     this.client.connect(playerAddress, () => {
       console.log('connected');
+      this.listeners.push(...listeners);
       // create various namespace handlers
       this.connection = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.connection', 'JSON');
       this.heartbeat = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.heartbeat', 'JSON');
@@ -61,7 +65,12 @@ export default class ChromecastEmitter {
         console.log('status');
         console.log(status.type);
         console.log(status.status);
+        this.listener(setStatus(status));
       });
     });
+  }
+
+  private listener(action) {
+    this.listeners.forEach(listener => listener(action));
   }
 }
