@@ -1,4 +1,4 @@
-import { CHANGE_VOLUME, GET_CHROMECASTS, GET_STATUS, LAUNCH, PAUSE, PLAY, SEEK } from '../../constants';
+import { CHANGE_VOLUME, CONNECT, GET_CHROMECASTS, GET_STATUS, LAUNCH, PAUSE, PLAY, SEEK } from '../../constants';
 
 export const PLAYING = 'PLAYING';
 export const PAUSED = 'PAUSED';
@@ -7,6 +7,11 @@ export const UPDATE_STATUS = 'UPDATE_STATUS';
 export const changeVolume = (volume: number) => ({
   payload: volume,
   type: CHANGE_VOLUME,
+});
+
+export const connect = (host: string) => ({
+  payload: host,
+  type: CONNECT,
 });
 
 export const getChromecasts = () => ({

@@ -54,7 +54,8 @@ export default class ChromecastEmitter {
 
       this.heartbeatId = setInterval(() => this.heartbeat.send({ type: 'PING' }), 5000);
 
-      this.receiver.send({ type: 'LAUNCH', appId: 'CC1AD845', requestId: 1 });
+      // TODO: move to launch function
+      // this.receiver.send({ type: 'LAUNCH', appId: 'CC1AD845', requestId: 1 });
 
       this.receiver.on('message', status => {
         console.log('status');
