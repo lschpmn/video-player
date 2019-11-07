@@ -15,6 +15,7 @@ export default class ChromecastEmitter {
   private heartbeatId?: Timeout;
   private _isConnected: boolean = false;
   private listeners: Listener[] = [];
+  private media?: Channel;
   private receiver?: Channel;
 
   static GetChromecasts(): Promise<ChromecastInfo[]> {
@@ -50,46 +51,55 @@ export default class ChromecastEmitter {
     this.addListeners(...listeners);
   }
 
-  connect(host: string, ...listeners: Listener[]): Promise<boolean> {
-    if (this.chromecastHost === host) return Promise.resolve(true);
+  connect(host: string, ...listeners: Listener[]): void {
+    if (this.chromecastHost === host) {
+      this.dispatch(connection(this.isConnected));
+      return;
+    }
     else if (this.chromecastHost) this.destroy();
     this.chromecastHost = host;
 
     this.client = new Client();
     this.addListeners(...listeners);
 
-    return new Promise((resolve, reject) => {
-      this.client.connect(host, () => {
-        console.log('connected');
-        this._isConnected = true;
-        // create various namespace handlers
-        this.connection = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.connection', 'JSON');
-        this.heartbeat = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.heartbeat', 'JSON');
-        this.receiver = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.receiver', 'JSON');
+    this.client.connect(host, () => {
+      console.log('connected');
+      this._isConnected = true;
+      this.dispatch(connection(this.isConnected));
+      // create various namespace handlers
+      this.connection = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.connection', 'JSON');
+      this.heartbeat = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.heartbeat', 'JSON');
+      this.media = this.client.createChannel('sender-1', 'receiver-1', 'urn:x-cast:com.google.cast.media', 'JSON');
+      this.receiver = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.receiver', 'JSON');
 
-        this.connection.send({ type: 'CONNECT' });
+      this.connection.send({ type: 'CONNECT' });
 
-        this.heartbeatId = setInterval(() => this.heartbeat.send({ type: 'PING' }), 5000);
+      this.heartbeatId = setInterval(() => this.heartbeat.send({ type: 'PING' }), 5000);
 
-        // TODO: move to launch function
-        // this.receiver.send({ type: 'LAUNCH', appId: 'CC1AD845', requestId: 1 });
+      // TODO: move to launch function
+      // this.receiver.send({ type: 'LAUNCH', appId: 'CC1AD845', requestId: 1 });
 
-        this.connection.on('disconnect', () => this.chromecastHost && this.destroy());
+      this.connection.on('disconnect', () => this.chromecastHost && this.destroy());
 
-        this.receiver.on('message', status => {
-          console.log('status');
-          console.log(status.type);
-          console.log(status.status);
-          this.dispatch(setStatus(status));
-        });
-
-        this.client.on('error', console.log);
-        this.connection.on('error', console.log);
-        this.heartbeat.on('error', console.log);
-        this.receiver.on('error', console.log);
-
-        resolve(true);
+      this.receiver.on('message', status => {
+        console.log('status');
+        console.log(status);
+        console.log(status.type);
+        console.log(status.status);
+        this.dispatch(setStatus(status));
       });
+
+      this.media.on('message', status => {
+        console.log('media status');
+        console.log(status);
+        this.dispatch(setStatus(status));
+      });
+
+      this.client.on('error', console.log);
+      this.connection.on('error', console.log);
+      this.heartbeat.on('error', console.log);
+      this.media.on('error', console.log);
+      this.receiver.on('error', console.log);
     });
   }
 
@@ -133,12 +143,19 @@ export default class ChromecastEmitter {
         }
       };
 
-      this.receiver.send({
+      const command = {
         autoplay: true,
+        currentTime: 0,
         media,
         repeatMode: 'REPEAT_OFF',
+        requestId: 2,
         type: 'LOAD',
-      });
+      };
+
+      console.log(command);
+      this.media.send(command);
+      this.receiver.send(command);
+      this.connection.send(command);
     }, 3000);
 
     // const fileUrl = await getFileUrl(filePath);

@@ -50,7 +50,7 @@ io.on('connection', socket => {
 
       // player
       case CONNECT:
-        dispatch(connection(await chromecastEmitter.connect(payload)));
+        chromecastEmitter.connect(payload);
         return;
       case GET_CHROMECASTS:
         dispatch(setChromecasts(await ChromecastEmitter.GetChromecasts()));
