@@ -6,7 +6,8 @@ import {
   GET_CHROMECASTS,
   GET_DRIVES_SERVER,
   GET_FILES_SERVER,
-  INSPECT_FILE_SERVER,
+  GET_STATUS,
+  INSPECT_FILE_SERVER, LAUNCH,
   PORT,
 } from '../constants';
 import { connection, getDrivesAction, getFilesAction, inspectFileAction, setChromecasts } from './action-creators';
@@ -53,6 +54,12 @@ io.on('connection', socket => {
         return;
       case GET_CHROMECASTS:
         dispatch(setChromecasts(await ChromecastEmitter.GetChromecasts()));
+        return;
+      case GET_STATUS:
+        chromecastEmitter.getStatus();
+        return;
+      case LAUNCH:
+        chromecastEmitter.launch(payload);
         return;
     }
   });

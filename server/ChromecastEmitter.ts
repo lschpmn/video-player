@@ -2,6 +2,7 @@ import { Client } from 'castv2';
 import * as multicastdns from 'multicast-dns';
 import { Channel, ChromecastInfo } from '../types';
 import { connection, setStatus } from './action-creators';
+import { getFileUrl } from './FileUtils';
 import Timeout = NodeJS.Timeout;
 
 type Listener = (action: { type: string, payload: Object }) => void;
@@ -61,7 +62,6 @@ export default class ChromecastEmitter {
       this.client.connect(host, () => {
         console.log('connected');
         this._isConnected = true;
-        this.dispatch(connection(true));
         // create various namespace handlers
         this.connection = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.connection', 'JSON');
         this.heartbeat = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.heartbeat', 'JSON');
@@ -78,9 +78,15 @@ export default class ChromecastEmitter {
 
         this.receiver.on('message', status => {
           console.log('status');
-          console.log(status);
+          console.log(status.type);
+          console.log(status.status);
           this.dispatch(setStatus(status));
         });
+
+        this.client.on('error', console.log);
+        this.connection.on('error', console.log);
+        this.heartbeat.on('error', console.log);
+        this.receiver.on('error', console.log);
 
         resolve(true);
       });
@@ -103,8 +109,70 @@ export default class ChromecastEmitter {
     this.dispatch(connection(false));
   }
 
-  async launch(filePath: string) {
+  getStatus() {
+    this.connection?.send({ type: 'GET_STATUS' });
+  }
 
+  async launch(filePath: string) {
+    if (!this.isConnected) return;
+
+    this.receiver.send({ type: 'LAUNCH', appId: 'CC1AD845', requestId: 1 });
+
+    setTimeout(async () => {
+      const fileUrl = await getFileUrl(filePath);
+
+      const media = {
+        contentId: fileUrl,
+        contentType: 'video/mp4',
+        streamType: 'BUFFERED',
+        metadata: {
+          type: 0,
+          metadataType: 0,
+          title: '',
+          images: [],
+        }
+      };
+
+      this.receiver.send({
+        autoplay: true,
+        media,
+        repeatMode: 'REPEAT_OFF',
+        type: 'LOAD',
+      });
+    }, 3000);
+
+    // const fileUrl = await getFileUrl(filePath);
+
+    //var media = {
+    //
+    //       	// Here you can plug an URL to any mp4, webm, mp3 or jpg file with the proper contentType.
+    //         contentId: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/big_buck_bunny_1080p.mp4',
+    //         contentType: 'video/mp4',
+    //         streamType: 'BUFFERED', // or LIVE
+    //
+    //         // Title and cover displayed while buffering
+    //         metadata: {
+    //           type: 0,
+    //           metadataType: 0,
+    //           title: "Big Buck Bunny",
+    //           images: [
+    //             { url: 'http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/images/BigBuckBunny.jpg' }
+    //           ]
+    //         }
+    //       };
+
+    // const media = {
+    //   contentId: fileUrl,
+    //   contentType: 'video/mp4',
+    //   streamType: 'BUFFERED',
+    // };
+    //
+    // this.receiver.send({
+    //   autoplay: true,
+    //   media,
+    //   repeatMode: 'REPEAT_OFF',
+    //   type: 'LOAD',
+    // });
   }
 
   removeAllListeners() {

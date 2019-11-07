@@ -30,7 +30,6 @@ export async function getFiles(location: string) {
 }
 
 export async function getFileUrl(path: string) {
-
   if (fileUrlMap[path]) return fileUrlMap[path];
 
   const tmpName = Math.random().toString(36).slice(-2);
