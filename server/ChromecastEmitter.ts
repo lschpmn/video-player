@@ -49,11 +49,8 @@ export default class ChromecastEmitter {
     this.addListeners(...listeners);
   }
 
-  connect(host: string, ...listeners: Listener[]): Promise<void> {
-    if (this.chromecastHost === host) {
-      this.dispatch(connection(true));
-      return Promise.resolve();
-    }
+  connect(host: string, ...listeners: Listener[]): Promise<boolean> {
+    if (this.chromecastHost === host) return Promise.resolve(true);
     else if (this.chromecastHost) this.destroy();
     this.chromecastHost = host;
 
@@ -77,13 +74,15 @@ export default class ChromecastEmitter {
         // TODO: move to launch function
         // this.receiver.send({ type: 'LAUNCH', appId: 'CC1AD845', requestId: 1 });
 
+        this.connection.on('disconnect', () => this.chromecastHost && this.destroy());
+
         this.receiver.on('message', status => {
           console.log('status');
           console.log(status);
           this.dispatch(setStatus(status));
         });
 
-        resolve();
+        resolve(true);
       });
     });
   }
@@ -102,6 +101,10 @@ export default class ChromecastEmitter {
     clearInterval(this.heartbeatId);
 
     this.dispatch(connection(false));
+  }
+
+  async launch(filePath: string) {
+
   }
 
   removeAllListeners() {

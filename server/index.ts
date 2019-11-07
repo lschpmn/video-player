@@ -9,7 +9,7 @@ import {
   INSPECT_FILE_SERVER,
   PORT,
 } from '../constants';
-import { getDrivesAction, getFilesAction, inspectFileAction, setChromecasts } from './action-creators';
+import { connection, getDrivesAction, getFilesAction, inspectFileAction, setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
 import { FilesRouter, getDrives, getFiles, inspectFile } from './FileUtils';
 
@@ -49,7 +49,7 @@ io.on('connection', socket => {
 
       // player
       case CONNECT:
-        chromecastEmitter.connect(payload);
+        dispatch(connection(await chromecastEmitter.connect(payload)));
         return;
       case GET_CHROMECASTS:
         dispatch(setChromecasts(await ChromecastEmitter.GetChromecasts()));
