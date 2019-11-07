@@ -1,6 +1,14 @@
 import { cloneDeep, set } from 'lodash';
 import { combineReducers } from 'redux';
-import { CONNECT, GET_CHROMECASTS, GET_DRIVES, GET_FILES, INSPECT_FILE, SET_CHROMECASTS } from '../../constants';
+import {
+  CONNECT,
+  CONNECTION,
+  GET_CHROMECASTS,
+  GET_DRIVES,
+  GET_FILES,
+  INSPECT_FILE,
+  SET_CHROMECASTS,
+} from '../../constants';
 import { ChromecastStoreState, Directory, ExplorerState, PlayerState } from '../types';
 import { PAUSED, UPDATE_STATUS } from './player-actions';
 
@@ -26,7 +34,14 @@ function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, a
     case CONNECT:
       return {
         ...state,
+        loading: true,
         selected: action.payload,
+      };
+    case CONNECTION:
+      return {
+        ...state,
+        loading: false,
+        isConnected: action.payload,
       };
     case GET_CHROMECASTS:
       return {

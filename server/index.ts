@@ -18,6 +18,7 @@ const cors = require('cors');
 const express = require('express');
 
 const app = express();
+const chromecastEmitter = new ChromecastEmitter();
 const server = createServer(app);
 const io = socketIO(server, {
   origins: '*:*',
@@ -25,12 +26,13 @@ const io = socketIO(server, {
 
 io.on('connection', socket => {
   console.log('client connected');
-  let chromecastEmitter: ChromecastEmitter;
+  const dispatch = action => socket.emit('dispatch', action);
+
+  chromecastEmitter.addListeners(dispatch);
 
   socket.on('dispatch', async ({ type, payload }) => {
     console.log(type);
     console.log(payload);
-    const dispatch = action => socket.emit('dispatch', action);
 
     switch (type) {
       // files
@@ -47,16 +49,12 @@ io.on('connection', socket => {
 
       // player
       case CONNECT:
-        chromecastEmitter = new ChromecastEmitter(payload, dispatch);
+        chromecastEmitter.connect(payload);
         return;
       case GET_CHROMECASTS:
         dispatch(setChromecasts(await ChromecastEmitter.GetChromecasts()));
         return;
     }
-  });
-
-  socket.on('disconnect', () => {
-    chromecastEmitter?.destroy();
   });
 });
 

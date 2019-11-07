@@ -13,7 +13,7 @@ export const INSPECT_FILE_SERVER = 'INSPECT_FILE@server';
 
 //player
 export const CHANGE_VOLUME = 'CHANGE_VOLUME@server';
-export const CLOSE_CONNECTION = 'CLOSE_CONNECTION';
+export const CONNECTION = 'CONNECTION';
 export const CONNECT = 'CONNECT@server';
 export const GET_CHROMECASTS = 'GET_CHROMECASTS@server';
 export const GET_STATUS = 'GET_STATUS@server';

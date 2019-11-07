@@ -1,7 +1,8 @@
-import { CLOSE_CONNECTION, GET_DRIVES, GET_FILES, INSPECT_FILE, SET_CHROMECASTS, SET_STATUS } from '../constants';
+import { CONNECTION, GET_DRIVES, GET_FILES, INSPECT_FILE, SET_CHROMECASTS, SET_STATUS } from '../constants';
 
-export const closeConnection = () => ({
-  type: CLOSE_CONNECTION,
+export const connection = (isConnected: boolean) => ({
+  payload: isConnected,
+  type: CONNECTION,
 });
 
 export const getDrivesAction = drives => ({
