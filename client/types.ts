@@ -2,6 +2,7 @@ import { ChromecastInfo } from '../types';
 
 export type ChromecastStoreState = {
   chromecasts: ChromecastInfo[],
+  isConnected:boolean,
   loading: boolean,
   selected?: ChromecastInfo,
 };

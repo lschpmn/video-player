@@ -53,9 +53,8 @@ class App extends React.Component<Props> {
       start={launch}
     >
       <div style={styles.parent}>
-        <div style={{...styles.top, backgroundColor: blue['500'], flex: 1}}>
-        </div>
-        <div style={styles.top}>
+        <div style={styles.top} />
+        <div style={styles.middle}>
           <div style={{ flex: 1 }}>
             <Media />
           </div>
@@ -95,11 +94,12 @@ const styles = {
     alignSelf: 'flex-end',
     width: '100%',
   } as React.CSSProperties,
-  chromecastButton: {
-    float: 'right',
-    height: '2.5rem',
-    margin: '1rem',
-    width: '2.5rem',
+  middle: {
+    display: 'flex',
+    flexDirection: 'row',
+    flex: 9,
+    height: '100%',
+    width: '100%',
   } as React.CSSProperties,
   parent: {
     alignItems: 'stretch',
@@ -108,9 +108,10 @@ const styles = {
     height: '100%',
   } as React.CSSProperties,
   top: {
+    backgroundColor: blue['500'],
     display: 'flex',
     flexDirection: 'row',
-    flex: 9,
+    height: '3rem',
     width: '100%',
   } as React.CSSProperties,
 };

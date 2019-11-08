@@ -86,6 +86,7 @@ export default class ChromecastEmitter {
       this.connection.on('disconnect', () => {
         console.log('receiver disconnected');
         this.chromecastHost && this.destroy();
+        this.dispatch(connection(this.isConnected));
       });
 
       this.connection.on('message', status => {
@@ -119,6 +120,7 @@ export default class ChromecastEmitter {
     this.client.on('error', () => {
       errorLogger('client');
       this.destroy();
+      this.dispatch(connection(this.isConnected));
     });
   }
 

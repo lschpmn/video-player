@@ -23,8 +23,9 @@ const defaultStateExplorer = {
   inspections: {},
 };
 
-const defaultChromecastStore = {
+const defaultChromecastStore: ChromecastStoreState = {
   chromecasts: [],
+  isConnected: false,
   loading: false,
   selected: null,
 };
