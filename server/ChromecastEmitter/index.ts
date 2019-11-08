@@ -1,26 +1,22 @@
 import { Client } from 'castv2';
 import * as multicastdns from 'multicast-dns';
-import { basename } from 'path';
-import { Channel, ChromecastInfo, receiverStatus } from '../types';
-import { connection, setStatus } from './action-creators';
-import { getFileUrl } from './FileUtils';
+import { DEFAULT_MEDIA_RECEIVER_ID, MEDIA_NAMESPACE } from '../../constants';
+import { Channel, ChromecastInfo, Listener, receiverStatus } from '../../types';
+import { connection, setStatus } from '../action-creators';
+import { channelErrorLogger, waitForTrue } from '../utils';
+import MediaEmitter from './MediaEmitter';
 import Timeout = NodeJS.Timeout;
 
-type Listener = (action: { type: string, payload: Object }) => void;
-const DEFAULT_MEDIA_RECEIVER_ID = 'CC1AD845';
-const MEDIA_NAMESPACE = 'urn:x-cast:com.google.cast.media';
-
 export default class ChromecastEmitter {
+  private appId?: string;
   private chromecastHost?: string;
-  private client?: typeof Client;
+  private client?: Client;
   private connection?: Channel;
   private heartbeat?: Channel;
   private heartbeatId?: Timeout;
   private _isConnected: boolean = false;
-  private _isMediaConnected: boolean = false;
   private listeners: Listener[] = [];
-  private media?: Channel;
-  private mediaConnect?: Channel;
+  private mediaEmitter?: MediaEmitter;
   private receiver?: Channel;
 
   static GetChromecasts(): Promise<ChromecastInfo[]> {
@@ -65,8 +61,7 @@ export default class ChromecastEmitter {
       this.dispatch(connection(this.isConnected));
       this.isConnected && this.getStatus();
       return;
-    }
-    else if (this.chromecastHost) this.destroy();
+    } else if (this.chromecastHost) this.destroy();
     this.chromecastHost = host;
 
     this.client = new Client();
@@ -102,51 +97,34 @@ export default class ChromecastEmitter {
         console.log(status.type);
         console.log(status.status);
         this.dispatch(setStatus(status));
-
-        if (status.status.applications && !this.isMediaConnected) {
+        if (status.status.applications && status.status.applications[0]) {
           const application = status.status.applications[0];
           const hasMedia = application.namespaces.some(({ name }) => name === MEDIA_NAMESPACE);
-          hasMedia && this.connectMedia(application.transportId);
+          this.appId = application.appId;
+
+          if (!this.isMediaConnected && hasMedia) this.connectMedia(application.transportId);
         }
       });
 
-      this.connection.on('error', errorLogger('connection'));
-      this.heartbeat.on('error', errorLogger('heartbeat'));
-      this.receiver.on('error', errorLogger('receiver'));
+      this.connection.on('error', channelErrorLogger('connection'));
+      this.heartbeat.on('error', channelErrorLogger('heartbeat'));
+      this.receiver.on('error', channelErrorLogger('receiver'));
 
       this.getStatus();
     });
 
-    this.client.on('error', () => {
-      errorLogger('client');
-      this.destroy();
+    this.client.on('error', status => {
+      channelErrorLogger('client')(status);
+      this._isConnected = false;
       this.dispatch(connection(this.isConnected));
     });
   }
 
   connectMedia(transportId: string) {
     console.log('connecting to media');
-    this.isMediaConnected && this.destroyMedia();
+    this.isMediaConnected && this.mediaEmitter?.destroy();
 
-    this.media = this.client.createChannel('sender-0', transportId, MEDIA_NAMESPACE, 'JSON');
-    this.mediaConnect = this.client.createChannel('sender-0', transportId, 'urn:x-cast:com.google.cast.tp.connection', 'JSON');
-    this.mediaConnect.send({ type: 'CONNECT' });
-    this._isMediaConnected = true;
-
-    this.media.on('message', status => {
-      console.log('media status');
-      console.log(status);
-      this.dispatch(setStatus(status));
-    });
-
-    this.mediaConnect.on('message', status => {
-      console.log('media connect status');
-      console.log(status);
-      status.type === 'CLOSE' && this.destroyMedia();
-    });
-
-    this.media.on('error', errorLogger('media'));
-    this.mediaConnect.on('error', errorLogger('media connect'));
+    this.mediaEmitter = new MediaEmitter(this.client, this.dispatch, transportId);
   }
 
   destroy() {
@@ -167,48 +145,25 @@ export default class ChromecastEmitter {
   }
 
   destroyMedia() {
-    this._isMediaConnected = false;
-    this.media?.close();
-    this.media?.removeAllListeners();
-    this.mediaConnect?.close();
-    this.mediaConnect?.removeAllListeners();
+    this.mediaEmitter?.destroy();
   }
 
   getStatus() {
     this.receiver?.send({ type: 'GET_STATUS', requestId: 1 });
   }
 
-  launch(filePath: string) {
+  async launch(filePath: string) {
     if (!this.isConnected) return;
 
-    this.receiver.send({ type: 'LAUNCH', appId: 'CC1AD845', requestId: 1 });
+    if (this.appId !== DEFAULT_MEDIA_RECEIVER_ID) this.receiver.send({
+      appId: DEFAULT_MEDIA_RECEIVER_ID,
+      requestId: 1,
+      type: 'LAUNCH',
+    });
 
-    setTimeout(async () => {
-      const fileUrl = await getFileUrl(filePath);
+    await waitForTrue(() => this.isMediaConnected, 15000);
 
-      const media = {
-        contentId: fileUrl,
-        contentType: 'video/mp4',
-        streamType: 'BUFFERED',
-        metadata: {
-          type: 0,
-          metadataType: 0,
-          title: basename(filePath),
-          images: [],
-        }
-      };
-
-      const command = {
-        autoplay: true,
-        media,
-        repeatMode: 'REPEAT_OFF',
-        requestId: 2,
-        type: 'LOAD',
-      };
-
-      console.log(command);
-      this.media.send(command);
-    }, 3000);
+    this.mediaEmitter?.launch(filePath);
   }
 
   removeAllListeners() {
@@ -224,13 +179,13 @@ export default class ChromecastEmitter {
     return this._isConnected;
   }
 
-  get isMediaConnected() {
-    return this._isMediaConnected;
+  get isMediaConnected(): boolean {
+    return this.mediaEmitter?.isConnected;
   }
 
-  private dispatch(action) {
+  private dispatch = (action) => {
     this.listeners.forEach(listener => listener(action));
-  }
+  };
 
   private setupHeartbeat() {
     this.heartbeatId = setInterval(() => this.heartbeat.send({ type: 'PING' }), 5000);
@@ -239,7 +194,7 @@ export default class ChromecastEmitter {
       console.log('heartbeat timeout');
       this._isConnected = false;
       this.dispatch(connection(this.isConnected));
-      clearInterval(this.heartbeatId)
+      clearInterval(this.heartbeatId);
     }, 10000);
     let heartbeatTimeoutId = heartbeatTimeout();
     this.heartbeat.on('message', status => {
@@ -250,5 +205,3 @@ export default class ChromecastEmitter {
     });
   }
 }
-
-const errorLogger = channel => errorStats => console.log(`${channel} error: ${JSON.stringify(errorStats, null, 2)}`);
