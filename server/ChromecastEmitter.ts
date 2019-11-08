@@ -168,10 +168,10 @@ export default class ChromecastEmitter {
 
   destroyMedia() {
     this._isMediaConnected = false;
-    this.media.close();
-    this.media.removeAllListeners();
-    this.mediaConnect.close();
-    this.mediaConnect.removeAllListeners();
+    this.media?.close();
+    this.media?.removeAllListeners();
+    this.mediaConnect?.close();
+    this.mediaConnect?.removeAllListeners();
   }
 
   getStatus() {
