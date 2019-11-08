@@ -150,6 +150,7 @@ export default class ChromecastEmitter {
 
   getStatus() {
     this.receiver?.send({ type: 'GET_STATUS', requestId: 1 });
+    this.isMediaConnected && this.mediaEmitter.getStatus();
   }
 
   async launch(filePath: string) {
@@ -182,6 +183,11 @@ export default class ChromecastEmitter {
   get isMediaConnected(): boolean {
     return this.mediaEmitter?.isConnected;
   }
+
+  // pass-through media controls
+  pause = () => this.mediaEmitter?.pause();
+  play = () => this.mediaEmitter?.play();
+  seek = (currentTime: number) => this.mediaEmitter?.seek(currentTime);
 
   private dispatch = (action) => {
     this.listeners.forEach(listener => listener(action));

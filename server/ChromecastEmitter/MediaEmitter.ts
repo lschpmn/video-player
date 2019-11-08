@@ -46,6 +46,8 @@ export default class MediaEmitter {
 
     this.connection.on('error', channelErrorLogger('media connect'));
     this.media.on('error', channelErrorLogger('media'));
+
+    this.getStatus();
   }
 
   destroy() {
@@ -55,6 +57,10 @@ export default class MediaEmitter {
     this.media?.removeAllListeners();
     this.mediaConnect?.close();
     this.mediaConnect?.removeAllListeners();
+  }
+
+  getStatus() {
+    this.media.send({ type: 'GET_STATUS', requestId: 1 });
   }
 
   async launch(filePath: string) {
