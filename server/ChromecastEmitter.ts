@@ -18,6 +18,7 @@ export default class ChromecastEmitter {
   private _isConnected: boolean = false;
   private listeners: Listener[] = [];
   private media?: Channel;
+  private mediaConnect?: Channel;
   private receiver?: Channel;
 
   static GetChromecasts(): Promise<ChromecastInfo[]> {
@@ -130,12 +131,14 @@ export default class ChromecastEmitter {
     if (this.media) {
       this.media.close();
       this.media.removeAllListeners();
+      this.mediaConnect.close();
+      this.mediaConnect.removeAllListeners();
     }
 
     this.media = this.client.createChannel('sender-0', transportId, MEDIA_NAMESPACE, 'JSON');
-    const connection = this.client.createChannel('sender-0', transportId, 'urn:x-cast:com.google.cast.tp.connection', 'JSON');
+    this.mediaConnect = this.client.createChannel('sender-0', transportId, 'urn:x-cast:com.google.cast.tp.connection', 'JSON');
 
-    connection.send({ type: 'CONNECT' });
+    this.mediaConnect.send({ type: 'CONNECT' });
 
     this.media.on('message', status => {
       console.log('media status');

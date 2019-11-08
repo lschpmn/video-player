@@ -1,12 +1,14 @@
 import { exec } from 'child_process';
 import { Router, static as expressStatic } from 'express';
 import { inspectAsync, listAsync } from 'fs-jetpack';
-import { address } from 'ip';
+import { networkInterfaces } from 'os';
 import { PORT } from '../constants';
 
 export const FilesRouter = Router();
 
-const ipAddress = address();
+const ipAddress = networkInterfaces().Ethernet
+  ? networkInterfaces().Ethernet.find(e => e.family === 'IPv4').address
+  : networkInterfaces()['Wi-Fi'].find(e => e.family === 'IPv4').address;
 const fileUrlMap: { [s: string]: string } = {};
 
 export function getDrives() {
@@ -40,7 +42,7 @@ export async function getFileUrl(path: string) {
 
   fileUrlMap[path] = `http://${ipAddress}:${PORT}/api/files/${tmpName}.mp4`;
   console.log(`url: ${fileUrlMap[path]}`);
-  return fileUrlMap[path]
+  return fileUrlMap[path];
 }
 
 export async function inspectFile(path: string) {
