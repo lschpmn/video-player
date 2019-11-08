@@ -7,10 +7,11 @@ import {
   GET_DRIVES_SERVER,
   GET_FILES_SERVER,
   GET_STATUS,
-  INSPECT_FILE_SERVER, LAUNCH,
+  INSPECT_FILE_SERVER,
+  LAUNCH,
   PORT,
 } from '../constants';
-import { connection, getDrivesAction, getFilesAction, inspectFileAction, setChromecasts } from './action-creators';
+import { getDrivesAction, getFilesAction, inspectFileAction, setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
 import { FilesRouter, getDrives, getFiles, inspectFile } from './FileUtils';
 

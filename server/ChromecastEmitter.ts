@@ -63,6 +63,7 @@ export default class ChromecastEmitter {
   connect(host: string, ...listeners: Listener[]): void {
     if (this.chromecastHost === host) {
       this.dispatch(connection(this.isConnected));
+      this.isConnected && this.getStatus();
       return;
     }
     else if (this.chromecastHost) this.destroy();
@@ -82,9 +83,10 @@ export default class ChromecastEmitter {
 
       this.connection.send({ type: 'CONNECT' });
 
-      this.heartbeatId = setInterval(() => this.heartbeat.send({ type: 'PING' }), 5000);
-
-      this.connection.on('disconnect', () => this.chromecastHost && this.destroy());
+      this.connection.on('disconnect', () => {
+        console.log('receiver disconnected');
+        this.chromecastHost && this.destroy();
+      });
 
       this.connection.on('message', status => {
         console.log('connection status');
@@ -92,18 +94,7 @@ export default class ChromecastEmitter {
         console.log(status.status);
       });
 
-      const heartbeatTimeout = () => setTimeout(() => {
-        console.log('heartbeat timeout');
-        this._isConnected = false;
-        this.dispatch(connection(this.isConnected));
-      }, 10000);
-      let heartbeatTimeoutId = heartbeatTimeout();
-      this.heartbeat.on('message', status => {
-        if (status.type === 'PONG') {
-          clearTimeout(heartbeatTimeoutId);
-          heartbeatTimeoutId = heartbeatTimeout();
-        }
-      });
+      this.setupHeartbeat();
 
       this.receiver.on('message', (status: receiverStatus) => {
         console.log('status');
@@ -113,23 +104,26 @@ export default class ChromecastEmitter {
 
         if (status.status.applications && !this.isMediaConnected) {
           const application = status.status.applications[0];
-          if (application.namespaces.some(({ name }) => name === MEDIA_NAMESPACE)) {
-            console.log('it can play media, launching media channel');
-            this.connectMedia(application.transportId);
-          }
+          const hasMedia = application.namespaces.some(({ name }) => name === MEDIA_NAMESPACE);
+          hasMedia && this.connectMedia(application.transportId);
         }
-
       });
 
-      this.client.on('error', errorLogger('client'));
       this.connection.on('error', errorLogger('connection'));
       this.heartbeat.on('error', errorLogger('heartbeat'));
       this.receiver.on('error', errorLogger('receiver'));
+
+      this.getStatus();
+    });
+
+    this.client.on('error', () => {
+      errorLogger('client');
+      this.destroy();
     });
   }
 
   connectMedia(transportId: string) {
-    console.log(`transportId: ${transportId}`);
+    console.log('connecting to media');
     if (this.media) {
       this.media.close();
       this.media.removeAllListeners();
@@ -148,7 +142,20 @@ export default class ChromecastEmitter {
       this.dispatch(setStatus(status));
     });
 
+    this.mediaConnect.on('message', status => {
+      console.log('media connect status');
+      console.log(status);
+      if (status.type === 'CLOSE') {
+        this._isMediaConnected = false;
+        this.media.close();
+        this.media.removeAllListeners();
+        this.mediaConnect.close();
+        this.mediaConnect.removeAllListeners();
+      }
+    });
+
     this.media.on('error', errorLogger('media'));
+    this.mediaConnect.on('error', errorLogger('media connect'));
   }
 
   destroy() {
@@ -156,11 +163,13 @@ export default class ChromecastEmitter {
     this.chromecastHost = null;
     this.client?.close();
     this.connection?.close();
-    this.connection.removeAllListeners();
+    this.connection?.removeAllListeners();
     this.heartbeat?.close();
     this.heartbeat?.removeAllListeners();
     this.media?.close();
     this.media?.removeAllListeners();
+    this.mediaConnect?.close();
+    this.mediaConnect?.removeAllListeners();
     this.receiver?.close();
     this.receiver?.removeAllListeners();
     clearInterval(this.heartbeatId);
@@ -171,7 +180,7 @@ export default class ChromecastEmitter {
   }
 
   getStatus() {
-    this.connection?.send({ type: 'GET_STATUS' });
+    this.receiver?.send({ type: 'GET_STATUS', requestId: 1 });
   }
 
   launch(filePath: string) {
@@ -226,6 +235,24 @@ export default class ChromecastEmitter {
 
   private dispatch(action) {
     this.listeners.forEach(listener => listener(action));
+  }
+
+  private setupHeartbeat() {
+    this.heartbeatId = setInterval(() => this.heartbeat.send({ type: 'PING' }), 5000);
+
+    const heartbeatTimeout = () => setTimeout(() => {
+      console.log('heartbeat timeout');
+      this._isConnected = false;
+      this.dispatch(connection(this.isConnected));
+      clearInterval(this.heartbeatId)
+    }, 10000);
+    let heartbeatTimeoutId = heartbeatTimeout();
+    this.heartbeat.on('message', status => {
+      if (status.type === 'PONG') {
+        clearTimeout(heartbeatTimeoutId);
+        heartbeatTimeoutId = heartbeatTimeout();
+      }
+    });
   }
 }
 
