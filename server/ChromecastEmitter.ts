@@ -124,12 +124,7 @@ export default class ChromecastEmitter {
 
   connectMedia(transportId: string) {
     console.log('connecting to media');
-    if (this.media) {
-      this.media.close();
-      this.media.removeAllListeners();
-      this.mediaConnect.close();
-      this.mediaConnect.removeAllListeners();
-    }
+    this.isMediaConnected && this.destroyMedia();
 
     this.media = this.client.createChannel('sender-0', transportId, MEDIA_NAMESPACE, 'JSON');
     this.mediaConnect = this.client.createChannel('sender-0', transportId, 'urn:x-cast:com.google.cast.tp.connection', 'JSON');
@@ -145,13 +140,7 @@ export default class ChromecastEmitter {
     this.mediaConnect.on('message', status => {
       console.log('media connect status');
       console.log(status);
-      if (status.type === 'CLOSE') {
-        this._isMediaConnected = false;
-        this.media.close();
-        this.media.removeAllListeners();
-        this.mediaConnect.close();
-        this.mediaConnect.removeAllListeners();
-      }
+      status.type === 'CLOSE' && this.destroyMedia();
     });
 
     this.media.on('error', errorLogger('media'));
@@ -166,17 +155,21 @@ export default class ChromecastEmitter {
     this.connection?.removeAllListeners();
     this.heartbeat?.close();
     this.heartbeat?.removeAllListeners();
-    this.media?.close();
-    this.media?.removeAllListeners();
-    this.mediaConnect?.close();
-    this.mediaConnect?.removeAllListeners();
     this.receiver?.close();
     this.receiver?.removeAllListeners();
     clearInterval(this.heartbeatId);
 
     this._isConnected = false;
-    this._isMediaConnected = false;
+    this.destroyMedia();
     this.dispatch(connection(this.isConnected));
+  }
+
+  destroyMedia() {
+    this._isMediaConnected = false;
+    this.media.close();
+    this.media.removeAllListeners();
+    this.mediaConnect.close();
+    this.mediaConnect.removeAllListeners();
   }
 
   getStatus() {
