@@ -1,11 +1,13 @@
 import { Client } from 'castv2';
 import * as multicastdns from 'multicast-dns';
-import { Channel, ChromecastInfo } from '../types';
+import { Channel, ChromecastInfo, receiverStatus } from '../types';
 import { connection, setStatus } from './action-creators';
 import { getFileUrl } from './FileUtils';
 import Timeout = NodeJS.Timeout;
 
 type Listener = (action: { type: string, payload: Object }) => void;
+const DEFAULT_MEDIA_RECEIVER_ID = 'CC1AD845';
+const MEDIA_NAMESPACE = 'urn:x-cast:com.google.cast.media';
 
 export default class ChromecastEmitter {
   private chromecastHost?: string;
@@ -51,6 +53,10 @@ export default class ChromecastEmitter {
     this.addListeners(...listeners);
   }
 
+  addListeners(...listeners: Listener[]) {
+    this.listeners.push(...listeners);
+  }
+
   connect(host: string, ...listeners: Listener[]): void {
     if (this.chromecastHost === host) {
       this.dispatch(connection(this.isConnected));
@@ -69,42 +75,78 @@ export default class ChromecastEmitter {
       // create various namespace handlers
       this.connection = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.connection', 'JSON');
       this.heartbeat = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.tp.heartbeat', 'JSON');
-      this.media = this.client.createChannel('sender-1', 'receiver-1', 'urn:x-cast:com.google.cast.media', 'JSON');
       this.receiver = this.client.createChannel('sender-0', 'receiver-0', 'urn:x-cast:com.google.cast.receiver', 'JSON');
 
       this.connection.send({ type: 'CONNECT' });
 
       this.heartbeatId = setInterval(() => this.heartbeat.send({ type: 'PING' }), 5000);
 
-      // TODO: move to launch function
-      // this.receiver.send({ type: 'LAUNCH', appId: 'CC1AD845', requestId: 1 });
-
       this.connection.on('disconnect', () => this.chromecastHost && this.destroy());
 
-      this.receiver.on('message', status => {
+      this.connection.on('message', status => {
+        console.log('connection status');
+        console.log(status.type);
+        console.log(status.status);
+      });
+
+      const heartbeatTimeout = () => setTimeout(() => {
+        console.log('heartbeat timeout');
+        this._isConnected = false;
+        this.dispatch(connection(this.isConnected));
+      }, 10000);
+      let heartbeatTimeoutId = heartbeatTimeout();
+      this.heartbeat.on('message', status => {
+        if (status.type === 'PONG') {
+          clearTimeout(heartbeatTimeoutId);
+          heartbeatTimeoutId = heartbeatTimeout();
+        }
+      });
+
+      this.receiver.on('message', (status: receiverStatus) => {
         console.log('status');
-        console.log(status);
         console.log(status.type);
         console.log(status.status);
         this.dispatch(setStatus(status));
+
+        if (status.status.applications) {
+          const application = status.status.applications[0];
+          if (application.namespaces.some(({ name }) => name === MEDIA_NAMESPACE)) {
+            console.log('it can play media, launching media channel');
+            this.connectMedia(application.transportId);
+          }
+        }
+
       });
 
-      this.media.on('message', status => {
-        console.log('media status');
-        console.log(status);
-        this.dispatch(setStatus(status));
-      });
-
-      this.client.on('error', console.log);
-      this.connection.on('error', console.log);
-      this.heartbeat.on('error', console.log);
-      this.media.on('error', console.log);
-      this.receiver.on('error', console.log);
+      this.client.on('error', errorLogger('client'));
+      this.connection.on('error', errorLogger('client'));
+      this.heartbeat.on('error', errorLogger('client'));
+      this.receiver.on('error', errorLogger('client'));
     });
   }
 
-  addListeners(...listeners: Listener[]) {
-    this.listeners.push(...listeners);
+  connectMedia(transportId: string) {
+    console.log(`transportId: ${transportId}`);
+    if (this.media) {
+      this.media.close();
+      this.media.removeAllListeners();
+    }
+
+    this.media = this.client.createChannel('sender-0', transportId, MEDIA_NAMESPACE, 'JSON');
+    const connection = this.client.createChannel('sender-0', transportId, 'urn:x-cast:com.google.cast.tp.connection', 'JSON');
+
+    connection.send({ type: 'CONNECT' });
+
+    this.media.on('message', status => {
+      console.log('media status');
+      console.log(status);
+      this.dispatch(setStatus(status));
+    });
+
+    this.media.on('error', status => {
+      console.log('media error');
+      console.log(status);
+    });
   }
 
   destroy() {
@@ -112,8 +154,13 @@ export default class ChromecastEmitter {
     this.chromecastHost = null;
     this.client?.close();
     this.connection?.close();
+    this.connection.removeAllListeners();
     this.heartbeat?.close();
+    this.heartbeat?.removeAllListeners();
+    this.media?.close();
+    this.media?.removeAllListeners();
     this.receiver?.close();
+    this.receiver?.removeAllListeners();
     clearInterval(this.heartbeatId);
 
     this.dispatch(connection(false));
@@ -134,28 +181,26 @@ export default class ChromecastEmitter {
       const media = {
         contentId: fileUrl,
         contentType: 'video/mp4',
-        streamType: 'BUFFERED',
+        // streamType: 'BUFFERED',
         metadata: {
           type: 0,
           metadataType: 0,
-          title: '',
+          title: 'please work',
           images: [],
         }
       };
 
       const command = {
         autoplay: true,
-        currentTime: 0,
+        // currentTime: 0,
         media,
-        repeatMode: 'REPEAT_OFF',
+        // repeatMode: 'REPEAT_OFF',
         requestId: 2,
         type: 'LOAD',
       };
 
       console.log(command);
       this.media.send(command);
-      this.receiver.send(command);
-      this.connection.send(command);
     }, 3000);
 
     // const fileUrl = await getFileUrl(filePath);
@@ -209,3 +254,5 @@ export default class ChromecastEmitter {
     this.listeners.forEach(listener => listener(action));
   }
 }
+
+const errorLogger = channel => errorStats => console.log(`${channel} error: ${JSON.stringify(errorStats, null, 2)}`);
