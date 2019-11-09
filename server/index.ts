@@ -13,6 +13,7 @@ import {
   PLAY,
   PORT,
   SEEK,
+  STOP_MEDIA,
 } from '../constants';
 import { getDrivesAction, getFilesAction, inspectFileAction, setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
@@ -73,6 +74,9 @@ io.on('connection', socket => {
         return;
       case SEEK:
         chromecastEmitter.seek(payload);
+        return;
+      case STOP_MEDIA:
+        chromecastEmitter.destroyMedia();
         return;
     }
   });

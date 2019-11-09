@@ -1,11 +1,12 @@
 import Pause from '@material-ui/icons/Pause';
 import PlayArrow from '@material-ui/icons/PlayArrow';
+import Stop from '@material-ui/icons/Stop';
 import Chip from 'material-ui/Chip';
 import Slider from 'material-ui/Slider';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { changeVolume, pause, play, PLAYING, seek } from '../../lib/player-actions';
 import { MediaStatus } from '../../../types';
+import { changeVolume, stopMedia, pause, play, PLAYING, seek } from '../../lib/player-actions';
 import { ReducerState } from '../../types';
 import Sound from './Sound';
 
@@ -18,10 +19,11 @@ type State = {
 
 type Props = {
   changeVolume: typeof changeVolume,
+  mediaStatus: MediaStatus,
   pause: typeof pause,
   play: typeof play,
   seek: typeof seek,
-  mediaStatus: MediaStatus,
+  stopMedia: typeof stopMedia,
 };
 
 class Controls extends Component<Props, State> {
@@ -42,8 +44,8 @@ class Controls extends Component<Props, State> {
 
   render() {
     const { changeVolume, pause, play } = this.props;
-    const { contentId, currentTime, duration, playerState, volume } = this.props.mediaStatus || {};
-    const isMediaLoaded = contentId !== '';
+    const { currentTime, duration, playerState, volume } = this.props.mediaStatus || {};
+    const isMediaLoaded = this.props.mediaStatus;
     const isPlaying = playerState === PLAYING;
     const click = isPlaying ? pause : play;
     const playPercent = currentTime / (duration || 1);
@@ -55,6 +57,12 @@ class Controls extends Component<Props, State> {
             ? <Pause style={styles.icon} />
             : <PlayArrow style={styles.icon} />
           }
+        </div>
+      </div>
+
+      <div style={styles.verticalCenter}>
+        <div onMouseDown={() => this.props.stopMedia()}>
+          <Stop style={styles.icon} />
         </div>
       </div>
 
@@ -117,6 +125,7 @@ export default connect(
   }),
   {
     changeVolume,
+    stopMedia,
     pause,
     play,
     seek,

@@ -1,4 +1,14 @@
-import { CHANGE_VOLUME, CONNECT, GET_CHROMECASTS, GET_STATUS, LAUNCH, PAUSE, PLAY, SEEK } from '../../constants';
+import {
+  CHANGE_VOLUME,
+  CONNECT,
+  GET_CHROMECASTS,
+  GET_STATUS,
+  LAUNCH,
+  PAUSE,
+  PLAY,
+  SEEK,
+  STOP_MEDIA,
+} from '../../constants';
 
 export const PLAYING = 'PLAYING';
 
@@ -36,4 +46,8 @@ export const pause = () => ({
 export const seek = (time: number) => ({
   payload: time,
   type: SEEK,
+});
+
+export const stopMedia = () => ({
+  type: STOP_MEDIA,
 });

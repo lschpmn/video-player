@@ -56,6 +56,7 @@ export default class MediaEmitter {
   }
 
   destroy() {
+    this.connection?.send({ type: 'CLOSE', requestId: 1 });
     this.dispatch(setMediaDisconnect());
     this._isConnected = false;
     this.dispatch = null;

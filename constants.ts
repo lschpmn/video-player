@@ -1,4 +1,5 @@
 
+export const BACKDROP_RECEIVER_ID = 'E8C28D3C';
 export const DEFAULT_MEDIA_RECEIVER_ID = 'CC1AD845';
 export const MEDIA_NAMESPACE = 'urn:x-cast:com.google.cast.media';
 export const PORT = 3001;
@@ -21,7 +22,8 @@ export const GET_CHROMECASTS = 'GET_CHROMECASTS@server';
 export const GET_STATUS = 'GET_STATUS@server';
 export const SET_MEDIA_STATUS = 'SET_MEDIA_STATUS';
 export const SET_MEDIA_DISCONNECT = 'SET_MEDIA_DISCONNECT';
-export const SET_STATUS = 'SET_STAUTS';
+export const SET_STATUS = 'SET_STATUS';
+export const STOP_MEDIA = 'STOP_MEDIA@server';
 export const LAUNCH  = 'LAUNCH@server';
 export const PAUSE = 'PAUSED@server';
 export const PLAY = 'PLAYING@server';
