@@ -18,6 +18,7 @@ export type MediaStatus = {
   currentTime: number,
   duration: number,
   playerState: string,
+  title: string,
   volume: {
     level: number,
     muted: boolean,

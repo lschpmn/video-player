@@ -27,8 +27,8 @@ class App extends React.Component<Props> {
   }
 
   componentDidUpdate() {
-    if (this.props.mediaStatus?.playerState === PLAYING && !this.statusIntervalId) this.getMediaStatus();
-    else if (this.props.mediaStatus?.playerState !== PLAYING && this.statusIntervalId) {
+    if (this.props.mediaStatus && !this.statusIntervalId) this.getMediaStatus();
+    else if (!this.props.mediaStatus && this.statusIntervalId) {
       clearInterval(this.statusIntervalId);
       this.statusIntervalId = null;
     }

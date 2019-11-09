@@ -37,6 +37,7 @@ export const setMediaStatus = (status: MediaStatusServer): { payload: MediaStatu
     contentId: status.media?.contentId,
     currentTime: status.currentTime,
     duration: status.media?.duration,
+    title: status.media?.metadata?.title,
     playerState: status.playerState === 'PLAYING' || status.playerState === 'BUFFERING'
       ? 'PLAYING' : 'PAUSED',
     volume: status.volume,
