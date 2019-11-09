@@ -9,7 +9,10 @@ import {
   GET_STATUS,
   INSPECT_FILE_SERVER,
   LAUNCH,
+  PAUSE,
+  PLAY,
   PORT,
+  SEEK,
 } from '../constants';
 import { getDrivesAction, getFilesAction, inspectFileAction, setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
@@ -61,6 +64,15 @@ io.on('connection', socket => {
         return;
       case LAUNCH:
         chromecastEmitter.launch(payload);
+        return;
+      case PAUSE:
+        chromecastEmitter.pause();
+        return;
+      case PLAY:
+        chromecastEmitter.play();
+        return;
+      case SEEK:
+        chromecastEmitter.seek(payload);
         return;
     }
   });

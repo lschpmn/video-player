@@ -1,4 +1,5 @@
 import EventEmitter = NodeJS.EventEmitter;
+import { PLAYING } from './client/lib/player-actions';
 
 export type Channel = EventEmitter & {
   send: (data: any) => void,
@@ -10,7 +11,73 @@ export type ChromecastInfo = {
   name: string,
 };
 
-export type Listener = (action: { type: string, payload: any }) => void;
+export type Listener = (action: { type: string, payload?: any }) => void;
+
+export type MediaStatus = {
+  contentId: string,
+  currentTime: number,
+  duration: number,
+  playerState: string,
+  volume: {
+    level: number,
+    muted: boolean,
+  },
+  videoInfo?: {
+    width: number,
+    height: number,
+  },
+};
+
+export type MediaStatusServer = {
+  activeTrackIds: [],
+  currentTime: number,
+  currentItemId: number,
+  items?: {
+    autoplay: true,
+    itemId: number,
+    media: {
+      contentId: string,
+      contentType: string,
+      duration: number,
+      metadata: {
+        type: number,
+        metadataType: number,
+        title: string,
+        images: []
+      },
+      streamType: string,
+    },
+    orderId: number,
+  }[],
+  media?: {
+    contentId: string,
+    contentType: string,
+    streamType: string,
+    metadata: {
+      type: number,
+      metadataType: number,
+      title: string,
+      images: [],
+    },
+    mediaCategory: string,
+    duration: number,
+    tracks: {
+      trackId: number,
+      type: string,
+    }[],
+    breakClips: [],
+    breaks: [],
+  },
+  mediaSessionId: number,
+  playbackRate: number,
+  playerState: typeof PLAYING | 'PAUSED' | 'BUFFERING' | 'IDLE',
+  repeatMode: 'REPEAT_OFF' | 'REPEAT_ALL' | 'REPEAT_SINGLE' | 'REPEAT_ALL_AND_SHUFFLE',
+  supportedMediaCommands: 274447,
+  volume: {
+    level: number,
+    muted: boolean,
+  },
+};
 
 export type receiverStatus = {
   requestId: number,

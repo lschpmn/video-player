@@ -1,56 +1,51 @@
 import blue from '@material-ui/core/colors/blue';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { MediaStatus } from '../types';
 import Controls from './components/Controls';
 import Explorer from './components/Explorer';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
 import Media from './components/Media';
-import { getStatus, launch, pause, PAUSED, play, PLAYING } from './lib/player-actions';
+import { getStatus, launch, pause, play, PLAYING } from './lib/player-actions';
+import { ReducerState } from './types';
+import Timeout = NodeJS.Timeout;
 
 type Props = {
   getStatus: typeof getStatus,
   pause: typeof pause,
   play: typeof play,
   launch: typeof launch,
-  status: any,
+  mediaStatus: MediaStatus,
 };
 
 class App extends React.Component<Props> {
-  statusTimeoutId?: number;
+  statusIntervalId?: Timeout;
 
   async componentDidMount() {
-    setTimeout(() => this.getStatus(), 2000);
     document.addEventListener('keydown', e => e.key === ' ' && this.playPause());
   }
 
   componentDidUpdate() {
-    if (this.props.status.playerState === PLAYING && !this.statusTimeoutId) this.getStatus();
-    else if (this.props.status.playerState !== PLAYING && this.statusTimeoutId) {
-      clearTimeout(this.statusTimeoutId);
-      this.statusTimeoutId = null;
+    if (this.props.mediaStatus && !this.statusIntervalId) this.getStatus();
+    else if (!this.props.mediaStatus && this.statusIntervalId) {
+      clearInterval(this.statusIntervalId);
+      this.statusIntervalId = null;
     }
   }
 
   getStatus() {
-    this.props.getStatus();
-
-    this.statusTimeoutId = setTimeout(() => {
-      if (this.props.status.playerState !== PLAYING) return;
-      this.getStatus();
-    }, 1000) as any; //because the type system went stupid
+    this.statusIntervalId = setInterval(() => this.props.getStatus(), 1000);
   }
 
   playPause() {
-    if (this.props.status.playerState === PLAYING) this.props.pause();
-    if (this.props.status.playerState === PAUSED) this.props.play();
+    if (this.props.mediaStatus?.playerState === PLAYING) this.props.pause();
+    else this.props.play();
   }
 
   render() {
-    const { launch } = this.props;
-
     return <FileUpload
-      start={launch}
+      start={this.props.launch}
     >
       <div style={styles.parent}>
         <div style={styles.top} />
@@ -77,9 +72,8 @@ class App extends React.Component<Props> {
 }
 
 export default connect(
-  state => ({
-    //@ts-ignore
-    status: state.status,
+  (state: ReducerState) => ({
+    mediaStatus: state.chromecastStore.mediaStatus,
   }),
   {
     getStatus,

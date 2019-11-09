@@ -1,8 +1,8 @@
 import { Client } from 'castv2';
 import { basename } from 'path';
 import { MEDIA_NAMESPACE } from '../../constants';
-import { Channel, Listener } from '../../types';
-import { setStatus } from '../action-creators';
+import { Channel, Listener, MediaStatusServer } from '../../types';
+import { setMediaDisconnect, setMediaStatus } from '../action-creators';
 import { getFileUrl } from '../FileUtils';
 import { channelErrorLogger } from '../utils';
 import Timeout = NodeJS.Timeout;
@@ -17,6 +17,7 @@ export default class MediaEmitter {
   private _isConnected: boolean = false;
   private readonly media?: Channel;
   private mediaConnect?: Channel;
+  private mediaSessionId?: number;
 
   constructor(client: typeof Client, dispatch: Listener, transportId: string) {
     this.client = client;
@@ -34,7 +35,11 @@ export default class MediaEmitter {
       console.log('media status');
       console.log(status.type);
       console.log(status.status);
-      this.dispatch(setStatus(status));
+      if (status.status && status.status[0]) {
+        const mediaStatus: MediaStatusServer = status.status[0];
+        this.dispatch(setMediaStatus(mediaStatus));
+        this.mediaSessionId = mediaStatus.mediaSessionId;
+      }
       if (!this.isConnected) this._isConnected = true;
     });
 
@@ -51,6 +56,7 @@ export default class MediaEmitter {
   }
 
   destroy() {
+    this.dispatch(setMediaDisconnect());
     this._isConnected = false;
     this.dispatch = null;
     this.media?.close();
@@ -93,15 +99,15 @@ export default class MediaEmitter {
   }
 
   pause() {
-    this.media.send({ type: 'PAUSE' });
+    this.media.send({ mediaSessionId: this.mediaSessionId, type: 'PAUSE', requestId: 3 });
   }
 
   play() {
-    this.media.send({ type: 'PLAY' });
+    this.media.send({ mediaSessionId: this.mediaSessionId, type: 'PLAY', requestId: 3 });
   }
 
   seek(currentTime: number) {
-    this.media.send({ currentTime, type: 'SEEK' });
+    this.media.send({ currentTime, mediaSessionId: this.mediaSessionId, type: 'SEEK', requestId: 3 });
   }
 
   get isConnected(): boolean {

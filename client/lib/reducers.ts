@@ -7,10 +7,14 @@ import {
   GET_DRIVES,
   GET_FILES,
   INSPECT_FILE,
+  PAUSE,
+  PLAY,
+  SEEK,
   SET_CHROMECASTS,
+  SET_MEDIA_DISCONNECT,
+  SET_MEDIA_STATUS,
 } from '../../constants';
-import { ChromecastStoreState, Directory, ExplorerState, PlayerState } from '../types';
-import { PAUSED, UPDATE_STATUS } from './player-actions';
+import { ChromecastStoreState, Directory, ExplorerState } from '../types';
 
 type Action = {
   type: string,
@@ -27,6 +31,7 @@ const defaultChromecastStore: ChromecastStoreState = {
   chromecasts: [],
   isConnected: false,
   loading: false,
+  mediaStatus: null,
   selected: null,
 };
 
@@ -44,16 +49,34 @@ function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, a
         loading: false,
         isConnected: action.payload,
       };
-    case GET_CHROMECASTS:
-      return {
-        ...state,
-        loading: true,
-      };
     case SET_CHROMECASTS:
       return {
         ...state,
         chromecasts: action.payload,
         loading: false,
+      };
+    case SET_MEDIA_DISCONNECT:
+      return {
+        ...state,
+        loading: false,
+        mediaStatus: null,
+      };
+    case SET_MEDIA_STATUS:
+      return {
+        ...state,
+        loading: false,
+        mediaStatus: {
+          ...state.mediaStatus,
+          ...action.payload,
+        },
+      };
+    case GET_CHROMECASTS:
+    case PAUSE:
+    case PLAY:
+    case SEEK:
+      return {
+        ...state,
+        loading: true,
       };
     default:
       return state;
@@ -102,26 +125,7 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
   }
 }
 
-const defaultStateStatus: PlayerState = {
-  contentId: '',
-  currentTime: 0,
-  duration: 0,
-  playerState: PAUSED,
-  volume: { level: 1, muted: false },
-  videoInfo: { width: 0, height: 0 },
-};
-
-function status(state: PlayerState = defaultStateStatus, action) {
-  switch (action.type) {
-    case UPDATE_STATUS:
-      return { ...state, ...action.data };
-    default:
-      return state;
-  }
-}
-
 export default combineReducers({
   chromecastStore,
   explorer,
-  status,
 });

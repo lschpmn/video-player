@@ -5,7 +5,8 @@ import Slider from 'material-ui/Slider';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { changeVolume, pause, play, PLAYING, seek } from '../../lib/player-actions';
-import { PlayerState } from '../../types';
+import { MediaStatus } from '../../../types';
+import { ReducerState } from '../../types';
 import Sound from './Sound';
 
 type State = {
@@ -20,7 +21,7 @@ type Props = {
   pause: typeof pause,
   play: typeof play,
   seek: typeof seek,
-  status: PlayerState,
+  mediaStatus: MediaStatus,
 };
 
 class Controls extends Component<Props, State> {
@@ -35,13 +36,13 @@ class Controls extends Component<Props, State> {
 
   seek = () => {
     this.setState({showTime: false});
-    const { duration } = this.props.status;
+    const { duration } = this.props.mediaStatus;
     this.props.seek(this.state.val * duration);
   };
 
   render() {
     const { changeVolume, pause, play } = this.props;
-    const { contentId, currentTime, duration, playerState, volume } = this.props.status;
+    const { contentId, currentTime, duration, playerState, volume } = this.props.mediaStatus || {};
     const isMediaLoaded = contentId !== '';
     const isPlaying = playerState === PLAYING;
     const click = isPlaying ? pause : play;
@@ -49,7 +50,7 @@ class Controls extends Component<Props, State> {
 
     return <div style={styles.container}>
       <div style={styles.verticalCenter}>
-        <div onMouseDown={() => click()}>
+        <div onMouseDown={() => isMediaLoaded && click()}>
           {isPlaying
             ? <Pause style={styles.icon} />
             : <PlayArrow style={styles.icon} />
@@ -59,7 +60,7 @@ class Controls extends Component<Props, State> {
 
       <Sound
         changeVolume={changeVolume}
-        volume={volume}
+        volume={volume || {}}
       />
 
       <div style={{...styles.verticalCenter, padding: '0 5px'}}>
@@ -80,7 +81,7 @@ class Controls extends Component<Props, State> {
           //@ts-ignore
           ref={ref => ref && (this.slider = ref.track)}
           sliderStyle={styles.sliderStyle}
-          value={playPercent}
+          value={playPercent || 0}
         />
       </div>
 
@@ -89,6 +90,7 @@ class Controls extends Component<Props, State> {
 }
 
 function getTimeString(time) {
+  if (!time) return '0:00';
   let currentTime = Math.round(time);
   let hour;
   let min;
@@ -110,8 +112,8 @@ function leadZero(num) {
 }
 
 export default connect(
-  (state: { status: PlayerState }) => ({
-    status: state.status,
+  (state: ReducerState) => ({
+    mediaStatus: state.chromecastStore.mediaStatus,
   }),
   {
     changeVolume,

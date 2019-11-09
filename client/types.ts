@@ -1,9 +1,10 @@
-import { ChromecastInfo } from '../types';
+import { ChromecastInfo, MediaStatus } from '../types';
 
 export type ChromecastStoreState = {
   chromecasts: ChromecastInfo[],
   isConnected:boolean,
   loading: boolean,
+  mediaStatus?: MediaStatus,
   selected?: ChromecastInfo,
 };
 
@@ -24,29 +25,7 @@ export type Inspections = {
   },
 };
 
-export interface Player {
-  close: () => void,
-  getStatus: (callback: (err: Error | null, status: any) => void) => void,
-  load: (media: any, options: { autoplay: boolean }, callback: (err: Error, status: any) => void) => void;
-}
-
-export type PlayerState = {
-  contentId: string,
-  currentTime: number,
-  duration: number,
-  playerState: string,
-  volume: {
-    level: number,
-    muted: boolean,
-  },
-  videoInfo: {
-    width: number,
-    height: number,
-  },
-};
-
 export type ReducerState = {
   chromecastStore: ChromecastStoreState,
   explorer: ExplorerState,
-  status: PlayerState,
 };

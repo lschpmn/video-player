@@ -1,8 +1,6 @@
 import { CHANGE_VOLUME, CONNECT, GET_CHROMECASTS, GET_STATUS, LAUNCH, PAUSE, PLAY, SEEK } from '../../constants';
 
 export const PLAYING = 'PLAYING';
-export const PAUSED = 'PAUSED';
-export const UPDATE_STATUS = 'UPDATE_STATUS';
 
 export const changeVolume = (volume: number) => ({
   payload: volume,
