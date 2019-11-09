@@ -188,6 +188,7 @@ export default class ChromecastEmitter {
   pause = () => this.mediaEmitter?.pause();
   play = () => this.mediaEmitter?.play();
   seek = (currentTime: number) => this.mediaEmitter?.seek(currentTime);
+  stop = () => this.mediaEmitter?.stop();
 
   private dispatch = (action) => {
     this.listeners.forEach(listener => listener(action));

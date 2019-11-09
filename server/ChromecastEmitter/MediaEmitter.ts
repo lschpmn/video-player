@@ -39,6 +39,8 @@ export default class MediaEmitter {
         const mediaStatus: MediaStatusServer = status.status[0];
         this.dispatch(setMediaStatus(mediaStatus));
         this.mediaSessionId = mediaStatus.mediaSessionId;
+      } else {
+        this.dispatch(setMediaDisconnect());
       }
       if (!this.isConnected) this._isConnected = true;
     });
@@ -59,7 +61,7 @@ export default class MediaEmitter {
     this.connection?.send({ type: 'CLOSE', requestId: 1 });
     this.dispatch(setMediaDisconnect());
     this._isConnected = false;
-    this.dispatch = null;
+    this.dispatch = () => null;
     this.media?.close();
     this.media?.removeAllListeners();
     this.mediaConnect?.close();
@@ -109,6 +111,10 @@ export default class MediaEmitter {
 
   seek(currentTime: number) {
     this.media.send({ currentTime, mediaSessionId: this.mediaSessionId, type: 'SEEK', requestId: 3 });
+  }
+
+  stop() {
+    this.media.send({ mediaSessionId: this.mediaSessionId, type: 'STOP', requestId: 3 });
   }
 
   get isConnected(): boolean {

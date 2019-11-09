@@ -76,7 +76,7 @@ io.on('connection', socket => {
         chromecastEmitter.seek(payload);
         return;
       case STOP_MEDIA:
-        chromecastEmitter.destroyMedia();
+        chromecastEmitter.stop();
         return;
     }
   });
