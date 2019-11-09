@@ -83,9 +83,9 @@ class Controls extends Component<Props, State> {
         }
 
         <Slider
-          onChange={(e, val) => this.setState({ val })}
-          onDragStart={() => this.setState({ showTime: true })}
-          onDragStop={this.seek}
+          onChange={(e, val) => isMediaLoaded &&  this.setState({ val })}
+          onDragStart={() => isMediaLoaded && this.setState({ showTime: true })}
+          onDragStop={isMediaLoaded && this.seek}
           //@ts-ignore
           ref={ref => ref && (this.slider = ref.track)}
           sliderStyle={styles.sliderStyle}
