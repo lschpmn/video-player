@@ -2,6 +2,7 @@ import {
   CHANGE_VOLUME,
   CONNECT,
   GET_CHROMECASTS,
+  GET_MEDIA_STATUS,
   GET_STATUS,
   LAUNCH,
   PAUSE,
@@ -24,6 +25,10 @@ export const connect = (host: string) => ({
 
 export const getChromecasts = () => ({
   type: GET_CHROMECASTS,
+});
+
+export const getMediaStatus = () => ({
+  type: GET_MEDIA_STATUS,
 });
 
 export const getStatus = () => ({

@@ -67,6 +67,7 @@ export default class ChromecastEmitter {
     this.client = new Client();
     this.addListeners(...listeners);
 
+    console.log('connecting');
     this.client.connect(host, () => {
       console.log('connected');
       this._isConnected = true;
@@ -115,6 +116,7 @@ export default class ChromecastEmitter {
 
     this.client.on('error', status => {
       channelErrorLogger('client')(status);
+      this.chromecastHost = null;
       this._isConnected = false;
       this.dispatch(connection(this.isConnected));
     });
@@ -146,6 +148,10 @@ export default class ChromecastEmitter {
 
   destroyMedia() {
     this.mediaEmitter?.destroy();
+  }
+
+  getMediaStatus() {
+    this.isMediaConnected && this.mediaEmitter.getStatus();
   }
 
   getStatus() {

@@ -20,6 +20,7 @@ export const CONNECTION = 'CONNECTION';
 export const CONNECT = 'CONNECT@server';
 export const GET_CHROMECASTS = 'GET_CHROMECASTS@server';
 export const GET_STATUS = 'GET_STATUS@server';
+export const GET_MEDIA_STATUS = 'GET_MEDIA_STATUS@server';
 export const SET_MEDIA_STATUS = 'SET_MEDIA_STATUS';
 export const SET_MEDIA_DISCONNECT = 'SET_MEDIA_DISCONNECT';
 export const SET_STATUS = 'SET_STATUS';

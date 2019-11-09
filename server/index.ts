@@ -6,6 +6,7 @@ import {
   GET_CHROMECASTS,
   GET_DRIVES_SERVER,
   GET_FILES_SERVER,
+  GET_MEDIA_STATUS,
   GET_STATUS,
   INSPECT_FILE_SERVER,
   LAUNCH,
@@ -59,6 +60,9 @@ io.on('connection', socket => {
         return;
       case GET_CHROMECASTS:
         dispatch(setChromecasts(await ChromecastEmitter.GetChromecasts()));
+        return;
+      case GET_MEDIA_STATUS:
+        chromecastEmitter.getMediaStatus();
         return;
       case GET_STATUS:
         chromecastEmitter.getStatus();

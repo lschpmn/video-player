@@ -7,12 +7,12 @@ import Explorer from './components/Explorer';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
 import Media from './components/Media';
-import { getStatus, launch, pause, play, PLAYING } from './lib/player-actions';
+import { getMediaStatus, launch, pause, play, PLAYING } from './lib/player-actions';
 import { ReducerState } from './types';
 import Timeout = NodeJS.Timeout;
 
 type Props = {
-  getStatus: typeof getStatus,
+  getMediaStatus: typeof getMediaStatus,
   pause: typeof pause,
   play: typeof play,
   launch: typeof launch,
@@ -27,15 +27,15 @@ class App extends React.Component<Props> {
   }
 
   componentDidUpdate() {
-    if (this.props.mediaStatus && !this.statusIntervalId) this.getStatus();
+    if (this.props.mediaStatus && !this.statusIntervalId) this.getMediaStatus();
     else if (!this.props.mediaStatus && this.statusIntervalId) {
       clearInterval(this.statusIntervalId);
       this.statusIntervalId = null;
     }
   }
 
-  getStatus() {
-    this.statusIntervalId = setInterval(() => this.props.getStatus(), 1000);
+  getMediaStatus() {
+    this.statusIntervalId = setInterval(() => this.props.getMediaStatus(), 1000);
   }
 
   playPause() {
@@ -76,7 +76,7 @@ export default connect(
     mediaStatus: state.chromecastStore.mediaStatus,
   }),
   {
-    getStatus,
+    getMediaStatus,
     launch,
     pause,
     play,
