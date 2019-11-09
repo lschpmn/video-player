@@ -61,7 +61,7 @@ class Controls extends Component<Props, State> {
       </div>
 
       <div style={styles.verticalCenter}>
-        <div onMouseDown={() => this.props.stopMedia()}>
+        <div onMouseDown={() => isMediaLoaded && this.props.stopMedia()}>
           <Stop style={styles.icon} />
         </div>
       </div>

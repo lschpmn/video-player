@@ -1,8 +1,15 @@
+import { blue, green, red } from '@material-ui/core/colors';
 
 export const BACKDROP_RECEIVER_ID = 'E8C28D3C';
 export const DEFAULT_MEDIA_RECEIVER_ID = 'CC1AD845';
 export const MEDIA_NAMESPACE = 'urn:x-cast:com.google.cast.media';
 export const PORT = 3001;
+
+export const colors = {
+  blue: blue['500'],
+  green: green['500'],
+  red: red['500'],
+};
 
 //server actions
 
