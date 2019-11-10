@@ -35,7 +35,7 @@ io.on('connection', socket => {
   console.log('client connected');
   const dispatch = action => socket.emit('dispatch', action);
 
-  chromecastEmitter.addListeners(dispatch);
+  chromecastEmitter.setDispatch(dispatch);
 
   socket.on('dispatch', async ({ type, payload }) => {
     console.log(type);

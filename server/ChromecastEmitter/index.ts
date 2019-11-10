@@ -15,7 +15,7 @@ export default class ChromecastEmitter {
   private heartbeat?: Channel;
   private heartbeatId?: Timeout;
   private _isConnected: boolean = false;
-  private listeners: Listener[] = [];
+  private listener?: Listener;
   private mediaEmitter?: MediaEmitter;
   private receiver?: Channel;
 
@@ -48,15 +48,11 @@ export default class ChromecastEmitter {
     });
   }
 
-  constructor(...listeners: Listener[]) {
-    this.addListeners(...listeners);
+  constructor(dispatch?: Listener) {
+    if (dispatch) this.setDispatch(dispatch);
   }
 
-  addListeners(...listeners: Listener[]) {
-    this.listeners.push(...listeners);
-  }
-
-  connect(host: string, ...listeners: Listener[]): void {
+  connect(host: string): void {
     if (this.chromecastHost === host) {
       this.dispatch(connection(this.isConnected));
       this.isConnected && this.getStatus();
@@ -65,7 +61,6 @@ export default class ChromecastEmitter {
     this.chromecastHost = host;
 
     this.client = new Client();
-    this.addListeners(...listeners);
 
     console.log('connecting');
     this.client.connect(host, () => {
@@ -173,13 +168,8 @@ export default class ChromecastEmitter {
     this.mediaEmitter?.launch(filePath);
   }
 
-  removeAllListeners() {
-    this.listeners = [];
-  }
-
-  removeListeners(...listeners: Listener[]) {
-    this.listeners = this.listeners
-      .filter(listener => !listeners.includes(listener));
+  setDispatch(dispatch: Listener) {
+    this.listener = dispatch;
   }
 
   get isConnected() {
@@ -196,9 +186,7 @@ export default class ChromecastEmitter {
   seek = (currentTime: number) => this.mediaEmitter?.seek(currentTime);
   stop = () => this.mediaEmitter?.stop();
 
-  private dispatch = (action) => {
-    this.listeners.forEach(listener => listener(action));
-  };
+  private dispatch = action => this.listener(action);
 
   private setupHeartbeat() {
     this.heartbeatId = setInterval(() => this.heartbeat.send({ type: 'PING' }), 5000);

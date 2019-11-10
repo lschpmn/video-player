@@ -61,11 +61,11 @@ export default class MediaEmitter {
     this.connection?.send({ type: 'CLOSE', requestId: 1 });
     this.dispatch(setMediaDisconnect());
     this._isConnected = false;
-    this.dispatch = () => null;
     this.media?.close();
     this.media?.removeAllListeners();
     this.mediaConnect?.close();
     this.mediaConnect?.removeAllListeners();
+    this.dispatch = () => null;
   }
 
   getStatus() {
