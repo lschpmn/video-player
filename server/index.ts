@@ -38,7 +38,7 @@ io.on('connection', socket => {
   chromecastEmitter.setDispatch(dispatch);
 
   socket.on('dispatch', async ({ type, payload }) => {
-    console.log(type);
+    if (type !== GET_MEDIA_STATUS) console.log(type);
     payload && console.log(payload);
 
     switch (type) {

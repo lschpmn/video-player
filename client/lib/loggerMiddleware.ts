@@ -1,8 +1,13 @@
+import { isEqual } from 'lodash';
 
-
-export default store => next => action => {
-  console.log(action);
-  const result = next(action);
-  console.log(store.getState());
-  return result;
+export default store => {
+  let lastStore = store.getState();
+  return next => action => {
+    console.log(action);
+    const result = next(action);
+    const nextStore = store.getState();
+    if (!isEqual(lastStore, nextStore)) console.log(store.getState());
+    lastStore = nextStore;
+    return result;
+  }
 };
