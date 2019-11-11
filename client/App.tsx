@@ -26,16 +26,22 @@ class App extends React.Component<Props> {
     document.addEventListener('keydown', e => e.key === ' ' && this.playPause());
   }
 
-  componentDidUpdate() {
-    if (this.props.mediaStatus && !this.statusIntervalId) this.getMediaStatus();
-    else if (!this.props.mediaStatus && this.statusIntervalId) {
+  componentDidUpdate(prevProps: Props) {
+    const wasPlaying = prevProps.mediaStatus?.playerState === PLAYING;
+    const isPlaying = this.props.mediaStatus?.playerState === PLAYING;
+    if (wasPlaying && !isPlaying) {
+      this.getMediaStatus(5000);
+    } else if (!wasPlaying && isPlaying) {
+      this.getMediaStatus(1000);
+    } else if (!this.props.mediaStatus && this.statusIntervalId) {
       clearInterval(this.statusIntervalId);
       this.statusIntervalId = null;
     }
   }
 
-  getMediaStatus() {
-    this.statusIntervalId = setInterval(() => this.props.getMediaStatus(), 1000);
+  getMediaStatus(time: number) {
+    this.statusIntervalId && clearInterval(this.statusIntervalId);
+    this.statusIntervalId = setInterval(() => this.props.getMediaStatus(), time);
   }
 
   playPause() {
