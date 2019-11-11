@@ -73,7 +73,7 @@ export type MediaStatusServer = {
   playbackRate: number,
   playerState: typeof PLAYING | 'PAUSED' | 'BUFFERING' | 'IDLE',
   repeatMode: 'REPEAT_OFF' | 'REPEAT_ALL' | 'REPEAT_SINGLE' | 'REPEAT_ALL_AND_SHUFFLE',
-  supportedMediaCommands: 274447,
+  supportedMediaCommands: number,
   volume: {
     level: number,
     muted: boolean,

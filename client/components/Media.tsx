@@ -21,8 +21,9 @@ class Media extends React.Component<Props> {
     const { chromecastStore: prevChromecastStore } = prevProps;
     const { chromecastStore } = this.props;
 
-    if (!prevChromecastStore.chromecasts[0] && chromecastStore.chromecasts[0]) {
-      this.props.connectAction(chromecastStore.chromecasts[0].host);
+    if (!prevChromecastStore.chromecasts[0] && chromecastStore.chromecasts[0]
+      || prevChromecastStore.loading && !chromecastStore.loading && !chromecastStore.isConnected) {
+      setTimeout(() => this.props.connectAction(chromecastStore.chromecasts[0].host), 500);
     }
   }
 
