@@ -2,7 +2,7 @@ import { Client } from 'castv2';
 import { basename } from 'path';
 import { MEDIA_NAMESPACE } from '../../constants';
 import { Channel, Listener, MediaStatusServer } from '../../types';
-import { setMediaDisconnect, setMediaStatus } from '../action-creators';
+import { log, setMediaDisconnect, setMediaStatus } from '../action-creators';
 import { getFileUrl } from '../FileUtils';
 import { channelErrorLogger } from '../utils';
 import Timeout = NodeJS.Timeout;
@@ -32,9 +32,7 @@ export default class MediaEmitter {
     this.setupHeartbeat();
 
     this.media.on('message', status => {
-      console.log('media status');
-      console.log(status.type);
-      console.log(status.status);
+      this.dispatch(log(status));
       if (status.status && status.status[0]) {
         const mediaStatus: MediaStatusServer = status.status[0];
         this.dispatch(setMediaStatus(mediaStatus));
@@ -46,6 +44,7 @@ export default class MediaEmitter {
     });
 
     this.connection.on('message', status => {
+      this.dispatch(log(status));
       console.log('media connect status');
       console.log(status);
       status.type === 'CLOSE' && this.destroy();

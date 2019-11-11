@@ -6,6 +6,7 @@ import {
   GET_CHROMECASTS,
   GET_DRIVES,
   GET_FILES,
+  GET_MEDIA_STATUS,
   INSPECT_FILE,
   PAUSE,
   PLAY,
@@ -71,6 +72,7 @@ function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, a
         },
       };
     case GET_CHROMECASTS:
+    case GET_MEDIA_STATUS:
     case PAUSE:
     case PLAY:
     case SEEK:

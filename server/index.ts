@@ -39,7 +39,7 @@ io.on('connection', socket => {
 
   socket.on('dispatch', async ({ type, payload }) => {
     console.log(type);
-    console.log(payload);
+    payload && console.log(payload);
 
     switch (type) {
       // files

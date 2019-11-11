@@ -3,6 +3,7 @@ import {
   GET_DRIVES,
   GET_FILES,
   INSPECT_FILE,
+  LOG,
   SET_CHROMECASTS,
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
@@ -28,6 +29,11 @@ export const getFilesAction = (files, location: string[]) => ({
   type: GET_FILES,
 });
 
+export const log = message => ({
+  payload: message,
+  type: LOG,
+});
+
 export const setMediaDisconnect = () => ({
   type: SET_MEDIA_DISCONNECT,
 });
@@ -37,9 +43,10 @@ export const setMediaStatus = (status: MediaStatusServer): { payload: MediaStatu
     contentId: status.media?.contentId,
     currentTime: status.currentTime,
     duration: status.media?.duration,
-    title: status.media?.metadata?.title,
+    subtitle: status.media?.metadata?.subtitle,
     playerState: status.playerState === 'PLAYING' || status.playerState === 'BUFFERING'
       ? 'PLAYING' : 'PAUSED',
+    title: status.media?.metadata?.title,
     volume: status.volume,
   },
   type: SET_MEDIA_STATUS,

@@ -18,6 +18,7 @@ export type MediaStatus = {
   currentTime: number,
   duration: number,
   playerState: string,
+  subtitle?: string,
   title: string,
   volume: {
     level: number,
@@ -57,6 +58,8 @@ export type MediaStatusServer = {
     metadata: {
       type: number,
       metadataType: number,
+      subtitle?: string,
+      tertiaryTitle?: string,
       title: string,
       images: [],
     },

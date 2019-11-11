@@ -2,7 +2,7 @@ import { Client } from 'castv2';
 import * as multicastdns from 'multicast-dns';
 import { DEFAULT_MEDIA_RECEIVER_ID, MEDIA_NAMESPACE } from '../../constants';
 import { Channel, ChromecastInfo, Listener, receiverStatus } from '../../types';
-import { connection, setStatus } from '../action-creators';
+import { connection, setMediaDisconnect, setStatus } from '../action-creators';
 import { channelErrorLogger, waitForTrue } from '../utils';
 import MediaEmitter from './MediaEmitter';
 import Timeout = NodeJS.Timeout;
@@ -146,7 +146,11 @@ export default class ChromecastEmitter {
   }
 
   getMediaStatus() {
-    this.isMediaConnected && this.mediaEmitter.getStatus();
+     if (this.isMediaConnected) this.mediaEmitter.getStatus();
+     else {
+       this.dispatch(connection(this.isConnected));
+       this.dispatch(setMediaDisconnect());
+     }
   }
 
   getStatus() {

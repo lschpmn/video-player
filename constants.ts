@@ -13,6 +13,8 @@ export const colors = {
 
 //server actions
 
+export const LOG = 'LOG';
+
 //files
 export const GET_DRIVES = 'GET_DRIVES';
 export const GET_DRIVES_SERVER = 'GET_DRIVES@server';
