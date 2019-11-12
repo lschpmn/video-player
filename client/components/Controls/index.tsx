@@ -1,12 +1,14 @@
+import Forward10Icon from '@material-ui/icons/Forward10';
 import Pause from '@material-ui/icons/Pause';
 import PlayArrow from '@material-ui/icons/PlayArrow';
+import Replay10Icon from '@material-ui/icons/Replay10';
 import Stop from '@material-ui/icons/Stop';
 import Chip from 'material-ui/Chip';
 import Slider from 'material-ui/Slider';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { MediaStatus } from '../../../types';
-import { changeVolume, stopMedia, pause, play, PLAYING, seek } from '../../lib/player-actions';
+import { changeVolume, pause, play, PLAYING, seek, stopMedia } from '../../lib/player-actions';
 import { ReducerState } from '../../types';
 import Sound from './Sound';
 
@@ -63,6 +65,18 @@ class Controls extends Component<Props, State> {
       <div style={styles.verticalCenter}>
         <div onMouseDown={() => isMediaLoaded && this.props.stopMedia()}>
           <Stop style={styles.icon} />
+        </div>
+      </div>
+
+      <div style={styles.verticalCenter}>
+        <div onMouseDown={() => isMediaLoaded && this.props.seek(currentTime - 10)}>
+          <Replay10Icon style={styles.icon} />
+        </div>
+      </div>
+
+      <div style={styles.verticalCenter}>
+        <div onMouseDown={() => isMediaLoaded && this.props.seek(currentTime + 10)}>
+          <Forward10Icon style={styles.icon} />
         </div>
       </div>
 
