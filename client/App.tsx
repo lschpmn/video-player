@@ -7,7 +7,7 @@ import Explorer from './components/Explorer';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
 import Media from './components/Media';
-import { getMediaStatus, launch, pause, play, PLAYING } from './lib/player-actions';
+import { getMediaStatus, launch, pause, play, PLAYING, seek } from './lib/player-actions';
 import { ReducerState } from './types';
 import Timeout = NodeJS.Timeout;
 
@@ -17,13 +17,29 @@ type Props = {
   play: typeof play,
   launch: typeof launch,
   mediaStatus: MediaStatus,
+  seek: typeof seek,
 };
 
 class App extends React.Component<Props> {
   statusIntervalId?: Timeout;
 
   async componentDidMount() {
-    document.addEventListener('keydown', e => e.key === ' ' && this.playPause());
+    document.addEventListener('keydown', e => {
+      if (!this.props.mediaStatus) return;
+      const { mediaStatus } = this.props;
+
+      switch (e.key) {
+        case ' ':
+          this.playPause();
+          return;
+        case 'ArrowLeft':
+          this.props.seek(mediaStatus.currentTime - 10);
+          return;
+        case 'ArrowRight':
+          this.props.seek(mediaStatus.currentTime + 10);
+          return;
+      }
+    });
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -86,6 +102,7 @@ export default connect(
     launch,
     pause,
     play,
+    seek,
   }
 )(App);
 
