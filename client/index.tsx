@@ -8,8 +8,6 @@ import loggerMiddleware from './lib/loggerMiddleware';
 import reducers from './lib/reducers';
 import socketMiddleware from './lib/socketMiddleware';
 
-import './index.html';
-
 const store = createStore(reducers, applyMiddleware(loggerMiddleware, socketMiddleware));
 
 render((

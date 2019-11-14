@@ -1,7 +1,7 @@
 import * as io from 'socket.io-client';
-import { PORT } from '../../constants';
 
-const socket = io(`http://localhost:${PORT}`);
+// @ts-ignore
+const socket = io(`http://localhost:${window.__PORT__}`);
 
 export default store => {
   socket.on('dispatch', action => store.dispatch(action));

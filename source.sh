@@ -2,5 +2,6 @@
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null && pwd )"
 PATH=$PATH:$DIR/node_modules/.bin/
+alias start-client="electron . | grep -v ProductRegistryImpl.Registry"
 alias start-server="nodemon -w ./server -e ts -x ts-node server/ < /dev/null"
-alias start="webpack-dev-server & start-server & electron . | grep -v ProductRegistryImpl.Registry&"
+alias start="start-server & webpack -w & start-client &"

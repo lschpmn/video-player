@@ -2,7 +2,7 @@ import { exec } from 'child_process';
 import { Router, static as expressStatic } from 'express';
 import { inspectAsync, listAsync } from 'fs-jetpack';
 import { networkInterfaces } from 'os';
-import { PORT } from '../constants';
+import { port } from './index';
 
 export const FilesRouter = Router();
 
@@ -40,7 +40,7 @@ export async function getFileUrl(path: string) {
     setHeaders: res => res.type('video/mp4'),
   }));
 
-  fileUrlMap[path] = `http://${ipAddress}:${PORT}/api/files/${tmpName}.mp4`;
+  fileUrlMap[path] = `http://${ipAddress}:${port}/api/files/${tmpName}.mp4`;
   console.log(`url: ${fileUrlMap[path]}`);
   return fileUrlMap[path];
 }

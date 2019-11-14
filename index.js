@@ -1,6 +1,7 @@
 'use strict';
 
 const { app, BrowserWindow } = require('electron');
+const { join } = require('path');
 
 let win;
 
@@ -13,7 +14,7 @@ function createWindow() {
     width: 1280,
   });
 
-  win.loadURL('http://localhost:5000');
+  win.loadFile(join(__dirname, 'public/index.html'));
 
   win.webContents.openDevTools();
 
