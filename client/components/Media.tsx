@@ -5,7 +5,7 @@ import CastConnectedIcon from '@material-ui/icons/CastConnected';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { colors } from '../../constants';
-import { connect as connectAction, getChromecasts } from '../lib/player-actions';
+import { connect as connectAction, getChromecasts, launch } from '../lib/player-actions';
 import { ChromecastStoreState, ReducerState } from '../types';
 
 type State = {
@@ -17,6 +17,7 @@ type Props = {
   chromecastStore: ChromecastStoreState,
   connectAction: typeof connectAction,
   getChromecasts: typeof getChromecasts,
+  launch: typeof launch,
 };
 
 class Media extends React.Component<Props, State> {
@@ -48,6 +49,7 @@ class Media extends React.Component<Props, State> {
   onEnter = ({ key }) => {
     if (key === 'Enter') {
       console.log(this.state.url);
+      this.props.launch(this.state.url, true);
       this.setState({
         showUrlField: false,
         url: '',
@@ -59,7 +61,7 @@ class Media extends React.Component<Props, State> {
     const { chromecastStore } = this.props;
     const name = chromecastStore.chromecasts[0] && chromecastStore.chromecasts[0].name;
 
-    return <div style={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    return <div style={styles.container}>
       {chromecastStore.isConnected
         ? chromecastStore.mediaStatus
           ? <CastConnectedIcon style={{ ...styles.icon, color: colors.blue }}/>
@@ -99,12 +101,19 @@ export default connect(
   {
     connectAction,
     getChromecasts,
+    launch,
   },
 )(Media);
 
 const styles = {
   connectionStatus: {
     textAlign: 'center',
+  } as React.CSSProperties,
+  container: {
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    wordBreak: 'break-all',
   } as React.CSSProperties,
   name: {
     textAlign: 'center',

@@ -1,9 +1,10 @@
 import { Client } from 'castv2';
+import { random } from 'lodash';
 import { basename } from 'path';
 import { MEDIA_NAMESPACE } from '../../constants';
 import { Channel, Listener, MediaStatusServer } from '../../types';
 import { log, setMediaDisconnect, setMediaStatus } from '../action-creators';
-import { getFileUrl } from '../FileUtils';
+import { getFileUrl, ipAddress } from '../FileUtils';
 import { channelErrorLogger } from '../utils';
 import Timeout = NodeJS.Timeout;
 
@@ -71,19 +72,24 @@ export default class MediaEmitter {
     this.media.send({ type: 'GET_STATUS', requestId: 1 });
   }
 
-  async launch(filePath: string) {
+  async launch(path: string, isUrl = false) {
     if (!this.isConnected) return;
 
-    const fileUrl = await getFileUrl(filePath);
+    let url;
+    if (isUrl) {
+      url = path.replace('127.0.0.1', ipAddress);
+    } else {
+      url = await getFileUrl(path);
+    }
 
     const media = {
-      contentId: fileUrl,
+      contentId: url,
       contentType: 'video/mp4',
       streamType: 'BUFFERED',
       metadata: {
         type: 0,
         metadataType: 0,
-        title: basename(filePath),
+        title: basename(isUrl ? url : path),
         images: [],
       },
     };
@@ -101,19 +107,19 @@ export default class MediaEmitter {
   }
 
   pause() {
-    this.media.send({ mediaSessionId: this.mediaSessionId, type: 'PAUSE', requestId: 3 });
+    this.media.send({ mediaSessionId: this.mediaSessionId, type: 'PAUSE', requestId: random(100) });
   }
 
   play() {
-    this.media.send({ mediaSessionId: this.mediaSessionId, type: 'PLAY', requestId: 3 });
+    this.media.send({ mediaSessionId: this.mediaSessionId, type: 'PLAY', requestId: random(100) });
   }
 
   seek(currentTime: number) {
-    this.media.send({ currentTime, mediaSessionId: this.mediaSessionId, type: 'SEEK', requestId: 3 });
+    this.media.send({ currentTime, mediaSessionId: this.mediaSessionId, type: 'SEEK', requestId: random(100) });
   }
 
   stop() {
-    this.media.send({ mediaSessionId: this.mediaSessionId, type: 'STOP', requestId: 3 });
+    this.media.send({ mediaSessionId: this.mediaSessionId, type: 'STOP', requestId: random(100) });
   }
 
   get isConnected(): boolean {

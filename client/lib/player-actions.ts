@@ -35,8 +35,11 @@ export const getStatus = () => ({
   type: GET_STATUS,
 });
 
-export const launch = (path: string) => ({
-  payload: path,
+export const launch = (path: string, isUrl = false) => ({
+  payload: {
+    isUrl,
+    path,
+  },
   type: LAUNCH,
 });
 

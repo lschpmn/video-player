@@ -86,7 +86,7 @@ async function startServer() {
           chromecastEmitter.getStatus();
           return;
         case LAUNCH:
-          chromecastEmitter.launch(payload);
+          chromecastEmitter.launch(payload.path, payload.isUrl);
           return;
         case PAUSE:
           chromecastEmitter.pause();

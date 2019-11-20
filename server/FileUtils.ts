@@ -6,7 +6,7 @@ import { port } from './index';
 
 export const FilesRouter = Router();
 
-const ipAddress = networkInterfaces().Ethernet
+export const ipAddress = networkInterfaces().Ethernet
   ? networkInterfaces().Ethernet.find(e => e.family === 'IPv4').address
   : networkInterfaces()['Wi-Fi'].find(e => e.family === 'IPv4').address;
 const fileUrlMap: { [s: string]: string } = {};
