@@ -1,4 +1,5 @@
 import blue from '@material-ui/core/colors/blue';
+import { hot } from 'react-hot-loader/root';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { MediaStatus } from '../types';
@@ -9,7 +10,6 @@ import FileUpload from './components/FileUpload';
 import Media from './components/Media';
 import { getMediaStatus, launch, pause, play, PLAYING, seek } from './lib/player-actions';
 import { ReducerState } from './types';
-import Timeout = NodeJS.Timeout;
 
 type Props = {
   getMediaStatus: typeof getMediaStatus,
@@ -21,7 +21,7 @@ type Props = {
 };
 
 class App extends React.Component<Props> {
-  statusIntervalId?: Timeout;
+  statusIntervalId?: any;
 
   async componentDidMount() {
     document.addEventListener('keydown', e => {
@@ -93,7 +93,7 @@ class App extends React.Component<Props> {
   }
 }
 
-export default connect(
+const ConnectedApp = connect(
   (state: ReducerState) => ({
     mediaStatus: state.chromecastStore.mediaStatus,
   }),
@@ -105,6 +105,8 @@ export default connect(
     seek,
   }
 )(App);
+
+export default hot(ConnectedApp);
 
 const styles = {
   bottom: {

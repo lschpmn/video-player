@@ -3,7 +3,7 @@
 const path = require('path');
 
 module.exports = {
-  entry: './client/index',
+  entry: ['react-hot-loader/patch', './client/index'],
 
   mode: 'development',
 
@@ -15,6 +15,9 @@ module.exports = {
   },
 
   resolve: {
+    alias: {
+      'react-dom': '@hot-loader/react-dom',
+    },
     extensions: ['.ts', '.tsx', '.js', '.json'],
   },
 
@@ -28,14 +31,25 @@ module.exports = {
       {
         test: /.tsx?$/,
         exclude: /node_modules/,
-        loader: 'ts-loader',
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: [
+              '@babel/preset-typescript',
+              '@babel/preset-react',
+              '@babel/preset-env',
+            ],
+            plugins: [
+              '@babel/plugin-transform-runtime',
+              '@babel/plugin-proposal-class-properties',
+              '@babel/plugin-proposal-optional-chaining',
+              'react-hot-loader/babel',
+            ],
+          },
+        },
       },
     ],
   },
 
   devtool: 'source-map',
-
-  devServer:  {
-    port: 5000,
-  },
 };
