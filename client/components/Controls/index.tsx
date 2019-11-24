@@ -1,111 +1,90 @@
+import Slider from '@material-ui/core/Slider';
 import Forward10Icon from '@material-ui/icons/Forward10';
 import Pause from '@material-ui/icons/Pause';
 import PlayArrow from '@material-ui/icons/PlayArrow';
 import Replay10Icon from '@material-ui/icons/Replay10';
 import Stop from '@material-ui/icons/Stop';
-import Chip from 'material-ui/Chip';
-import Slider from 'material-ui/Slider';
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
-import { MediaStatus } from '../../../types';
+import debounce from 'lodash/debounce';
+import React, { useCallback, useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import { pause, play, PLAYING, seek, stopMedia } from '../../lib/player-actions';
+import { colors, useAction } from '../../lib/utils';
 import { ReducerState } from '../../types';
 import Sound from './Sound';
 
-type State = {
-  seekId?: number,
-  showTime: boolean,
-  x: number,
-  val: number,
-};
+const Controls = () => {
+  const [isSeeking, setIsSeeking] = useState(false);
+  const [localCurrentTime, setLocalCurrentTime] = useState(0);
+  const pauseAction = useAction(pause);
+  const playAction = useAction(play);
+  const seekAction = useAction(seek);
+  const seekDebounce = useCallback(debounce(seekAction, 250), []);
+  const stopMediaAction = useAction(stopMedia);
+  const mediaStatus = useSelector((state: ReducerState) => state.chromecastStore.mediaStatus);
+  const { currentTime, duration, playerState } = mediaStatus || {};
 
-type Props = {
-  mediaStatus: MediaStatus,
-  pause: typeof pause,
-  play: typeof play,
-  seek: typeof seek,
-  stopMedia: typeof stopMedia,
-};
+  const isMediaLoaded = !!mediaStatus;
+  const isPlaying = playerState === PLAYING;
+  const click = isPlaying ? pauseAction : playAction;
 
-class Controls extends Component<Props, State> {
-  slider: any;
+  useEffect(() => {
+    !isSeeking && setLocalCurrentTime(currentTime || 0);
+  }, [currentTime]);
 
-  state = {
-    seekId: null,
-    showTime: false,
-    x: 0,
-    val: 0,
-  };
+  const onSliderChange = useCallback((e, val) => {
+    if (val === localCurrentTime) return;
+    setLocalCurrentTime(val || 0);
+    isMediaLoaded && seekDebounce(val || 0);
+  }, [isMediaLoaded]);
 
-  seek = () => {
-    this.setState({showTime: false});
-    const { duration } = this.props.mediaStatus;
-    this.props.seek(this.state.val * duration);
-  };
-
-  render() {
-    const { pause, play } = this.props;
-    const { currentTime, duration, playerState } = this.props.mediaStatus || {};
-    const isMediaLoaded = this.props.mediaStatus;
-    const isPlaying = playerState === PLAYING;
-    const click = isPlaying ? pause : play;
-    const playPercent = currentTime / (duration || 1);
-
-    return <div style={styles.container}>
-      <div style={styles.verticalCenter}>
-        <div onMouseDown={() => isMediaLoaded && click()}>
-          {isPlaying
-            ? <Pause style={styles.icon} />
-            : <PlayArrow style={styles.icon} />
-          }
-        </div>
-      </div>
-
-      <div style={styles.verticalCenter}>
-        <div onMouseDown={() => isMediaLoaded && this.props.stopMedia()}>
-          <Stop style={styles.icon} />
-        </div>
-      </div>
-
-      <div style={styles.verticalCenter}>
-        <div onMouseDown={() => isMediaLoaded && this.props.seek(currentTime - 10)}>
-          <Replay10Icon style={styles.icon} />
-        </div>
-      </div>
-
-      <div style={styles.verticalCenter}>
-        <div onMouseDown={() => isMediaLoaded && this.props.seek(currentTime + 10)}>
-          <Forward10Icon style={styles.icon} />
-        </div>
-      </div>
-
-      <Sound />
-
-      <div style={{...styles.verticalCenter, padding: '0 5px'}}>
-        {`${getTimeString(currentTime)}/${getTimeString(duration)}`}
-      </div>
-
-      <div style={styles.slider} onMouseMove={e => this.state.showTime && this.setState({x: e.pageX})} >
-        {this.state.showTime && this.slider &&
-          <Chip style={{...styles.chip, left: `calc(${this.state.x}px - 2rem)`}}>
-            {getTimeString(this.state.val * duration)}
-          </Chip>
+  return <div style={styles.container}>
+    <div style={styles.verticalCenter}>
+      <div onMouseDown={() => isMediaLoaded && click()}>
+        {isPlaying
+          ? <Pause style={styles.icon} />
+          : <PlayArrow style={styles.icon} />
         }
-
-        <Slider
-          onChange={(e, val) => isMediaLoaded &&  this.setState({ val })}
-          onDragStart={() => isMediaLoaded && this.setState({ showTime: true })}
-          onDragStop={isMediaLoaded && this.seek}
-          //@ts-ignore
-          ref={ref => ref && (this.slider = ref.track)}
-          sliderStyle={styles.sliderStyle}
-          value={playPercent || 0}
-        />
       </div>
-
     </div>
-  }
-}
+
+    <div style={styles.verticalCenter}>
+      <div onMouseDown={() => isMediaLoaded && stopMediaAction()}>
+        <Stop style={styles.icon} />
+      </div>
+    </div>
+
+    <div style={styles.verticalCenter}>
+      <div onMouseDown={() => isMediaLoaded && seekAction(currentTime - 10)}>
+        <Replay10Icon style={styles.icon} />
+      </div>
+    </div>
+
+    <div style={styles.verticalCenter}>
+      <div onMouseDown={() => isMediaLoaded && seekAction(currentTime + 10)}>
+        <Forward10Icon style={styles.icon} />
+      </div>
+    </div>
+
+    <Sound />
+
+    <div style={{...styles.verticalCenter, padding: '0 5px'}}>
+      {`${getTimeString(localCurrentTime)}/${getTimeString(duration)}`}
+    </div>
+
+    <div style={styles.slider} >
+      <Slider
+        max={duration || 0}
+        min={0}
+        onChange={onSliderChange}
+        onMouseDown={() => setIsSeeking(true)}
+        onMouseUp={() => setIsSeeking(false)}
+        style={styles.sliderStyle}
+        value={localCurrentTime}
+      />
+    </div>
+
+  </div>
+};
 
 function getTimeString(time) {
   if (!time) return '0:00';
@@ -129,17 +108,7 @@ function leadZero(num) {
   return ('0' + num).slice(-2);
 }
 
-export default connect(
-  (state: ReducerState) => ({
-    mediaStatus: state.chromecastStore.mediaStatus,
-  }),
-  {
-    stopMedia,
-    pause,
-    play,
-    seek,
-  }
-)(Controls);
+export default Controls;
 
 const styles = {
   chip: {
@@ -149,7 +118,7 @@ const styles = {
   } as React.CSSProperties,
   container: {
     alignItems: 'stretch',
-    backgroundColor: '#2196F3',
+    backgroundColor: colors.primary,
     color: 'white',
     display: 'flex',
     height: '3rem',
@@ -170,6 +139,7 @@ const styles = {
     position: 'relative',
   } as React.CSSProperties,
   sliderStyle: {
+    color: colors.secondary,
     margin: '0 1rem',
     width: 'inherit'
   } as React.CSSProperties,

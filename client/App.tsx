@@ -1,6 +1,5 @@
-import blue from '@material-ui/core/colors/blue';
-import { hot } from 'react-hot-loader/root';
 import * as React from 'react';
+import { hot } from 'react-hot-loader/root';
 import { connect } from 'react-redux';
 import { MediaStatus } from '../types';
 import Controls from './components/Controls';
@@ -9,6 +8,7 @@ import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
 import Media from './components/Media';
 import { getMediaStatus, launch, pause, play, PLAYING, seek } from './lib/player-actions';
+import { colors } from './lib/utils';
 import { ReducerState } from './types';
 
 type Props = {
@@ -127,7 +127,7 @@ const styles = {
     height: '100%',
   } as React.CSSProperties,
   top: {
-    backgroundColor: blue['500'],
+    backgroundColor: colors.primary,
     display: 'flex',
     flexDirection: 'row',
     height: '3rem',
