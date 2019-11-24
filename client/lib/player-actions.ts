@@ -1,5 +1,4 @@
 import {
-  CHANGE_VOLUME,
   CONNECT,
   GET_CHROMECASTS,
   GET_MEDIA_STATUS,
@@ -8,15 +7,12 @@ import {
   PAUSE,
   PLAY,
   SEEK,
+  SET_MUTED,
+  SET_VOLUME,
   STOP_MEDIA,
 } from '../../constants';
 
 export const PLAYING = 'PLAYING';
-
-export const changeVolume = (volume: number) => ({
-  payload: volume,
-  type: CHANGE_VOLUME,
-});
 
 export const connect = (host: string) => ({
   payload: host,
@@ -54,6 +50,16 @@ export const pause = () => ({
 export const seek = (time: number) => ({
   payload: time,
   type: SEEK,
+});
+
+export const setMuted = (muted: boolean) => ({
+  payload: muted,
+  type: SET_MUTED,
+});
+
+export const setVolume = (volume: number) => ({
+  payload: volume,
+  type: SET_VOLUME,
 });
 
 export const stopMedia = () => ({

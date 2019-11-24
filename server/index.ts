@@ -15,6 +15,8 @@ import {
   PAUSE,
   PLAY,
   SEEK,
+  SET_MUTED,
+  SET_VOLUME,
   STOP_MEDIA,
 } from '../constants';
 import { getDrivesAction, getFilesAction, inspectFileAction, setChromecasts } from './action-creators';
@@ -96,6 +98,12 @@ async function startServer() {
           return;
         case SEEK:
           chromecastEmitter.seek(payload);
+          return;
+        case SET_MUTED:
+          chromecastEmitter.setMuted(payload);
+          return;
+        case SET_VOLUME:
+          chromecastEmitter.setVolume(payload);
           return;
         case STOP_MEDIA:
           chromecastEmitter.stop();

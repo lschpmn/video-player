@@ -14,6 +14,7 @@ import {
   SET_CHROMECASTS,
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
+  SET_STATUS,
 } from '../../constants';
 import { ChromecastStoreState, Directory, ExplorerState } from '../types';
 
@@ -34,6 +35,7 @@ const defaultChromecastStore: ChromecastStoreState = {
   loading: false,
   mediaStatus: null,
   selected: null,
+  volumeStatus: null,
 };
 
 function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, action: Action) {
@@ -71,6 +73,17 @@ function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, a
           ...action.payload,
         },
       };
+    case SET_STATUS:
+      const volume = action.payload?.status?.volume;
+      return volume
+        ? {
+            ...state,
+            volumeStatus: {
+              level: volume.level,
+              muted: volume.muted,
+            },
+        }
+        : state;
     case GET_CHROMECASTS:
     case GET_MEDIA_STATUS:
     case PAUSE:

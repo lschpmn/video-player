@@ -176,6 +176,26 @@ export default class ChromecastEmitter {
     this.listener = dispatch;
   }
 
+  setMuted(muted: boolean) {
+    this.receiver?.send({
+      requestId: Math.round(Math.random() * 100),
+      type: 'SET_VOLUME',
+      volume: {
+        muted,
+      },
+    });
+  }
+
+  setVolume(level: number) {
+    this.receiver?.send({
+      requestId: Math.round(Math.random() * 100),
+      type: 'SET_VOLUME',
+      volume: {
+        level,
+      },
+    });
+  }
+
   get isConnected() {
     return this._isConnected;
   }

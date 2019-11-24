@@ -6,6 +6,7 @@ export type ChromecastStoreState = {
   loading: boolean,
   mediaStatus?: MediaStatus,
   selected?: ChromecastInfo,
+  volumeStatus?: VolumeStatus,
 };
 
 export type ExplorerState = {
@@ -28,4 +29,9 @@ export type Inspections = {
 export type ReducerState = {
   chromecastStore: ChromecastStoreState,
   explorer: ExplorerState,
+};
+
+export type VolumeStatus = {
+  level: number,
+  muted: boolean,
 };

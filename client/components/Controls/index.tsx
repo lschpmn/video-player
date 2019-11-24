@@ -8,7 +8,7 @@ import Slider from 'material-ui/Slider';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { MediaStatus } from '../../../types';
-import { changeVolume, pause, play, PLAYING, seek, stopMedia } from '../../lib/player-actions';
+import { pause, play, PLAYING, seek, stopMedia } from '../../lib/player-actions';
 import { ReducerState } from '../../types';
 import Sound from './Sound';
 
@@ -20,7 +20,6 @@ type State = {
 };
 
 type Props = {
-  changeVolume: typeof changeVolume,
   mediaStatus: MediaStatus,
   pause: typeof pause,
   play: typeof play,
@@ -45,8 +44,8 @@ class Controls extends Component<Props, State> {
   };
 
   render() {
-    const { changeVolume, pause, play } = this.props;
-    const { currentTime, duration, playerState, volume } = this.props.mediaStatus || {};
+    const { pause, play } = this.props;
+    const { currentTime, duration, playerState } = this.props.mediaStatus || {};
     const isMediaLoaded = this.props.mediaStatus;
     const isPlaying = playerState === PLAYING;
     const click = isPlaying ? pause : play;
@@ -80,10 +79,7 @@ class Controls extends Component<Props, State> {
         </div>
       </div>
 
-      <Sound
-        changeVolume={changeVolume}
-        volume={volume || {}}
-      />
+      <Sound />
 
       <div style={{...styles.verticalCenter, padding: '0 5px'}}>
         {`${getTimeString(currentTime)}/${getTimeString(duration)}`}
@@ -138,7 +134,6 @@ export default connect(
     mediaStatus: state.chromecastStore.mediaStatus,
   }),
   {
-    changeVolume,
     stopMedia,
     pause,
     play,

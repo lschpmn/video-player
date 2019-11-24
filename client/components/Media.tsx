@@ -67,6 +67,7 @@ class Media extends React.Component<Props, State> {
           ? <CastConnectedIcon style={{ ...styles.icon, color: colors.blue }}/>
           : <CastIcon style={{ ...styles.icon, color: colors.green }}/>
         : <CastIcon style={{ ...styles.icon, color: colors.red }}/>}
+
       <div style={styles.name}>{name}</div>
       <div style={styles.name}>{chromecastStore.mediaStatus?.title}</div>
       <div style={styles.name}>{chromecastStore.mediaStatus?.subtitle}</div>

@@ -23,18 +23,19 @@ export const INSPECT_FILE = 'INSPECT_FILE';
 export const INSPECT_FILE_SERVER = 'INSPECT_FILE@server';
 
 //player
-export const CHANGE_VOLUME = 'CHANGE_VOLUME@server';
-export const CONNECTION = 'CONNECTION';
 export const CONNECT = 'CONNECT@server';
+export const CONNECTION = 'CONNECTION';
 export const GET_CHROMECASTS = 'GET_CHROMECASTS@server';
-export const GET_STATUS = 'GET_STATUS@server';
 export const GET_MEDIA_STATUS = 'GET_MEDIA_STATUS@server';
-export const SET_MEDIA_STATUS = 'SET_MEDIA_STATUS';
-export const SET_MEDIA_DISCONNECT = 'SET_MEDIA_DISCONNECT';
-export const SET_STATUS = 'SET_STATUS';
-export const STOP_MEDIA = 'STOP_MEDIA@server';
+export const GET_STATUS = 'GET_STATUS@server';
 export const LAUNCH  = 'LAUNCH@server';
 export const PAUSE = 'PAUSED@server';
 export const PLAY = 'PLAYING@server';
 export const SEEK = 'SEEK@server';
 export const SET_CHROMECASTS = 'SET_CHROMECASTS';
+export const SET_MEDIA_DISCONNECT = 'SET_MEDIA_DISCONNECT';
+export const SET_MEDIA_STATUS = 'SET_MEDIA_STATUS';
+export const SET_MUTED = 'SET_MUTED@server';
+export const SET_STATUS = 'SET_STATUS';
+export const SET_VOLUME = 'SET_VOLUME@server';
+export const STOP_MEDIA = 'STOP_MEDIA@server';

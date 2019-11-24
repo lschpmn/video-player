@@ -1,46 +1,43 @@
 import VolumeUp from '@material-ui/icons/VolumeUp';
+import VolumeMute from '@material-ui/icons/VolumeMute';
+import debounce from 'lodash/debounce';
 import Slider from 'material-ui/Slider';
-import React, { Component } from 'react';
+import React, { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { setMuted, setVolume } from '../../lib/player-actions';
+import { useAction } from '../../lib/utils';
+import { ReducerState } from '../../types';
 
-export default class Sound extends Component<any, any> {
-  _id: any;
-  constructor(props) {
-    super(props);
+const Sound = () => {
+  const [show, setShow] = useState(false);
+  const setVolumeAction = debounce(useAction(setVolume), 200);
+  const setMutedAction = useAction(setMuted);
+  const volumeStatus = useSelector((state: ReducerState) => state.chromecastStore?.volumeStatus);
 
-    this.state = {
-      show: false,
-    };
-  }
+  return <div
+    onMouseEnter={() => setShow(true)}
+    onMouseLeave={() => setShow(false)}
+    style={styles.container}
+  >
 
-  changeVolume(volume) {
-    if (this._id) clearTimeout(this._id);
+    {show &&
+      <Slider
+        axis={'y'}
+        onChange={(e, val) => setVolumeAction(val)}
+        style={styles.slider}
+        sliderStyle={{ marginTop: '1rem' }}
+        value={volumeStatus?.level}
+      />
+    }
 
-    this._id = setTimeout(() => this.props.changeVolume(volume), 200);
-  }
+    {volumeStatus?.muted
+      ? <VolumeMute onClick={() => setMutedAction(false)} style={styles.icon}/>
+      : <VolumeUp onClick={() => setMutedAction(true)} style={styles.icon}/>
+    }
+  </div>;
+};
 
-  render() {
-    const { level } = this.props.volume;
-    
-    return <div
-      onMouseEnter={() => this.setState({show: true})}
-      onMouseLeave={() => this.setState({show: false})}
-      style={{...styles.container, ...this.props.style}}
-    >
-
-      {this.state.show &&
-        <Slider
-          axis={'y'}
-          onChange={(e, val) => this.changeVolume(val)}
-          style={styles.slider}
-          sliderStyle={{marginTop: '1rem',}}
-          value={level}
-        />
-      }
-
-      <VolumeUp style={styles.icon} />
-    </div>
-  }
-}
+export default Sound;
 
 const styles = {
   container: {
