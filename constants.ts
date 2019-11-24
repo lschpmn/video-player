@@ -15,6 +15,7 @@ export const GET_FILES = 'GET_FILES';
 export const GET_FILES_SERVER = 'GET_FILES@server';
 export const INSPECT_FILE = 'INSPECT_FILE';
 export const INSPECT_FILE_SERVER = 'INSPECT_FILE@server';
+export const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION';
 
 //player
 export const CONNECT = 'CONNECT@server';

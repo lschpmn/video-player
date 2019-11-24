@@ -1,43 +1,41 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { inspectFile, getDrives, getFiles } from '../lib/file-actions';
+import { useEffect } from 'react';
+import { useSelector } from 'react-redux';
+import { getDrives, getFiles, inspectFile, setCurrentLocation } from '../lib/file-actions';
+import { useAction } from '../lib/utils';
+import { Directory, ReducerState } from '../types';
 import DirectoryStructure from './DirectoryStructure';
-import { Directory, ExplorerState, Inspections } from '../types';
 
-type Props = {
-  inspectFile: typeof inspectFile,
-  getDrives: typeof getDrives,
-  getFiles: typeof getFiles,
-  drives: Directory,
-  inspections: Inspections,
+const FileStructure = () => {
+  const inspectFileAction = useAction(inspectFile);
+  const getDrivesAction = useAction(getDrives);
+  const getFilesAction = useAction(getFiles);
+  const setCurrentLocationAction = useAction(setCurrentLocation);
+  const drives = useSelector((state: ReducerState) => state.explorer.drives);
+  const inspections = useSelector((state: ReducerState) => state.explorer.inspections);
+
+  useEffect(() => {
+    getDrivesAction();
+  }, []);
+
+  return <div style={styles.container}>
+    {
+      Object
+        .entries(drives)
+        .map(([drive, directory]: [string, Directory | boolean]) => (
+          <DirectoryStructure
+            directory={directory}
+            inspectFile={inspectFileAction}
+            inspections={inspections}
+            key={drive}
+            onClick={getFilesAction}
+            location={[drive]}
+            setCurrentLocation={setCurrentLocationAction}
+          />
+        ))
+    }
+  </div>;
 };
-
-class FileStructure extends React.Component<Props> {
-  componentDidMount() {
-    this.props.getDrives();
-  }
-
-  render() {
-    const { drives } = this.props;
-
-    return <div style={styles.container}>
-      {
-        Object
-          .entries(drives)
-          .map(([drive, directory]: [string, Directory | boolean]) => (
-            <DirectoryStructure
-              directory={directory}
-              inspectFile={this.props.inspectFile}
-              inspections={this.props.inspections}
-              key={drive}
-              onClick={this.props.getFiles}
-              location={[drive]}
-            />
-          ))
-      }
-    </div>;
-  }
-}
 
 const styles = {
   container: {
@@ -45,14 +43,4 @@ const styles = {
   },
 };
 
-export default connect(
-  (state: { explorer: ExplorerState }) => ({
-    drives: state.explorer.drives,
-    inspections: state.explorer.inspections,
-  }),
-  {
-    inspectFile,
-    getDrives,
-    getFiles,
-  }
-)(FileStructure);
+export default FileStructure;

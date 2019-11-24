@@ -12,6 +12,7 @@ import {
   PLAY,
   SEEK,
   SET_CHROMECASTS,
+  SET_CURRENT_LOCATION,
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
   SET_STATUS,
@@ -135,6 +136,11 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
         },
       };
     }
+    case SET_CURRENT_LOCATION:
+      return {
+        ...state,
+        currentLocation: action.payload,
+      };
     default:
       return state;
   }

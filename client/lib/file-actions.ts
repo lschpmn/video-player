@@ -1,4 +1,4 @@
-import { GET_DRIVES_SERVER, GET_FILES_SERVER, INSPECT_FILE_SERVER } from '../../constants';
+import { GET_DRIVES_SERVER, GET_FILES_SERVER, INSPECT_FILE_SERVER, SET_CURRENT_LOCATION } from '../../constants';
 
 export const getDrives = () => ({
   type: GET_DRIVES_SERVER,
@@ -12,4 +12,9 @@ export const getFiles = (location: string[]) => ({
 export const inspectFile = (path: string) => ({
   payload: path,
   type: INSPECT_FILE_SERVER,
+});
+
+export const setCurrentLocation = (currentLocation: string[]) => ({
+  payload: currentLocation,
+  type: SET_CURRENT_LOCATION
 });

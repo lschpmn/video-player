@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { getFiles, inspectFile } from '../lib/file-actions';
+import { getFiles, inspectFile, setCurrentLocation } from '../lib/file-actions';
 import { Directory, Inspections } from '../types';
 import { join } from 'path';
 
@@ -9,6 +9,7 @@ type Props = {
   onClick: typeof getFiles,
   directory: Directory | boolean,
   inspections: Inspections,
+  setCurrentLocation: typeof setCurrentLocation,
 };
 
 type State = {
@@ -46,6 +47,7 @@ export default class DirectoryStructure extends React.Component<Props, State> {
 
     this.setState({ open: !this.state.open });
     if (typeof directory === 'boolean') this.props.onClick(location);
+    this.props.setCurrentLocation(this.props.location);
   };
 
   shouldOpen() {
@@ -83,6 +85,7 @@ export default class DirectoryStructure extends React.Component<Props, State> {
               key={parentDirectory}
               onClick={this.props.onClick}
               location={[...location, parentDirectory]}
+              setCurrentLocation={this.props.setCurrentLocation}
             />
           ))
         }

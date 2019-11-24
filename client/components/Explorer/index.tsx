@@ -1,16 +1,12 @@
-import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
-import Folder from '@material-ui/icons/Folder';
 import { get } from 'lodash';
 import { join } from 'path';
 import * as React from 'react';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { getFiles } from '../../lib/file-actions';
-import { useAction } from '../../lib/utils';
 import { ReducerState } from '../../types';
+import ExplorerItem from './ExplorerItem';
 
 const Explorer = () => {
-  const getFilesAction = useAction(getFiles);
   const explorer = useSelector((state: ReducerState) => state.explorer);
   const folderFiles = explorer.currentLocation.length
     ? Object.keys(get(explorer.drives, explorer.currentLocation))
@@ -31,20 +27,13 @@ const Explorer = () => {
       .filter(Boolean);
   }, [folderFiles]);
 
-  if (explorer.currentLocation.length) {
-    folderFiles.forEach(folderFile => {
-      console.log(explorer.inspections[join(...explorer.currentLocation, folderFile)]);
-    });
-  }
-
   return <div style={styles.container}>
     {inspectedFolderFiles.map(drive =>
-      <div key={join(...explorer.currentLocation, drive.name)} style={styles.folder}>
-        {drive.type === 'file'
-          ? <InsertDriveFileIcon style={styles.folderIcon}/>
-          : <Folder onDoubleClick={() => getFilesAction([...explorer.currentLocation, drive.name])} style={styles.folderIcon}/>}
-        <div style={styles.folderText}>{drive.name}</div>
-      </div>,
+      <ExplorerItem
+        currentLocation={explorer.currentLocation}
+        drive={drive}
+        key={join(...explorer.currentLocation, drive.name)}
+      />
     )}
   </div>;
 };
@@ -59,19 +48,5 @@ const styles = {
     height: '100%',
     margin: '0 0.5rem',
     overflow: 'auto',
-  } as React.CSSProperties,
-  folder: {
-    display: 'flex',
-    flexDirection: 'column',
-    margin: '1rem',
-    width: '8rem',
-  } as React.CSSProperties,
-  folderIcon: {
-    fontSize: '5rem',
-    margin: '0 auto',
-  } as React.CSSProperties,
-  folderText: {
-    textAlign: 'center',
-    wordBreak: 'break-all',
   } as React.CSSProperties,
 };
