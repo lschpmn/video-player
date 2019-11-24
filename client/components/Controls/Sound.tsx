@@ -1,18 +1,28 @@
-import VolumeUp from '@material-ui/icons/VolumeUp';
+import Slider from '@material-ui/core/Slider';
 import VolumeMute from '@material-ui/icons/VolumeMute';
+import VolumeUp from '@material-ui/icons/VolumeUp';
 import debounce from 'lodash/debounce';
-import Slider from 'material-ui/Slider';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { setMuted, setVolume } from '../../lib/player-actions';
-import { useAction } from '../../lib/utils';
+import { colors, useAction } from '../../lib/utils';
 import { ReducerState } from '../../types';
 
 const Sound = () => {
   const [show, setShow] = useState(false);
+  const [level, setLevel] = useState(100);
   const setVolumeAction = debounce(useAction(setVolume), 200);
   const setMutedAction = useAction(setMuted);
   const volumeStatus = useSelector((state: ReducerState) => state.chromecastStore?.volumeStatus);
+
+  const onChange = useCallback((e, val: number) => {
+    setVolumeAction(val / 100);
+    setLevel(val);
+  }, []);
+
+  useEffect(() => {
+    volumeStatus && setLevel(volumeStatus.level * 100);
+  }, [volumeStatus?.level]);
 
   return <div
     onMouseEnter={() => setShow(true)}
@@ -22,11 +32,10 @@ const Sound = () => {
 
     {show &&
       <Slider
-        axis={'y'}
-        onChange={(e, val) => setVolumeAction(val)}
+        orientation="vertical"
+        onChange={onChange}
         style={styles.slider}
-        sliderStyle={{ marginTop: '1rem' }}
-        value={volumeStatus?.level}
+        value={level}
       />
     }
 
@@ -55,11 +64,12 @@ const styles = {
     width: '2rem',
   } as React.CSSProperties,
   slider: {
-    backgroundColor: 'black',
+    backgroundColor: colors.neutral,
     bottom: '3rem',
+    color: colors.primary,
     height: '5rem',
     left: '1rem',
-    opacity: 0.6,
+    opacity: 0.8,
     paddingBottom: '1rem',
     position: 'absolute',
   } as React.CSSProperties,

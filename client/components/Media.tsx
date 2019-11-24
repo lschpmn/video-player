@@ -4,7 +4,7 @@ import CastIcon from '@material-ui/icons/Cast';
 import CastConnectedIcon from '@material-ui/icons/CastConnected';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { colors } from '../../constants';
+import { colors } from '../lib/utils';
 import { connect as connectAction, getChromecasts, launch } from '../lib/player-actions';
 import { ChromecastStoreState, ReducerState } from '../types';
 
@@ -64,9 +64,9 @@ class Media extends React.Component<Props, State> {
     return <div style={styles.container}>
       {chromecastStore.isConnected
         ? chromecastStore.mediaStatus
-          ? <CastConnectedIcon style={{ ...styles.icon, color: colors.blue }}/>
-          : <CastIcon style={{ ...styles.icon, color: colors.green }}/>
-        : <CastIcon style={{ ...styles.icon, color: colors.red }}/>}
+          ? <CastConnectedIcon style={{ ...styles.icon, color: colors.primary }}/>
+          : <CastIcon style={{ ...styles.icon, color: colors.secondary }}/>
+        : <CastIcon style={{ ...styles.icon, color: colors.danger }}/>}
 
       <div style={styles.name}>{name}</div>
       <div style={styles.name}>{chromecastStore.mediaStatus?.title}</div>
