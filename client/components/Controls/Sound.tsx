@@ -31,12 +31,14 @@ const Sound = () => {
   >
 
     {show &&
-      <Slider
-        orientation="vertical"
-        onChange={onChange}
-        style={styles.slider}
-        value={level}
-      />
+      <div style={styles.sliderContainer}>
+        <Slider
+          orientation="vertical"
+          onChange={onChange}
+          style={styles.slider}
+          value={level}
+        />
+      </div>
     }
 
     {volumeStatus?.muted
@@ -65,12 +67,15 @@ const styles = {
   } as React.CSSProperties,
   slider: {
     backgroundColor: colors.neutral,
-    bottom: '3rem',
     color: colors.primary,
     height: '5rem',
-    left: '1rem',
+    padding: 0,
+  } as React.CSSProperties,
+  sliderContainer: {
+    backgroundColor: colors.neutral,
+    bottom: '3rem',
     opacity: 0.8,
-    paddingBottom: '1rem',
+    padding: '1rem 1.5rem 0',
     position: 'absolute',
   } as React.CSSProperties,
 };
