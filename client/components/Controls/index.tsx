@@ -1,4 +1,5 @@
 import Slider from '@material-ui/core/Slider';
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import useTheme from '@material-ui/core/styles/useTheme';
 import Forward10Icon from '@material-ui/icons/Forward10';
 import Pause from '@material-ui/icons/Pause';
@@ -22,6 +23,7 @@ const Controls = () => {
   const seekDebounce = useCallback(debounce(seekAction, 250), []);
   const stopMediaAction = useAction(stopMedia);
   const mediaStatus = useSelector((state: ReducerState) => state.chromecastStore.mediaStatus);
+  const classes = useStyles({});
   const theme = useTheme();
   const { currentTime, duration, playerState } = mediaStatus || {};
 
@@ -75,7 +77,7 @@ const Controls = () => {
 
     <div style={styles.slider} >
       <Slider
-        color="secondary"
+        className={classes.slider}
         max={duration || 0}
         min={0}
         onChange={onSliderChange}
@@ -88,6 +90,12 @@ const Controls = () => {
 
   </div>
 };
+
+const useStyles = makeStyles(theme => ({
+  slider: {
+    color: theme.palette.grey.A200,
+  },
+}));
 
 function getTimeString(time) {
   if (!time) return '0:00';
