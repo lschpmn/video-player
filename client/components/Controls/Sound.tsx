@@ -66,8 +66,6 @@ const styles = {
     width: '2rem',
   } as React.CSSProperties,
   slider: {
-    backgroundColor: colors.neutral,
-    color: colors.primary,
     height: '5rem',
     padding: 0,
   } as React.CSSProperties,

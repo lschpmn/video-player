@@ -1,4 +1,5 @@
 import Slider from '@material-ui/core/Slider';
+import useTheme from '@material-ui/core/styles/useTheme';
 import Forward10Icon from '@material-ui/icons/Forward10';
 import Pause from '@material-ui/icons/Pause';
 import PlayArrow from '@material-ui/icons/PlayArrow';
@@ -8,7 +9,7 @@ import debounce from 'lodash/debounce';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { pause, play, PLAYING, seek, stopMedia } from '../../lib/player-actions';
-import { colors, useAction } from '../../lib/utils';
+import { useAction } from '../../lib/utils';
 import { ReducerState } from '../../types';
 import Sound from './Sound';
 
@@ -21,6 +22,7 @@ const Controls = () => {
   const seekDebounce = useCallback(debounce(seekAction, 250), []);
   const stopMediaAction = useAction(stopMedia);
   const mediaStatus = useSelector((state: ReducerState) => state.chromecastStore.mediaStatus);
+  const theme = useTheme();
   const { currentTime, duration, playerState } = mediaStatus || {};
 
   const isMediaLoaded = !!mediaStatus;
@@ -37,7 +39,7 @@ const Controls = () => {
     isMediaLoaded && seekDebounce(val || 0);
   }, [isMediaLoaded]);
 
-  return <div style={styles.container}>
+  return <div style={{ ...styles.container, backgroundColor: theme.palette.primary.main }}>
     <div style={styles.verticalCenter}>
       <div onMouseDown={() => isMediaLoaded && click()}>
         {isPlaying
@@ -73,6 +75,7 @@ const Controls = () => {
 
     <div style={styles.slider} >
       <Slider
+        color="secondary"
         max={duration || 0}
         min={0}
         onChange={onSliderChange}
@@ -118,7 +121,6 @@ const styles = {
   } as React.CSSProperties,
   container: {
     alignItems: 'stretch',
-    backgroundColor: colors.primary,
     color: 'white',
     display: 'flex',
     height: '3rem',
@@ -139,7 +141,6 @@ const styles = {
     position: 'relative',
   } as React.CSSProperties,
   sliderStyle: {
-    color: colors.secondary,
     margin: '0 1rem',
     width: 'inherit'
   } as React.CSSProperties,
