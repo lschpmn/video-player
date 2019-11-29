@@ -1,6 +1,5 @@
 import Slider from '@material-ui/core/Slider';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import useTheme from '@material-ui/core/styles/useTheme';
 import Forward10Icon from '@material-ui/icons/Forward10';
 import Pause from '@material-ui/icons/Pause';
 import PlayArrow from '@material-ui/icons/PlayArrow';
@@ -24,7 +23,6 @@ const Controls = () => {
   const stopMediaAction = useAction(stopMedia);
   const mediaStatus = useSelector((state: ReducerState) => state.chromecastStore.mediaStatus);
   const classes = useStyles({});
-  const theme = useTheme();
   const { currentTime, duration, playerState } = mediaStatus || {};
 
   const isMediaLoaded = !!mediaStatus;
@@ -41,7 +39,7 @@ const Controls = () => {
     isMediaLoaded && seekDebounce(val || 0);
   }, [isMediaLoaded]);
 
-  return <div style={{ ...styles.container, backgroundColor: theme.palette.primary.main }}>
+  return <div className={classes.container}>
     <div style={styles.verticalCenter}>
       <div onMouseDown={() => isMediaLoaded && click()}>
         {isPlaying
@@ -92,8 +90,16 @@ const Controls = () => {
 };
 
 const useStyles = makeStyles(theme => ({
+  container: {
+    alignItems: 'stretch',
+    backgroundColor: theme.palette.primary.main,
+    color: 'white',// theme.palette.grey.A100,
+    display: 'flex',
+    height: '3rem',
+    width: '100%',
+  },
   slider: {
-    color: theme.palette.grey.A200,
+    color: theme.palette.grey.A100,
   },
 }));
 
@@ -122,18 +128,6 @@ function leadZero(num) {
 export default Controls;
 
 const styles = {
-  chip: {
-    bottom: '3rem',
-    position: 'fixed',
-    width: '4rem',
-  } as React.CSSProperties,
-  container: {
-    alignItems: 'stretch',
-    color: 'white',
-    display: 'flex',
-    height: '3rem',
-    width: '100%',
-  } as React.CSSProperties,
   icon: {
     cursor: 'pointer',
     display: 'block',
