@@ -5,13 +5,14 @@ import CastConnectedIcon from '@material-ui/icons/CastConnected';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { connect, getChromecasts, launch } from '../lib/player-actions';
+import { connect, getChromecasts, getMediaStatus, launch, PLAYING } from '../lib/player-actions';
 import { useAction } from '../lib/utils';
 import { ReducerState } from '../types';
 
 const Media = () => {
   const connectAction = useAction(connect);
   const getChromecastsAction = useAction(getChromecasts);
+  const getMediaStatusAction = useAction(getMediaStatus);
   const launchAction = useAction(launch);
   const chromecastStore = useSelector((state: ReducerState) => state.chromecastStore);
   const [showUrlField, setShowUrlField] = useState(false);
@@ -42,6 +43,16 @@ const Media = () => {
       return () => document.removeEventListener('keydown', onEnter);
     }
   }, [showUrlField, url]);
+
+  useEffect(() => {
+    if (chromecastStore.mediaStatus?.playerState === PLAYING) {
+      const intervalId = setInterval(() => getMediaStatusAction(), 1000);
+      return () => clearInterval(intervalId);
+    } else {
+      const intervalId = setInterval(() => getMediaStatusAction(), 5000);
+      return () => clearInterval(intervalId);
+    }
+  }, [chromecastStore.mediaStatus?.playerState]);
 
   return <div style={styles.container}>
     {chromecastStore.isConnected

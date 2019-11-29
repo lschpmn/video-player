@@ -1,37 +1,39 @@
 import * as React from 'react';
+import { useCallback } from 'react';
+import { launch } from '../lib/player-actions';
+import { useAction } from '../lib/utils';
 
 type Props = {
-  start: (path: string) => void,
+  children: React.ReactNode,
 };
 
-export default class FileUpload extends React.Component<Props> {
-  drop = event => {
-    event.preventDefault();
-    
-    const { dataTransfer } = event;
+const FileUpload = ({ children }: Props) =>  {
+  const launchAction = useAction(launch);
+
+  const drop = useCallback(e => {
+    e.preventDefault();
+    const { dataTransfer } = e;
     const files = [];
-    
+
     for (let file of dataTransfer.files) {
       files.push(file);
     }
-    
+
     console.log(files);
-    this.props.start(files[0].path);
-  };
-  
-  eventNoop = (event) => {
-    event.preventDefault();
-  };
-  
-  render() {
-    return <div
-      id='dropzone'
-      style={{ height: '100%', width: '100%' }}
-      onDrop={this.drop}
-      onDragOver={this.eventNoop}
-      onDragEnd={this.eventNoop}
-    >
-      {this.props.children}
-    </div>;
-  }
-}
+    launchAction(files[0].path);
+  }, []);
+
+  const eventNoop = useCallback((e) => e.preventDefault(), []);
+
+  return <div
+    id='dropzone'
+    style={{ height: '100%', width: '100%' }}
+    onDrop={drop}
+    onDragOver={eventNoop}
+    onDragEnd={eventNoop}
+  >
+    {children}
+  </div>;
+};
+
+export default FileUpload;

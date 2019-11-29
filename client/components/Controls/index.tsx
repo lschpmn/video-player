@@ -9,7 +9,7 @@ import debounce from 'lodash/debounce';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { pause, play, PLAYING, seek, stopMedia } from '../../lib/player-actions';
-import { useAction } from '../../lib/utils';
+import { getTimeString, useAction } from '../../lib/utils';
 import { ReducerState } from '../../types';
 import Sound from './Sound';
 
@@ -23,8 +23,8 @@ const Controls = () => {
   const stopMediaAction = useAction(stopMedia);
   const mediaStatus = useSelector((state: ReducerState) => state.chromecastStore.mediaStatus);
   const classes = useStyles({});
-  const { currentTime, duration, playerState } = mediaStatus || {};
 
+  const { currentTime, duration, playerState } = mediaStatus || {};
   const isMediaLoaded = !!mediaStatus;
   const isPlaying = playerState === PLAYING;
   const click = isPlaying ? pauseAction : playAction;
@@ -32,6 +32,26 @@ const Controls = () => {
   useEffect(() => {
     !isSeeking && setLocalCurrentTime(currentTime || 0);
   }, [currentTime]);
+
+  useEffect(() => {
+    const listener = ({ key }) => {
+      if (!isMediaLoaded) return;
+      switch (key) {
+        case ' ':
+          click();
+          return;
+        case 'ArrowLeft':
+          seekAction(mediaStatus.currentTime - 10);
+          return;
+        case 'ArrowRight':
+          seekAction(mediaStatus.currentTime + 10);
+          return;
+      }
+    };
+    document.addEventListener('keydown', listener);
+
+    return () => document.removeEventListener('keydown', listener);
+  }, [isMediaLoaded, mediaStatus]);
 
   const onSliderChange = useCallback((e, val) => {
     if (val === localCurrentTime) return;
@@ -93,7 +113,7 @@ const useStyles = makeStyles(theme => ({
   container: {
     alignItems: 'stretch',
     backgroundColor: theme.palette.primary.main,
-    color: 'white',// theme.palette.grey.A100,
+    color: 'white',
     display: 'flex',
     height: '3rem',
     width: '100%',
@@ -102,28 +122,6 @@ const useStyles = makeStyles(theme => ({
     color: theme.palette.grey.A100,
   },
 }));
-
-function getTimeString(time) {
-  if (!time) return '0:00';
-  let currentTime = Math.round(time);
-  let hour;
-  let min;
-  let sec;
-
-  sec = currentTime % 60;
-  currentTime -= sec;
-
-  min = (currentTime % 3600) / 60;
-  currentTime -= min * 60;
-
-  hour = Math.round(currentTime / 3600);
-
-  return `${hour ? hour + ':' : ''}${leadZero(min)}:${leadZero(sec)}`;
-}
-
-function leadZero(num) {
-  return ('0' + num).slice(-2);
-}
 
 export default Controls;
 

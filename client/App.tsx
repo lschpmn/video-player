@@ -1,112 +1,56 @@
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import * as React from 'react';
 import { hot } from 'react-hot-loader/root';
-import { connect } from 'react-redux';
-import { MediaStatus } from '../types';
 import Controls from './components/Controls';
 import Explorer from './components/Explorer';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
 import Media from './components/Media';
-import { getMediaStatus, launch, pause, play, PLAYING, seek } from './lib/player-actions';
-import { colors } from './lib/utils';
-import { ReducerState } from './types';
 
-type Props = {
-  getMediaStatus: typeof getMediaStatus,
-  pause: typeof pause,
-  play: typeof play,
-  launch: typeof launch,
-  mediaStatus: MediaStatus,
-  seek: typeof seek,
-};
-
-class App extends React.Component<Props> {
-  statusIntervalId?: any;
-
-  async componentDidMount() {
-    document.addEventListener('keydown', e => {
-      if (!this.props.mediaStatus) return;
-      const { mediaStatus } = this.props;
-
-      switch (e.key) {
-        case ' ':
-          this.playPause();
-          return;
-        case 'ArrowLeft':
-          this.props.seek(mediaStatus.currentTime - 10);
-          return;
-        case 'ArrowRight':
-          this.props.seek(mediaStatus.currentTime + 10);
-          return;
-      }
-    });
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    const wasPlaying = prevProps.mediaStatus?.playerState === PLAYING;
-    const isPlaying = this.props.mediaStatus?.playerState === PLAYING;
-    if (wasPlaying && !isPlaying) {
-      this.getMediaStatus(5000);
-    } else if (!wasPlaying && isPlaying) {
-      this.getMediaStatus(1000);
-    } else if (!this.props.mediaStatus && this.statusIntervalId) {
-      clearInterval(this.statusIntervalId);
-      this.statusIntervalId = null;
-    }
-  }
-
-  getMediaStatus(time: number) {
-    this.statusIntervalId && clearInterval(this.statusIntervalId);
-    this.statusIntervalId = setInterval(() => this.props.getMediaStatus(), time);
-  }
-
-  playPause() {
-    if (this.props.mediaStatus?.playerState === PLAYING) this.props.pause();
-    else this.props.play();
-  }
-
-  render() {
-    return <FileUpload
-      start={this.props.launch}
-    >
-      <div style={styles.parent}>
-        <div style={styles.top} />
-        <div style={styles.middle}>
-          <div style={{ flex: 1 }}>
-            <Media />
-          </div>
-
-          <div style={{ flex: 3 }}>
-            <Explorer />
-          </div>
-
-          <div style={{ flex: 1, overflow: 'auto' }}>
-            <FileStructure />
-          </div>
+const App = () => {
+  const classes = useStyles({});
+  return <FileUpload>
+    <div className={classes.container}>
+      <div className={classes.top} />
+      <div style={styles.middle}>
+        <div style={{ flex: 1 }}>
+          <Media />
         </div>
 
-        <div style={styles.bottom}>
-          <Controls />
+        <div style={{ flex: 3 }}>
+          <Explorer />
+        </div>
+
+        <div style={{ flex: 1, overflow: 'auto' }}>
+          <FileStructure />
         </div>
       </div>
-    </FileUpload>;
-  }
-}
 
-const ConnectedApp = connect(
-  (state: ReducerState) => ({
-    mediaStatus: state.chromecastStore.mediaStatus,
-  }),
-  {
-    getMediaStatus,
-    launch,
-    pause,
-    play,
-    seek,
-  }
-)(App);
+      <div style={styles.bottom}>
+        <Controls />
+      </div>
+    </div>
+  </FileUpload>;
+};
 
-export default hot(ConnectedApp);
+const useStyles = makeStyles(theme => ({
+  container: {
+    alignItems: 'stretch',
+    backgroundColor: theme.palette.background.default,
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+  },
+  top: {
+    backgroundColor: theme.palette.primary.main,
+    display: 'flex',
+    flexDirection: 'row',
+    height: '3rem',
+    width: '100%',
+  },
+}));
+
+export default hot(App);
 
 const styles = {
   bottom: {
@@ -125,12 +69,5 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-  } as React.CSSProperties,
-  top: {
-    backgroundColor: colors.primary,
-    display: 'flex',
-    flexDirection: 'row',
-    height: '3rem',
-    width: '100%',
   } as React.CSSProperties,
 };

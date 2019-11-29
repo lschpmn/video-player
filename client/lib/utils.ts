@@ -1,16 +1,27 @@
-import blue from '@material-ui/core/colors/blue';
-import green from '@material-ui/core/colors/green';
-import grey from '@material-ui/core/colors/grey';
-import red from '@material-ui/core/colors/red';
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
 
-export const colors = {
-  primary: blue['500'],
-  secondary: green['500'],
-  neutral: grey['500'],
-  danger: red['500'],
-};
+export function getTimeString(time) {
+  if (!time) return '0:00';
+  let currentTime = Math.round(time);
+  let hour;
+  let min;
+  let sec;
+
+  sec = currentTime % 60;
+  currentTime -= sec;
+
+  min = (currentTime % 3600) / 60;
+  currentTime -= min * 60;
+
+  hour = Math.round(currentTime / 3600);
+
+  return `${hour ? hour + ':' : ''}${leadZero(min)}:${leadZero(sec)}`;
+}
+
+export function leadZero(num) {
+  return ('0' + num).slice(-2);
+}
 
 export const useAction = <T extends Function>(action: T, deps?): T => {
   const dispatch = useDispatch();
