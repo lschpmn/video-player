@@ -4,6 +4,7 @@ import {
   GET_MEDIA_STATUS,
   GET_STATUS,
   LAUNCH,
+  LAUNCH_APP,
   PAUSE,
   PLAY,
   SEEK,
@@ -38,6 +39,11 @@ export const launch = (path: string, isUrl = false) => ({
     path,
   },
   type: LAUNCH,
+});
+
+export const launchApp = (appId: string) => ({
+  payload: appId,
+  type: LAUNCH_APP,
 });
 
 export const play = () => ({

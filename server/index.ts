@@ -12,6 +12,7 @@ import {
   GET_STATUS,
   INSPECT_FILE_SERVER,
   LAUNCH,
+  LAUNCH_APP,
   PAUSE,
   PLAY,
   SEEK,
@@ -88,7 +89,10 @@ async function startServer() {
           chromecastEmitter.getStatus();
           return;
         case LAUNCH:
-          chromecastEmitter.launch(payload.path, payload.isUrl);
+          chromecastEmitter.launch(payload.path, payload.isUrl).catch(console.log);
+          return;
+        case LAUNCH_APP:
+          chromecastEmitter.launchApp(payload);
           return;
         case PAUSE:
           chromecastEmitter.pause();

@@ -17,8 +17,8 @@ import {
   SET_MEDIA_STATUS,
   SET_STATUS,
 } from '../../constants';
-import { ReceiverStatus } from '../../types';
-import { ChromecastStoreState, Directory, ExplorerState } from '../types';
+import { ChromecastInfo, ReceiverStatus } from '../../types';
+import { ChromecastStoreState, Directory, ExplorerState, VolumeStatus } from '../types';
 
 type Action = {
   type: string,
@@ -76,11 +76,11 @@ function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, a
         },
       };
     case SET_STATUS:
-      return Object.assign(
-        {},
-        setSelected(state, action.payload),
-        setVolume(state, action.payload),
-      );
+      return {
+        ...state,
+        selected: setSelected(state, action.payload),
+        volumeStatus: setVolume(state, action.payload),
+      };
     case GET_CHROMECASTS:
     case GET_MEDIA_STATUS:
     case PAUSE:
@@ -147,30 +147,24 @@ export default combineReducers({
   explorer,
 });
 
-function setSelected(state: ChromecastStoreState, status: ReceiverStatus): ChromecastStoreState {
+function setSelected(state: ChromecastStoreState, status: ReceiverStatus): ChromecastInfo {
   const appId = status?.status?.applications?.[0]?.appId;
 
   return appId
     ? {
-      ...state,
-      selected: {
-        ...state.selected,
-        appId,
-      },
+      ...state.selected,
+      appId,
     }
-    : state;
+    : state.selected;
 }
 
-function setVolume(state: ChromecastStoreState, status: ReceiverStatus): ChromecastStoreState {
+function setVolume(state: ChromecastStoreState, status: ReceiverStatus): VolumeStatus {
   const volume = status?.status?.volume;
 
   return volume
     ? {
-      ...state,
-      volumeStatus: {
-        level: volume.level,
-        muted: volume.muted,
-      },
+      level: volume.level,
+      muted: volume.muted,
     }
-    : state;
+    : state.volumeStatus;
 }

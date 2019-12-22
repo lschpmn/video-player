@@ -3,17 +3,26 @@ import MenuItem from '@material-ui/core/MenuItem';
 import CastIcon from '@material-ui/icons/Cast';
 import CastConnectedIcon from '@material-ui/icons/CastConnected';
 import React, { useCallback, useState } from 'react';
+import { BACKDROP_RECEIVER_ID, DEFAULT_MEDIA_RECEIVER_ID } from '../../../constants';
+import { launchApp } from '../../lib/player-actions';
+import { useAction } from '../../lib/utils';
 import { ChromecastStoreState } from '../../types';
-
 
 type Props = {
   chromecastStore: ChromecastStoreState,
 };
 
 export const ChromecastIcon = ({ chromecastStore }: Props) => {
+  const launchAppAction = useAction(launchApp);
   const [anchorEl, setAnchorEl] = useState();
   const [menuOpen, setMenuOpen] = useState(false);
-  const name = chromecastStore.chromecasts[0] && chromecastStore.chromecasts[0].name;
+  const isBackdrop = chromecastStore.selected?.appId === BACKDROP_RECEIVER_ID;
+  const name = chromecastStore.selected?.name;
+
+  const onClick = () => {
+    launchAppAction(isBackdrop ? DEFAULT_MEDIA_RECEIVER_ID : BACKDROP_RECEIVER_ID);
+    setMenuOpen(false);
+  };
 
   const toggleMenu = useCallback(() => setMenuOpen(!menuOpen), [menuOpen]);
 
@@ -28,9 +37,16 @@ export const ChromecastIcon = ({ chromecastStore }: Props) => {
     <Menu
       anchorEl={anchorEl}
       onClose={toggleMenu}
-      open={menuOpen}
+      open={menuOpen && !!chromecastStore.selected}
     >
-      <MenuItem>Cast Default Background</MenuItem>
+      <MenuItem
+        onClick={onClick}
+      >
+        {isBackdrop
+          ? <>Cast Default Media Receiver</>
+          : <>Cast Default Background</>
+        }
+      </MenuItem>
     </Menu>
   </div>;
 };

@@ -23,6 +23,7 @@ export const GET_CHROMECASTS = 'GET_CHROMECASTS@server';
 export const GET_MEDIA_STATUS = 'GET_MEDIA_STATUS@server';
 export const GET_STATUS = 'GET_STATUS@server';
 export const LAUNCH  = 'LAUNCH@server';
+export const LAUNCH_APP  = 'LAUNCH_APP@server';
 export const PAUSE = 'PAUSED@server';
 export const PLAY = 'PLAYING@server';
 export const SEEK = 'SEEK@server';

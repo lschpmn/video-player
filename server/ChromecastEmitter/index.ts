@@ -1,6 +1,6 @@
 import { Client } from 'castv2';
 import * as multicastdns from 'multicast-dns';
-import { DEFAULT_MEDIA_RECEIVER_ID, MEDIA_NAMESPACE } from '../../constants';
+import { BACKDROP_RECEIVER_ID, DEFAULT_MEDIA_RECEIVER_ID, MEDIA_NAMESPACE } from '../../constants';
 import { Channel, ChromecastInfo, Listener, ReceiverStatus } from '../../types';
 import { connection, setMediaDisconnect, setStatus } from '../action-creators';
 import { channelErrorLogger, waitForTrue } from '../utils';
@@ -95,7 +95,7 @@ export default class ChromecastEmitter {
         console.log(status.type);
         console.log(status.status);
         this.dispatch(setStatus(status));
-        if (status.status.applications && status.status.applications[0]) {
+        if (status?.status?.applications?.[0]) {
           const application = status.status.applications[0];
           const hasMedia = application.namespaces.some(({ name }) => name === MEDIA_NAMESPACE);
           this.appId = application.appId;
@@ -172,6 +172,23 @@ export default class ChromecastEmitter {
     await waitForTrue(() => this.isMediaConnected, 15000);
 
     this.mediaEmitter?.launch(filePath, isUrl).catch(console.log);
+  }
+
+  launchApp(appId: string) {
+    if (this.appId === appId) return;
+
+    if (appId === BACKDROP_RECEIVER_ID) {
+      this.receiver.send({
+        requestId: Math.round(Math.random() * 100),
+        type: 'STOP',
+      });
+    } else {
+      this.receiver.send({
+        appId,
+        requestId: Math.round(Math.random() * 100),
+        type: 'LAUNCH',
+      });
+    }
   }
 
   setDispatch(dispatch: Listener) {
