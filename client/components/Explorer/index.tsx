@@ -1,4 +1,4 @@
-import { get } from 'lodash';
+import get from 'lodash/get';
 import { join } from 'path';
 import * as React from 'react';
 import { useMemo } from 'react';

@@ -1,6 +1,6 @@
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { isEqual } from 'lodash';
+import isEqual from 'lodash/isEqual';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
