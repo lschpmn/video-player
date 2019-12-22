@@ -5,9 +5,9 @@ import CastConnectedIcon from '@material-ui/icons/CastConnected';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { connect, getChromecasts, getMediaStatus, launch, PLAYING } from '../lib/player-actions';
-import { useAction } from '../lib/utils';
-import { ReducerState } from '../types';
+import { connect, getChromecasts, getMediaStatus, launch, PLAYING } from '../../lib/player-actions';
+import { useAction } from '../../lib/utils';
+import { ReducerState } from '../../types';
 
 const Media = () => {
   const connectAction = useAction(connect);
