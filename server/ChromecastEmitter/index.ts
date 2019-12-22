@@ -1,7 +1,7 @@
 import { Client } from 'castv2';
 import * as multicastdns from 'multicast-dns';
 import { DEFAULT_MEDIA_RECEIVER_ID, MEDIA_NAMESPACE } from '../../constants';
-import { Channel, ChromecastInfo, Listener, receiverStatus } from '../../types';
+import { Channel, ChromecastInfo, Listener, ReceiverStatus } from '../../types';
 import { connection, setMediaDisconnect, setStatus } from '../action-creators';
 import { channelErrorLogger, waitForTrue } from '../utils';
 import MediaEmitter from './MediaEmitter';
@@ -10,6 +10,7 @@ import Timeout = NodeJS.Timeout;
 export default class ChromecastEmitter {
   private appId?: string;
   private chromecastHost?: string;
+  private chromecastName?: string;
   private client?: Client;
   private connection?: Channel;
   private heartbeat?: Channel;
@@ -52,18 +53,19 @@ export default class ChromecastEmitter {
     if (dispatch) this.setDispatch(dispatch);
   }
 
-  connect(host: string): void {
-    if (this.chromecastHost === host) {
+  connect(chromecastInfo: ChromecastInfo): void {
+    if (this.chromecastHost === chromecastInfo.host) {
       this.dispatch(connection(this.isConnected));
       this.isConnected && this.getStatus();
       return;
     } else if (this.chromecastHost) this.destroy();
-    this.chromecastHost = host;
+    this.chromecastHost = chromecastInfo.host;
+    this.chromecastName = chromecastInfo.name;
 
     this.client = new Client();
 
     console.log('connecting');
-    this.client.connect(host, () => {
+    this.client.connect(chromecastInfo.host, () => {
       console.log('connected');
       this._isConnected = true;
       this.dispatch(connection(this.isConnected));
@@ -88,7 +90,7 @@ export default class ChromecastEmitter {
 
       this.setupHeartbeat();
 
-      this.receiver.on('message', (status: receiverStatus) => {
+      this.receiver.on('message', (status: ReceiverStatus) => {
         console.log('status');
         console.log(status.type);
         console.log(status.status);

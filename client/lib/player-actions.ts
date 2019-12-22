@@ -11,11 +11,12 @@ import {
   SET_VOLUME,
   STOP_MEDIA,
 } from '../../constants';
+import { ChromecastInfo } from '../../types';
 
 export const PLAYING = 'PLAYING';
 
-export const connect = (host: string) => ({
-  payload: host,
+export const connect = (chromecastInfo: ChromecastInfo) => ({
+  payload: chromecastInfo,
   type: CONNECT,
 });
 

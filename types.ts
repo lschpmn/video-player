@@ -7,6 +7,7 @@ export type Channel = EventEmitter & {
 };
 
 export type ChromecastInfo = {
+  appId?: string,
   host: string,
   name: string,
 };
@@ -83,19 +84,17 @@ export type MediaStatusServer = {
   },
 };
 
-export type receiverStatus = {
+export type ReceiverStatus = {
   requestId: number,
   status: {
-    applications?: [
-      {
-        appId: string,
-        displayName: string,
-        namespaces: { name: string }[],
-        sessionId: string,
-        statusText: string,
-        transportId: string,
-      }
-    ],
+    applications?: {
+      appId: string,
+      displayName: string,
+      namespaces: { name: string }[],
+      sessionId: string,
+      statusText: string,
+      transportId: string,
+    }[],
     isActiveInput: boolean,
     volume: {
       level: number,

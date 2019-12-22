@@ -2,7 +2,7 @@ import { ChromecastInfo, MediaStatus } from '../types';
 
 export type ChromecastStoreState = {
   chromecasts: ChromecastInfo[],
-  isConnected:boolean,
+  isConnected: boolean,
   loading: boolean,
   mediaStatus?: MediaStatus,
   selected?: ChromecastInfo,
@@ -16,11 +16,11 @@ export type ExplorerState = {
 };
 
 export interface Directory {
-  [s:string]: boolean | Directory,
+  [s: string]: boolean | Directory,
 }
 
 export type Inspections = {
-  [s:string]: {
+  [s: string]: {
     size: number,
     type: 'dir' | 'file' | 'forbidden',
   },

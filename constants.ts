@@ -1,4 +1,3 @@
-import { blue, green, red } from '@material-ui/core/colors';
 
 export const BACKDROP_RECEIVER_ID = 'E8C28D3C';
 export const DEFAULT_MEDIA_RECEIVER_ID = 'CC1AD845';
