@@ -45,13 +45,10 @@ const Media = () => {
   }, [showUrlField, url]);
 
   useEffect(() => {
-    if (chromecastStore.mediaStatus?.playerState === PLAYING) {
-      const intervalId = setInterval(() => getMediaStatusAction(), 1000);
-      return () => clearInterval(intervalId);
-    } else {
-      const intervalId = setInterval(() => getMediaStatusAction(), 5000);
-      return () => clearInterval(intervalId);
-    }
+    const isPlaying = chromecastStore.mediaStatus?.playerState === PLAYING;
+    const intervalId = setInterval(() => getMediaStatusAction(), isPlaying ? 1000 : 5000);
+
+    return () => clearInterval(intervalId);
   }, [chromecastStore.mediaStatus?.playerState]);
 
   return <div style={styles.container}>
