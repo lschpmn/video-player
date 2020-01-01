@@ -19,7 +19,7 @@ import {
   SET_STATUS,
 } from '../../constants';
 import { ChromecastInfo, ReceiverStatus } from '../../types';
-import { ChromecastStoreState, Directory, ExplorerState, VolumeStatus } from '../types';
+import { ChromecastStoreState, Directory, ExplorerState, FileStructure, VolumeStatus } from '../types';
 
 type Action = {
   type: string,
@@ -143,9 +143,26 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
   }
 }
 
+function fileStructure(state: FileStructure = {}, action) {
+  switch (action.type) {
+    case GET_DRIVES:
+      const newState = {};
+      action.payload.forEach(drive => {
+        newState[drive] = {
+          type: 'dir',
+        };
+      });
+
+      return newState;
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   chromecastStore,
   explorer,
+  fileStructure,
 });
 
 function setSelected(state: ChromecastStoreState, status: ReceiverStatus): ChromecastInfo {

@@ -19,6 +19,16 @@ export interface Directory {
   [s: string]: boolean | Directory,
 }
 
+export type FileItem = {
+  files?: FileItem[],
+  size: number,
+  type: 'dir' | 'file' | 'forbidden',
+};
+
+export type FileStructure = {
+  [s: string]: FileItem,
+};
+
 export type Inspections = {
   [s: string]: {
     size: number,
