@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
-import { getDrives, getFiles, inspectFile, setCurrentLocation } from '../lib/file-actions';
-import { useAction } from '../lib/utils';
-import { Directory, ReducerState } from '../types';
-import DirectoryStructure from './DirectoryStructure';
+import { getDrives, getFiles, inspectFile, setCurrentLocation } from '../../lib/file-actions';
+import { useAction } from '../../lib/utils';
+import { Directory, ReducerState } from '../../types';
+import DirectoryStructure from '../DirectoryStructure';
 
 const FileStructure = () => {
   const inspectFileAction = useAction(inspectFile);
