@@ -20,7 +20,7 @@ export interface Directory {
 }
 
 export type FileItem = {
-  files?: FileItem[],
+  files?: FileStructure,
   size: number,
   type: 'dir' | 'file' | 'forbidden',
 };
@@ -39,6 +39,7 @@ export type Inspections = {
 export type ReducerState = {
   chromecastStore: ChromecastStoreState,
   explorer: ExplorerState,
+  fileStructure: FileStructure,
 };
 
 export type VolumeStatus = {

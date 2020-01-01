@@ -14,12 +14,14 @@ import {
   SEEK,
   SET_CHROMECASTS,
   SET_CURRENT_LOCATION,
+  SET_FILE_ITEMS,
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
   SET_STATUS,
 } from '../../constants';
 import { ChromecastInfo, ReceiverStatus } from '../../types';
 import { ChromecastStoreState, Directory, ExplorerState, FileStructure, VolumeStatus } from '../types';
+import { getFileItem } from './utils';
 
 type Action = {
   type: string,
@@ -145,7 +147,7 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
 
 function fileStructure(state: FileStructure = {}, action) {
   switch (action.type) {
-    case GET_DRIVES:
+    case GET_DRIVES: {
       const newState = {};
       action.payload.forEach(drive => {
         newState[drive] = {
@@ -154,6 +156,14 @@ function fileStructure(state: FileStructure = {}, action) {
       });
 
       return newState;
+    }
+    case SET_FILE_ITEMS: {
+      const newState = cloneDeep(state);
+      const fileItem = getFileItem(newState, action.payload.location);
+      fileItem.files = action.payload.files;
+
+      return newState;
+    }
     default:
       return state;
   }

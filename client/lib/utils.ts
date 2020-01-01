@@ -1,5 +1,14 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
+import { FileItem, FileStructure } from '../types';
+
+export function getFileItem(fileStructure: FileStructure, location: string[]): FileItem {
+  if (location.length === 1) {
+    return fileStructure[location[0]];
+  } else {
+    return getFileItem(fileStructure[location[0]].files, location.slice(1));
+  }
+}
 
 export function getTimeString(time) {
   if (!time) return '0:00';
@@ -23,9 +32,9 @@ export function leadZero(num) {
   return ('0' + num).slice(-2);
 }
 
-export const useAction = <T extends Function>(action: T, deps?): T => {
+export const useAction = <T extends Function>(action: T, deps=[]): T => {
   const dispatch = useDispatch();
 
   return useCallback((...args) =>
-    dispatch(action(...args)), deps ? [dispatch, ...deps] : [dispatch]) as any;
+    dispatch(action(...args)), [dispatch, ...deps]) as any;
 };

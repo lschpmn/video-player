@@ -5,6 +5,7 @@ import {
   INSPECT_FILE,
   LOG,
   SET_CHROMECASTS,
+  SET_FILE_ITEMS,
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
   SET_STATUS,
@@ -32,6 +33,14 @@ export const getFilesAction = (files, location: string[]) => ({
 export const log = message => ({
   payload: message,
   type: LOG,
+});
+
+export const setFileItemsAction = (files, location: string[]) => ({
+  payload: {
+    files,
+    location,
+  },
+  type: SET_FILE_ITEMS
 });
 
 export const setMediaDisconnect = () => ({

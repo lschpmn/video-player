@@ -2,6 +2,7 @@ import { exec } from 'child_process';
 import { Router, static as expressStatic } from 'express';
 import { inspectAsync, listAsync } from 'fs-jetpack';
 import { networkInterfaces } from 'os';
+import { join } from 'path';
 import { port } from './index';
 
 export const FilesRouter = Router();
@@ -29,6 +30,21 @@ export async function getFiles(location: string) {
   console.log(`files for path ${location}`);
   console.log(files);
   return files;
+}
+
+export async function getFileItems(location: string[]) {
+  const path = location.join('/') + '/';
+  const files = await listAsync(path);
+  const fileStructure = {};
+  await Promise.all(files.map(async file => {
+    try {
+      fileStructure[file] = await inspectAsync(join(path, file));
+    } catch (err) {
+      fileStructure[file] = { type: 'forbidden' };
+    }
+  }));
+
+  return fileStructure;
 }
 
 export async function getFileUrl(path: string) {

@@ -7,6 +7,7 @@ import {
   CONNECT,
   GET_CHROMECASTS,
   GET_DRIVES_SERVER,
+  GET_FILE_ITEMS,
   GET_FILES_SERVER,
   GET_MEDIA_STATUS,
   GET_STATUS,
@@ -20,9 +21,15 @@ import {
   SET_VOLUME,
   STOP_MEDIA,
 } from '../constants';
-import { getDrivesAction, getFilesAction, inspectFileAction, setChromecasts } from './action-creators';
+import {
+  getDrivesAction,
+  getFilesAction,
+  inspectFileAction,
+  setChromecasts,
+  setFileItemsAction,
+} from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
-import { FilesRouter, getDrives, getFiles, inspectFile } from './FileUtils';
+import { FilesRouter, getDrives, getFileItems, getFiles, inspectFile } from './FileUtils';
 
 const START_PORT = 3000;
 export let port;
@@ -67,10 +74,15 @@ async function startServer() {
         case GET_DRIVES_SERVER:
           dispatch(getDrivesAction(await getDrives()));
           return;
-        case GET_FILES_SERVER:
+        case GET_FILE_ITEMS: {
+          dispatch(setFileItemsAction(await getFileItems(payload), payload));
+          return;
+        }
+        case GET_FILES_SERVER: {
           const path = (join(...payload) + '/').replace(':.', ':');
           dispatch(getFilesAction(await getFiles(path), payload));
           return;
+        }
         case INSPECT_FILE_SERVER:
           dispatch(inspectFileAction(await inspectFile(payload), payload));
           return;
