@@ -19,9 +19,9 @@ const Explorer = () => {
       .sort(([aName, aItem], [bName, bItem]) => {
         if (aItem.type === 'dir' && bItem.type === 'dir') {
           return aName.localeCompare(bName);
-        } else if (aItem.type === 'dir' && bItem.type === 'file') {
+        } else if (aItem.type === 'dir' && bItem.type !== 'dir') {
           return -1;
-        } else if (aItem.type === 'file' && bItem.type === 'dir') {
+        } else if (aItem.type !== 'dir' && bItem.type === 'dir') {
           return 1;
         }
 
@@ -42,6 +42,7 @@ export default Explorer;
 
 const styles = {
   container: {
+    alignContent: 'start',
     display: 'flex',
     flexDirection: 'row',
     flexWrap: 'wrap',

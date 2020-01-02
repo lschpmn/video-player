@@ -26,6 +26,7 @@ const styles = {
   folder: {
     display: 'flex',
     flexDirection: 'column',
+    height: 'fit-content',
     margin: '1rem',
     width: '8rem',
   } as React.CSSProperties,
