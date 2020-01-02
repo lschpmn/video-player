@@ -12,9 +12,10 @@ type Props = {
 
 const ExplorerItem = ({ currentLocation, drive, name }: Props) => {
   return <div key={join(...currentLocation, name)} style={styles.folder}>
-    {drive.type === 'file'
-      ? <InsertDriveFileIcon style={styles.folderIcon}/>
-      : <Folder style={styles.folderIcon}/>}
+    {drive.type === 'dir'
+      ? <Folder style={styles.folderIcon}/>
+      : <InsertDriveFileIcon style={styles.folderIcon}/>
+    }
     <div style={styles.folderText}>{name}</div>
   </div>;
 };
