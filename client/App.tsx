@@ -14,7 +14,7 @@ const App = () => {
       <div className={classes.top} />
       <div style={styles.middle}>
         <div style={{ flex: 1 }}>
-          <Media />
+          {/*<Media />*/}
         </div>
 
         <div style={{ flex: 3 }}>

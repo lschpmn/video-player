@@ -1,14 +1,11 @@
 import cloneDeep from 'lodash/cloneDeep';
-import set from 'lodash/set';
 import { combineReducers } from 'redux';
 import {
   CONNECT,
   CONNECTION,
   GET_CHROMECASTS,
   GET_DRIVES,
-  GET_FILES,
   GET_MEDIA_STATUS,
-  INSPECT_FILE,
   PAUSE,
   PLAY,
   SEEK,
@@ -20,18 +17,12 @@ import {
   SET_STATUS,
 } from '../../constants';
 import { ChromecastInfo, ReceiverStatus } from '../../types';
-import { ChromecastStoreState, Directory, ExplorerState, FileStructure, VolumeStatus } from '../types';
+import { ChromecastStoreState, FileStructureState, VolumeStatus } from '../types';
 import { getFileItem } from './utils';
 
 type Action = {
   type: string,
   payload: any,
-};
-
-const defaultStateExplorer = {
-  currentLocation: [],
-  drives: {},
-  inspections: {},
 };
 
 const defaultChromecastStore: ChromecastStoreState = {
@@ -41,6 +32,11 @@ const defaultChromecastStore: ChromecastStoreState = {
   mediaStatus: null,
   selected: null,
   volumeStatus: null,
+};
+
+const defaultFileStructureState: FileStructureState = {
+  currentLocation: [],
+  fileStructure: {},
 };
 
 function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, action: Action) {
@@ -98,41 +94,19 @@ function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, a
   }
 }
 
-function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
+function fileStructureState(state: FileStructureState = defaultFileStructureState, action) {
   switch (action.type) {
     case GET_DRIVES: {
-      const drives: string[] = action.payload;
-      const driveObj = {};
-      for (let drive of drives) driveObj[drive] = true;
+      const fileStructure = {};
+      action.payload.forEach(drive => {
+        fileStructure[drive] = {
+          type: 'dir',
+        };
+      });
 
       return {
         ...state,
-        drives: driveObj,
-      };
-    }
-    case GET_FILES: {
-      const { location, files } = action.payload;
-      const directory: Directory = {};
-
-      files.forEach(file => directory[file] = true);
-
-      const drives = set(cloneDeep(state.drives), location, directory);
-
-      return {
-        ...state,
-        currentLocation: location,
-        drives,
-      };
-    }
-    case INSPECT_FILE: {
-      const { inspection, path } = action.payload;
-
-      return {
-        ...state,
-        inspections: {
-          ...state.inspections,
-          [path]: inspection,
-        },
+        fileStructure,
       };
     }
     case SET_CURRENT_LOCATION:
@@ -140,29 +114,15 @@ function explorer(state: ExplorerState = defaultStateExplorer, action: Action) {
         ...state,
         currentLocation: action.payload,
       };
-    default:
-      return state;
-  }
-}
-
-function fileStructure(state: FileStructure = {}, action) {
-  switch (action.type) {
-    case GET_DRIVES: {
-      const newState = {};
-      action.payload.forEach(drive => {
-        newState[drive] = {
-          type: 'dir',
-        };
-      });
-
-      return newState;
-    }
     case SET_FILE_ITEMS: {
-      const newState = cloneDeep(state);
-      const fileItem = getFileItem(newState, action.payload.location);
+      const fileStructure = cloneDeep(state.fileStructure);
+      const fileItem = getFileItem(fileStructure, action.payload.location);
       fileItem.files = action.payload.files;
 
-      return newState;
+      return {
+        ...state,
+        fileStructure,
+      };
     }
     default:
       return state;
@@ -171,8 +131,7 @@ function fileStructure(state: FileStructure = {}, action) {
 
 export default combineReducers({
   chromecastStore,
-  explorer,
-  fileStructure,
+  fileStructureState,
 });
 
 function setSelected(state: ChromecastStoreState, status: ReceiverStatus): ChromecastInfo {

@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux';
 import { FileItem, FileStructure } from '../types';
 
 export function getFileItem(fileStructure: FileStructure, location: string[]): FileItem {
+  if (location.length === 0) return null;
   if (location.length === 1) {
     return fileStructure[location[0]];
   } else {

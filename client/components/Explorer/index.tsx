@@ -1,38 +1,21 @@
-import get from 'lodash/get';
 import { join } from 'path';
 import * as React from 'react';
-import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import { getFileItem } from '../../lib/utils';
 import { ReducerState } from '../../types';
 import ExplorerItem from './ExplorerItem';
 
 const Explorer = () => {
-  const explorer = useSelector((state: ReducerState) => state.explorer);
-  const folderFiles = explorer.currentLocation.length
-    ? Object.keys(get(explorer.drives, explorer.currentLocation))
-    : Object.keys(explorer.drives);
-
-  const inspectedFolderFiles = useMemo(() => {
-    return folderFiles
-      .map(folderFile => ({
-        ...explorer.inspections[join(...explorer.currentLocation, folderFile)],
-        name: folderFile,
-      }))
-      .sort((a, b) => {
-        if (a.type === 'dir' && b.type === 'dir') return 0;
-        else if (a.type === 'file' && b.type === 'file') return 0;
-        else if (a.type === 'file' && b.type === 'dir') return 1;
-        else if (a.type === 'dir' && b.type === 'file') return -1;
-      })
-      .filter(Boolean);
-  }, [folderFiles]);
+  const fileStructureState = useSelector((state: ReducerState) => state.fileStructureState);
+  const fileItem = getFileItem(fileStructureState.fileStructure, fileStructureState.currentLocation);
 
   return <div style={styles.container}>
-    {inspectedFolderFiles.map(drive =>
+    {Object.entries(fileItem?.files || fileStructureState.fileStructure).map(([name, item]) =>
       <ExplorerItem
-        currentLocation={explorer.currentLocation}
-        drive={drive}
-        key={join(...explorer.currentLocation, drive.name)}
+        currentLocation={fileStructureState.currentLocation}
+        drive={item}
+        key={join(...fileStructureState.currentLocation, name)}
+        name={name}
       />
     )}
   </div>;

@@ -24,14 +24,6 @@ export function getDrives() {
   });
 }
 
-export async function getFiles(location: string) {
-  const files = await listAsync(location);
-
-  console.log(`files for path ${location}`);
-  console.log(files);
-  return files;
-}
-
 export async function getFileItems(location: string[]) {
   const path = location.join('/') + '/';
   const files = await listAsync(path);
@@ -59,19 +51,4 @@ export async function getFileUrl(path: string) {
   fileUrlMap[path] = `http://${ipAddress}:${port}/api/files/${tmpName}.mp4`;
   console.log(`url: ${fileUrlMap[path]}`);
   return fileUrlMap[path];
-}
-
-export async function inspectFile(path: string) {
-  try {
-    const file = await inspectAsync(path);
-
-    console.log(`for ${path}`);
-    console.log(file);
-
-    return file;
-  } catch (err) {
-    return {
-      type: 'forbidden',
-    };
-  }
 }

@@ -9,16 +9,6 @@ export type ChromecastStoreState = {
   volumeStatus?: VolumeStatus,
 };
 
-export type ExplorerState = {
-  currentLocation: string[],
-  drives: Directory,
-  inspections: Inspections,
-};
-
-export interface Directory {
-  [s: string]: boolean | Directory,
-}
-
 export type FileItem = {
   files?: FileStructure,
   size: number,
@@ -29,17 +19,14 @@ export type FileStructure = {
   [s: string]: FileItem,
 };
 
-export type Inspections = {
-  [s: string]: {
-    size: number,
-    type: 'dir' | 'file' | 'forbidden',
-  },
+export type FileStructureState = {
+  currentLocation: string[],
+  fileStructure: FileStructure,
 };
 
 export type ReducerState = {
   chromecastStore: ChromecastStoreState,
-  explorer: ExplorerState,
-  fileStructure: FileStructure,
+  fileStructureState: FileStructureState,
 };
 
 export type VolumeStatus = {

@@ -1,8 +1,6 @@
 import {
   CONNECTION,
   GET_DRIVES,
-  GET_FILES,
-  INSPECT_FILE,
   LOG,
   SET_CHROMECASTS,
   SET_FILE_ITEMS,
@@ -22,17 +20,14 @@ export const getDrivesAction = drives => ({
   type: GET_DRIVES,
 });
 
-export const getFilesAction = (files, location: string[]) => ({
-  payload: {
-    files,
-    location,
-  },
-  type: GET_FILES,
-});
-
 export const log = message => ({
   payload: message,
   type: LOG,
+});
+
+export const setChromecasts = chromecasts => ({
+  payload: chromecasts,
+  type: SET_CHROMECASTS,
 });
 
 export const setFileItemsAction = (files, location: string[]) => ({
@@ -64,17 +59,4 @@ export const setMediaStatus = (status: MediaStatusServer): { payload: MediaStatu
 export const setStatus = status => ({
   payload: status,
   type: SET_STATUS,
-});
-
-export const inspectFileAction = (inspection, path) => ({
-  payload: {
-    inspection,
-    path,
-  },
-  type: INSPECT_FILE,
-});
-
-export const setChromecasts = chromecasts => ({
-  payload: chromecasts,
-  type: SET_CHROMECASTS,
 });
