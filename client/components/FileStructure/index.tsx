@@ -1,25 +1,25 @@
 import * as React from 'react';
-import { useEffect } from 'react';
-import { useSelector } from 'react-redux';
-import { getDrives, setCurrentLocation } from '../../lib/file-actions';
-import { useAction } from '../../lib/utils';
-import { ReducerState } from '../../types';
+import { useEffect, useState } from 'react';
+import { setCurrentLocation } from '../../lib/file-actions';
+import { requestDrives, useAction } from '../../lib/utils';
+import { FileStructure as FileStructureType } from '../../types';
 import DirectoryItem from './DirectoryItem';
 
 const FileStructure = () => {
-  const getDrivesAction = useAction(getDrives);
+  const [drives, setDrives] = useState(null as FileStructureType | null);
   const setCurrentLocationAction = useAction(setCurrentLocation);
-  const fileStructure = useSelector((state: ReducerState) => state.fileStructureState.fileStructure);
 
   useEffect(() => {
-    getDrivesAction();
+    requestDrives()
+      .then(res => setDrives(res))
+      .catch(console.log);
   }, []);
 
   return <div style={styles.container}>
-    {Object.keys(fileStructure)
+    {drives && Object.keys(drives)
       .map((drive: string) =>
         <DirectoryItem
-          fileStructure={fileStructure}
+          fileStructure={drives}
           key={drive}
           location={[drive]}
           setCurrentLocation={setCurrentLocationAction}

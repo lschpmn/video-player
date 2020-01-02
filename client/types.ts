@@ -10,7 +10,6 @@ export type ChromecastStoreState = {
 };
 
 export type FileItem = {
-  files?: FileStructure,
   size: number,
   type: 'dir' | 'file' | 'forbidden',
 };
@@ -19,17 +18,20 @@ export type FileStructure = {
   [s: string]: FileItem,
 };
 
-export type FileStructureState = {
+export type ExplorerState = {
   currentLocation: string[],
-  fileStructure: FileStructure,
 };
 
 export type ReducerState = {
   chromecastStore: ChromecastStoreState,
-  fileStructureState: FileStructureState,
+  explorer: ExplorerState,
 };
 
 export type VolumeStatus = {
   level: number,
   muted: boolean,
+};
+
+export type WindowState = {
+  __PORT__: number,
 };

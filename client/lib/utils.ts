@@ -1,15 +1,8 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { FileItem, FileStructure } from '../types';
+import { WindowState } from '../types';
 
-export function getFileItem(fileStructure: FileStructure, location: string[]): FileItem {
-  if (location.length === 0) return null;
-  if (location.length === 1) {
-    return fileStructure[location[0]];
-  } else {
-    return getFileItem(fileStructure[location[0]].files, location.slice(1));
-  }
-}
+const PORT = (window as any as WindowState).__PORT__;
 
 export function getTimeString(time) {
   if (!time) return '0:00';
@@ -31,6 +24,23 @@ export function getTimeString(time) {
 
 export function leadZero(num) {
   return ('0' + num).slice(-2);
+}
+
+export async function requestDrives() {
+  const response = await fetch(`http://localhost:${PORT}/api/files/get-drives`);
+  return await response.json();
+}
+
+export async function requestFileItems(path) {
+  const response = await fetch(`http://localhost:${PORT}/api/files/get-files`, {
+    body: JSON.stringify({ path }),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  });
+
+  return await response.json();
 }
 
 export const useAction = <T extends Function>(action: T, deps=[]): T => {

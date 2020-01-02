@@ -6,8 +6,6 @@ import * as socketIO from 'socket.io';
 import {
   CONNECT,
   GET_CHROMECASTS,
-  GET_DRIVES_SERVER,
-  GET_FILE_ITEMS,
   GET_MEDIA_STATUS,
   GET_STATUS,
   LAUNCH,
@@ -19,9 +17,9 @@ import {
   SET_VOLUME,
   STOP_MEDIA,
 } from '../constants';
-import { getDrivesAction, setChromecasts, setFileItemsAction } from './action-creators';
+import { setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
-import { FilesRouter, getDrives, getFileItems } from './FileUtils';
+import { FilesRouter } from './FileUtils';
 
 const START_PORT = 3000;
 export let port;
@@ -62,15 +60,6 @@ async function startServer() {
       payload && console.log(payload);
 
       switch (type) {
-        // files
-        case GET_DRIVES_SERVER:
-          dispatch(getDrivesAction(await getDrives()));
-          return;
-        case GET_FILE_ITEMS: {
-          dispatch(setFileItemsAction(await getFileItems(payload), payload));
-          return;
-        }
-
         // player
         case CONNECT:
           chromecastEmitter.connect(payload);

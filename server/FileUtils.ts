@@ -12,7 +12,19 @@ export const ipAddress = networkInterfaces().Ethernet
   : networkInterfaces()['Wi-Fi'].find(e => e.family === 'IPv4').address;
 const fileUrlMap: { [s: string]: string } = {};
 
-export function getDrives() {
+FilesRouter.get('/get-drives', async (req, res) => {
+  const drives = await getDrives();
+  res.send(drives
+    .reduce((total, curr) => ({ ...total, [curr]: { type: 'dir' } }), {}));
+});
+
+FilesRouter.post('/get-files', async (req, res) => {
+  const path = req.body.path;
+  const files = await getFileItems(path);
+  res.send(files);
+});
+
+export function getDrives(): Promise<string[]> {
   return new Promise((resolve, reject) => {
     exec(' wmic logicaldisk get caption', (err, stdout) => {
       if (err) return reject(err);
@@ -24,8 +36,7 @@ export function getDrives() {
   });
 }
 
-export async function getFileItems(location: string[]) {
-  const path = location.join('/') + '/';
+export async function getFileItems(path: string) {
   const files = await listAsync(path);
   const fileStructure = {};
   await Promise.all(files.map(async file => {

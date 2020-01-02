@@ -39,7 +39,9 @@ function createWindow() {
     width: 1280,
   });
 
-  win.loadURL(`http://localhost:${port}/index.html`);
+  win
+    .loadURL(`http://localhost:${port}/index.html`)
+    .catch(console.log);
 
   win.webContents.openDevTools();
 

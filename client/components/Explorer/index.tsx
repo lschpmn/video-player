@@ -1,21 +1,28 @@
 import { join } from 'path';
 import * as React from 'react';
+import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { getFileItem } from '../../lib/utils';
-import { ReducerState } from '../../types';
+import { requestDrives, requestFileItems } from '../../lib/utils';
+import { FileStructure, ReducerState } from '../../types';
 import ExplorerItem from './ExplorerItem';
 
 const Explorer = () => {
-  const fileStructureState = useSelector((state: ReducerState) => state.fileStructureState);
-  const fileItem = getFileItem(fileStructureState.fileStructure, fileStructureState.currentLocation);
+  const [files, setFiles] = useState(null as FileStructure | null);
+  const currentLocation = useSelector((state: ReducerState) => state.explorer.currentLocation);
 
-  const fileStructure = fileStructureState.currentLocation.length === 0
-    ? fileStructureState.fileStructure
-    : fileItem?.files;
+  useEffect(() => {
+    const request = currentLocation.length === 0
+      ? requestDrives()
+      : requestFileItems(currentLocation.join('/') + '/');
+
+    request
+      .then(res => setFiles(res))
+      .catch(console.log);
+  }, [currentLocation]);
 
   return <div style={styles.container}>
-    {fileStructure && Object
-      .entries(fileStructure)
+    {files && Object
+      .entries(files)
       .sort(([aName, aItem], [bName, bItem]) => {
         if (aItem.type === 'dir' && bItem.type === 'dir') {
           return aName.localeCompare(bName);
@@ -29,9 +36,9 @@ const Explorer = () => {
       })
       .map(([name, item]) =>
         <ExplorerItem
-          currentLocation={fileStructureState.currentLocation}
+          currentLocation={currentLocation}
           drive={item}
-          key={join(...fileStructureState.currentLocation, name)}
+          key={join(...currentLocation, name)}
           name={name}
         />,
       )}

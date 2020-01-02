@@ -1,23 +1,9 @@
-import {
-  CONNECTION,
-  GET_DRIVES,
-  LOG,
-  SET_CHROMECASTS,
-  SET_FILE_ITEMS,
-  SET_MEDIA_DISCONNECT,
-  SET_MEDIA_STATUS,
-  SET_STATUS,
-} from '../constants';
+import { CONNECTION, LOG, SET_CHROMECASTS, SET_MEDIA_DISCONNECT, SET_MEDIA_STATUS, SET_STATUS } from '../constants';
 import { MediaStatus, MediaStatusServer } from '../types';
 
 export const connection = (isConnected: boolean) => ({
   payload: isConnected,
   type: CONNECTION,
-});
-
-export const getDrivesAction = drives => ({
-  payload: drives,
-  type: GET_DRIVES,
 });
 
 export const log = message => ({
@@ -28,14 +14,6 @@ export const log = message => ({
 export const setChromecasts = chromecasts => ({
   payload: chromecasts,
   type: SET_CHROMECASTS,
-});
-
-export const setFileItemsAction = (files, location: string[]) => ({
-  payload: {
-    files,
-    location,
-  },
-  type: SET_FILE_ITEMS
 });
 
 export const setMediaDisconnect = () => ({

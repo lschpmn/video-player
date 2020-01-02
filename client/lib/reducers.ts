@@ -1,24 +1,20 @@
-import cloneDeep from 'lodash/cloneDeep';
 import { combineReducers } from 'redux';
 import {
   CONNECT,
   CONNECTION,
   GET_CHROMECASTS,
-  GET_DRIVES,
   GET_MEDIA_STATUS,
   PAUSE,
   PLAY,
   SEEK,
   SET_CHROMECASTS,
   SET_CURRENT_LOCATION,
-  SET_FILE_ITEMS,
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
   SET_STATUS,
 } from '../../constants';
 import { ChromecastInfo, ReceiverStatus } from '../../types';
-import { ChromecastStoreState, FileStructureState, VolumeStatus } from '../types';
-import { getFileItem } from './utils';
+import { ChromecastStoreState, ExplorerState, VolumeStatus } from '../types';
 
 type Action = {
   type: string,
@@ -34,9 +30,8 @@ const defaultChromecastStore: ChromecastStoreState = {
   volumeStatus: null,
 };
 
-const defaultFileStructureState: FileStructureState = {
+const defaultExplorerState: ExplorerState = {
   currentLocation: [],
-  fileStructure: {},
 };
 
 function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, action: Action) {
@@ -94,36 +89,13 @@ function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, a
   }
 }
 
-function fileStructureState(state: FileStructureState = defaultFileStructureState, action) {
+function explorer(state: ExplorerState = defaultExplorerState, action) {
   switch (action.type) {
-    case GET_DRIVES: {
-      const fileStructure = {};
-      action.payload.forEach(drive => {
-        fileStructure[drive] = {
-          type: 'dir',
-        };
-      });
-
-      return {
-        ...state,
-        fileStructure,
-      };
-    }
     case SET_CURRENT_LOCATION:
       return {
         ...state,
         currentLocation: action.payload,
       };
-    case SET_FILE_ITEMS: {
-      const fileStructure = cloneDeep(state.fileStructure);
-      const fileItem = getFileItem(fileStructure, action.payload.location);
-      fileItem.files = action.payload.files;
-
-      return {
-        ...state,
-        fileStructure,
-      };
-    }
     default:
       return state;
   }
@@ -131,7 +103,7 @@ function fileStructureState(state: FileStructureState = defaultFileStructureStat
 
 export default combineReducers({
   chromecastStore,
-  fileStructureState,
+  explorer,
 });
 
 function setSelected(state: ChromecastStoreState, status: ReceiverStatus): ChromecastInfo {

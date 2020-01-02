@@ -8,11 +8,7 @@ export const MEDIA_NAMESPACE = 'urn:x-cast:com.google.cast.media';
 export const LOG = 'LOG';
 
 //files
-export const GET_DRIVES = 'GET_DRIVES';
-export const GET_DRIVES_SERVER = 'GET_DRIVES@server';
-export const GET_FILE_ITEMS = 'GET_FILE_ITEMS@server';
 export const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION';
-export const SET_FILE_ITEMS = ' SET_FILE_ITEMS';
 
 //player
 export const CONNECT = 'CONNECT@server';

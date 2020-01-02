@@ -2,8 +2,8 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { getFileItems, setCurrentLocation } from '../../lib/file-actions';
-import { useAction } from '../../lib/utils';
+import { setCurrentLocation } from '../../lib/file-actions';
+import { requestFileItems } from '../../lib/utils';
 import { FileStructure } from '../../types';
 
 type Props = {
@@ -13,37 +13,36 @@ type Props = {
 };
 
 const DirectoryItem = ({ fileStructure, location, setCurrentLocation }: Props) => {
-  const getFileItemsAction = useAction(getFileItems);
+  const [files, setFiles] = useState(null as FileStructure | null);
   const [isOpen, setIsOpen] = useState(false);
   const setCurrentLocationAction = useCallback(() => setCurrentLocation(location), []);
   const toggleOpen = useCallback(() => setIsOpen(!isOpen), [isOpen]);
   const fileItem = useMemo(() => fileStructure[location.slice(-1)[0]], [fileStructure]);
   const classes = useStyles({});
 
-  const setLocation = useCallback(() => {
-    setCurrentLocationAction();
-    getFileItemsAction(location);
-  }, []);
-
   useEffect(() => {
-    if (isOpen && fileItem.type === 'dir' && !fileItem.files) {
-      getFileItemsAction(location);
+    if (isOpen && fileItem.type === 'dir' && !files) {
+      requestFileItems(location.join('/') + '/')
+        .then(res => {
+          setFiles(res);
+        })
+        .catch(console.log);
     }
   }, [isOpen]);
 
   return <div className={classes.container}>
     <div className={classes.nameContainer}>
       {isOpen ? <ArrowDropDownIcon onMouseDown={toggleOpen}/> : <ArrowRight onMouseDown={toggleOpen}/>}
-      <div className={classes.name} onMouseDown={setLocation}>
+      <div className={classes.name} onMouseDown={setCurrentLocationAction}>
         {location.slice(-1)[0]}
       </div>
     </div>
-    {isOpen && fileItem.files && Object.entries(fileItem.files)
+    {isOpen && files && Object.entries(files)
       .filter(([name, item]) => item.type === 'dir')
       .map(([name, item]) =>
         <div className={classes.children} key={[...location, name].join('/')}>
           <DirectoryItem
-            fileStructure={fileItem.files}
+            fileStructure={files}
             location={[...location, name]}
             setCurrentLocation={setCurrentLocation}
           />
