@@ -1,9 +1,13 @@
 import { exec } from 'child_process';
 import { Router, static as expressStatic } from 'express';
-import { inspectAsync, listAsync } from 'fs-jetpack';
+import * as ffmpeg from 'fluent-ffmpeg';
+import { dirAsync, inspectAsync, listAsync } from 'fs-jetpack';
 import { networkInterfaces } from 'os';
+import { join } from 'path';
 import { FileItem } from '../client/types';
 import { port } from './index';
+
+const imageCache = {};
 
 export const FilesRouter = Router();
 
@@ -35,11 +39,33 @@ FilesRouter.post('/get-files', async (req, res) => {
   res.send(files);
 });
 
-FilesRouter.post('/inspect', async (req, res) => {
+FilesRouter.post('/get-thumbnail', async (req, res) => {
   const path = req.body.path;
-  console.log(`inspect: ${path}`);
+  if (imageCache[path]) {
+    res.send({ path: imageCache[path] });
+    return;
+  }
 
-  setTimeout(() => res.send([]), Math.min(Math.random() * 500, 200));
+  const id = Math.random().toString(36).slice(-8);
+  const imagePath = join(__dirname, '..', 'public', 'images', id);
+  await dirAsync(imagePath);
+
+  ffmpeg(path)
+    .on('error', (err) => {
+      console.log(err);
+      res.status(500).send({ error: err.message });
+    })
+    .on('end', () => {
+      imageCache[path] = `/images/${id}/1.png`;
+
+      res.send({ path: imageCache[path] });
+    })
+    .screenshots({
+      filename: '1.png',
+      folder: imagePath,
+      size: '360x?',
+      timemarks: ['10%'],
+    });
 });
 
 export function getDrives(): Promise<string[]> {

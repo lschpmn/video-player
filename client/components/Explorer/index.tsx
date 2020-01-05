@@ -35,21 +35,21 @@ const Explorer = () => {
       const videoToLoad = videoFiles.find(videoFile => !videoFile.images);
       if (!videoToLoad) return;
 
-      postLocal('/api/files/inspect', { path: videoToLoad.path })
-        .then(res => {
+      postLocal('/api/files/get-thumbnail', { path: videoToLoad.path })
+        .then(res =>
           setFiles(oldFiles => oldFiles
             .map(file => file.path === videoToLoad.path
               ? ({
                 ...file,
-                images: res,
+                images: res.path,
               })
               : file
             )
-          );
-        })
+          )
+        )
         .catch(console.log);
 
-      setFiles(files
+      setFiles(oldFiles => oldFiles
         .map(file => file.path === videoToLoad.path
           ? ({
             ...file,
