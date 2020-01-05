@@ -41,7 +41,7 @@ const Explorer = () => {
             .map(file => file.path === videoToLoad.path
               ? ({
                 ...file,
-                images: res.path,
+                images: [res.path],
               })
               : file
             )
@@ -72,18 +72,16 @@ const Explorer = () => {
           style={styles.explorerItem}
         >
           {loc}/
-        </h3>,
+        </h3>
       )}
     </div>
     <div style={styles.itemContainer}>
       {files
         .map((item) =>
           <ExplorerItem
-            currentLocation={currentLocation}
             item={item}
             key={item.path}
-            name={item.path.split('/').slice(-1)[0]}
-          />,
+          />
         )}
     </div>
   </div>;

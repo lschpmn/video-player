@@ -7,24 +7,24 @@ import { useAction } from '../../lib/utils';
 import { FileItem } from '../../types';
 
 type Props = {
-  currentLocation: string[],
   item: FileItem,
-  name: string,
 };
 
-const ExplorerItem = ({ currentLocation, item, name }: Props) => {
-  const setCurrentLocationAction = useAction(setCurrentLocation);
+const ExplorerItem = ({ item }: Props) => {
+  const currentLocation = item.path.split('/');
+  const setCurrentLocationAction = useAction(() =>
+    setCurrentLocation(currentLocation), [currentLocation]);
 
   return <div style={styles.folder}>
     {!item.images && (item.type === 'dir'
-      ? <Folder onDoubleClick={() => setCurrentLocationAction([...currentLocation, name])} style={styles.folderIcon}/>
+      ? <Folder onDoubleClick={setCurrentLocationAction} style={styles.folderIcon}/>
       : <InsertDriveFileIcon style={styles.folderIcon}/>)
     }
     {item.images === 'loading' && <LoopIcon style={styles.folderIcon} />}
     {item.images && item.images !== 'loading' &&
-      <img style={{ maxWidth: '100%' }} src={item.images}  alt="thumbnail"/>
+      <img style={styles.image} src={item.images[0]}  alt="thumbnail"/>
     }
-    <div style={styles.folderText}>{name}</div>
+    <div style={styles.folderText}>{currentLocation.slice(-1)[0]}</div>
   </div>;
 };
 
@@ -32,6 +32,7 @@ export default ExplorerItem;
 
 const styles = {
   folder: {
+    cursor: 'pointer',
     display: 'flex',
     flexDirection: 'column',
     height: 'fit-content',
@@ -46,4 +47,7 @@ const styles = {
     textAlign: 'center',
     wordBreak: 'break-word',
   } as React.CSSProperties,
+  image: {
+    maxWidth: '100%',
+  },
 };
