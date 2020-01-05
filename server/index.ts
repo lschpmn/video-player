@@ -19,15 +19,19 @@ import {
 } from '../constants';
 import { setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
-import { FilesRouter } from './FileUtils';
-
-const START_PORT = 3000;
-export let port;
+import * as lowdb from 'lowdb';
+import * as FileAsync from 'lowdb/adapters/FileAsync';
+import { FilesRouter } from './FilesRouter';
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const express = require('express');
-let retries = 10;
+let retries = 2;
+
+const START_PORT = 3000;
+
+export let db;
+export let port;
 
 (function serverRestarter() {
   startServer()
@@ -41,6 +45,15 @@ let retries = 10;
 async function startServer() {
   port = await getIncrementalPort(START_PORT);
   await writePortToIndex(port);
+
+  const adapter = new FileAsync(join(__dirname, '..', 'db.json'));
+  db = await lowdb(adapter);
+
+  await db
+    .defaults({
+      imageCache: {},
+    })
+    .write();
 
   const app = express();
   const chromecastEmitter = new ChromecastEmitter();

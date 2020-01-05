@@ -8,20 +8,20 @@ import { FileItem } from '../../types';
 
 type Props = {
   fileItem: FileItem,
-  location: string[],
   setCurrentLocation: typeof setCurrentLocation,
 };
 
-const DirectoryItem = ({ fileItem, location, setCurrentLocation }: Props) => {
+const DirectoryItem = ({ fileItem, setCurrentLocation }: Props) => {
   const [files, setFiles] = useState([] as FileItem[]);
   const [isOpen, setIsOpen] = useState(false);
+  const location = fileItem.path.split('/');
   const setCurrentLocationAction = useCallback(() => setCurrentLocation(location), []);
   const toggleOpen = useCallback(() => setIsOpen(!isOpen), [isOpen]);
   const classes = useStyles({});
 
   useEffect(() => {
     if (isOpen && fileItem.type === 'dir' && !files.length) {
-      requestFileItems(location.join('/') + '/')
+      requestFileItems(fileItem.path + '/')
         .then(res => {
           setFiles(res);
         })
@@ -42,7 +42,6 @@ const DirectoryItem = ({ fileItem, location, setCurrentLocation }: Props) => {
         <div className={classes.children} key={item.path}>
           <DirectoryItem
             fileItem={item}
-            location={item.path.split('/')}
             setCurrentLocation={setCurrentLocation}
           />
         </div>

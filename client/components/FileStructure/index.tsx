@@ -21,7 +21,6 @@ const FileStructure = () => {
         <DirectoryItem
           fileItem={drive}
           key={drive.path}
-          location={[drive.path]}
           setCurrentLocation={setCurrentLocationAction}
         />
       )
