@@ -2,7 +2,7 @@ import { exec } from 'child_process';
 import { Router, static as expressStatic } from 'express';
 import { inspectAsync, listAsync } from 'fs-jetpack';
 import { networkInterfaces } from 'os';
-import { join } from 'path';
+import { FileItem } from '../client/types';
 import { port } from './index';
 
 export const FilesRouter = Router();
@@ -14,14 +14,32 @@ const fileUrlMap: { [s: string]: string } = {};
 
 FilesRouter.get('/get-drives', async (req, res) => {
   const drives = await getDrives();
-  res.send(drives
-    .reduce((total, curr) => ({ ...total, [curr]: { type: 'dir' } }), {}));
+  res.send(drives.map(drive => ({ path: drive, type: 'dir' })));
 });
 
 FilesRouter.post('/get-files', async (req, res) => {
   const path = req.body.path;
   const files = await getFileItems(path);
+  files
+    .sort((aItem, bItem) => {
+      if (aItem.type === 'dir' && bItem.type === 'dir') {
+        return aItem.path.localeCompare(bItem.path);
+      } else if (aItem.type === 'dir' && bItem.type !== 'dir') {
+        return -1;
+      } else if (aItem.type !== 'dir' && bItem.type === 'dir') {
+        return 1;
+      }
+
+      return aItem.path.localeCompare(bItem.path);
+    });
   res.send(files);
+});
+
+FilesRouter.post('/inspect', async (req, res) => {
+  const path = req.body.path;
+  console.log(`path: ${path}`);
+
+  setTimeout(res.end, 500);
 });
 
 export function getDrives(): Promise<string[]> {
@@ -36,18 +54,20 @@ export function getDrives(): Promise<string[]> {
   });
 }
 
-export async function getFileItems(path: string) {
+export async function getFileItems(path: string): Promise<FileItem[]> {
   const files = await listAsync(path);
-  const fileStructure = {};
-  await Promise.all(files.map(async file => {
+  return await Promise.all(files.map(async file => {
+    const filePath = `${path}/${file}`;
     try {
-      fileStructure[file] = await inspectAsync(join(path, file));
+      const inspect = await inspectAsync(filePath);
+      return {
+        ...inspect,
+        path: filePath,
+      };
     } catch (err) {
-      fileStructure[file] = { type: 'forbidden' };
+      return { path: filePath, type: 'forbidden' as 'forbidden' };
     }
   }));
-
-  return fileStructure;
 }
 
 export async function getFileUrl(path: string) {

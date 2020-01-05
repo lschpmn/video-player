@@ -2,11 +2,11 @@ import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { setCurrentLocation } from '../../lib/file-actions';
 import { requestDrives, useAction } from '../../lib/utils';
-import { FileStructure as FileStructureType } from '../../types';
+import { FileItem } from '../../types';
 import DirectoryItem from './DirectoryItem';
 
 const FileStructure = () => {
-  const [drives, setDrives] = useState(null as FileStructureType | null);
+  const [drives, setDrives] = useState([] as FileItem[]);
   const setCurrentLocationAction = useAction(setCurrentLocation);
 
   useEffect(() => {
@@ -16,12 +16,12 @@ const FileStructure = () => {
   }, []);
 
   return <div style={styles.container}>
-    {drives && Object.keys(drives)
-      .map((drive: string) =>
+    {drives
+      .map(drive =>
         <DirectoryItem
-          fileStructure={drives}
-          key={drive}
-          location={[drive]}
+          fileItem={drive}
+          key={drive.path}
+          location={[drive.path]}
           setCurrentLocation={setCurrentLocationAction}
         />
       )

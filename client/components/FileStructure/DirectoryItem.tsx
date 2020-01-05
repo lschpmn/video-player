@@ -1,27 +1,26 @@
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRight from '@material-ui/icons/ArrowRight';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { setCurrentLocation } from '../../lib/file-actions';
 import { requestFileItems } from '../../lib/utils';
-import { FileStructure } from '../../types';
+import { FileItem } from '../../types';
 
 type Props = {
-  fileStructure: FileStructure,
+  fileItem: FileItem,
   location: string[],
   setCurrentLocation: typeof setCurrentLocation,
 };
 
-const DirectoryItem = ({ fileStructure, location, setCurrentLocation }: Props) => {
-  const [files, setFiles] = useState(null as FileStructure | null);
+const DirectoryItem = ({ fileItem, location, setCurrentLocation }: Props) => {
+  const [files, setFiles] = useState([] as FileItem[]);
   const [isOpen, setIsOpen] = useState(false);
   const setCurrentLocationAction = useCallback(() => setCurrentLocation(location), []);
   const toggleOpen = useCallback(() => setIsOpen(!isOpen), [isOpen]);
-  const fileItem = useMemo(() => fileStructure[location.slice(-1)[0]], [fileStructure]);
   const classes = useStyles({});
 
   useEffect(() => {
-    if (isOpen && fileItem.type === 'dir' && !files) {
+    if (isOpen && fileItem.type === 'dir' && !files.length) {
       requestFileItems(location.join('/') + '/')
         .then(res => {
           setFiles(res);
@@ -37,13 +36,13 @@ const DirectoryItem = ({ fileStructure, location, setCurrentLocation }: Props) =
         {location.slice(-1)[0]}
       </div>
     </div>
-    {isOpen && files && Object.entries(files)
-      .filter(([name, item]) => item.type === 'dir')
-      .map(([name, item]) =>
-        <div className={classes.children} key={[...location, name].join('/')}>
+    {isOpen && files
+      .filter(item => item.type === 'dir')
+      .map(item =>
+        <div className={classes.children} key={item.path}>
           <DirectoryItem
-            fileStructure={files}
-            location={[...location, name]}
+            fileItem={item}
+            location={item.path.split('/')}
             setCurrentLocation={setCurrentLocation}
           />
         </div>

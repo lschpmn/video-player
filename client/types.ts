@@ -10,12 +10,9 @@ export type ChromecastStoreState = {
 };
 
 export type FileItem = {
-  size: number,
-  type: 'dir' | 'file' | 'forbidden',
-};
-
-export type FileStructure = {
-  [s: string]: FileItem,
+  path: string,
+  size?: number,
+  type: 'dir' | 'file' | 'forbidden' | 'symlink',
 };
 
 export type ExplorerState = {
