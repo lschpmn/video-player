@@ -3,6 +3,7 @@ import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import LoopIcon from '@material-ui/icons/Loop';
 import * as React from 'react';
 import { setCurrentLocation } from '../../lib/file-actions';
+import { launch } from '../../lib/player-actions';
 import { useAction } from '../../lib/utils';
 import { FileItem } from '../../types';
 
@@ -12,6 +13,7 @@ type Props = {
 
 const ExplorerItem = ({ item }: Props) => {
   const currentLocation = item.path.split('/');
+  const launchAction = useAction(() => launch(item.path));
   const setCurrentLocationAction = useAction(() =>
     setCurrentLocation(currentLocation), [currentLocation]);
 
@@ -22,7 +24,7 @@ const ExplorerItem = ({ item }: Props) => {
     }
     {item.images === 'loading' && <LoopIcon style={styles.folderIcon} />}
     {item.images && item.images !== 'loading' &&
-      <img style={styles.image} src={item.images[0]}  alt="thumbnail"/>
+      <img onDoubleClick={launchAction} style={styles.image} src={item.images[0]} alt="thumbnail"/>
     }
     <div style={styles.folderText}>{currentLocation.slice(-1)[0]}</div>
   </div>;
