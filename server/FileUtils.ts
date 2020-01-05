@@ -37,9 +37,9 @@ FilesRouter.post('/get-files', async (req, res) => {
 
 FilesRouter.post('/inspect', async (req, res) => {
   const path = req.body.path;
-  console.log(`path: ${path}`);
+  console.log(`inspect: ${path}`);
 
-  setTimeout(res.end, 500);
+  setTimeout(() => res.send([]), Math.min(Math.random() * 500, 200));
 });
 
 export function getDrives(): Promise<string[]> {
@@ -57,7 +57,7 @@ export function getDrives(): Promise<string[]> {
 export async function getFileItems(path: string): Promise<FileItem[]> {
   const files = await listAsync(path);
   return await Promise.all(files.map(async file => {
-    const filePath = `${path}/${file}`;
+    const filePath = path + file;
     try {
       const inspect = await inspectAsync(filePath);
       return {

@@ -1,15 +1,16 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { VIDEO_EXTENSIONS } from '../../../constants';
 import { setCurrentLocation } from '../../lib/file-actions';
-import { requestDrives, requestFileItems, useAction } from '../../lib/utils';
-import { FileItem, ReducerState, WindowState } from '../../types';
+import { postLocal, requestDrives, requestFileItems, useAction } from '../../lib/utils';
+import { FileItem, ReducerState } from '../../types';
 import ExplorerItem from './ExplorerItem';
 
-const PORT = (window as any as WindowState).__PORT__;
+const MAX_INSPECTS = 3;
 
 const Explorer = () => {
-  const [files, setFiles] = useState(null as FileItem[] | null);
+  const [files, setFiles] = useState([] as FileItem[]);
   const currentLocation = useSelector((state: ReducerState) => state.explorer.currentLocation);
   const setCurrentLocationAction = useAction(setCurrentLocation);
 
@@ -23,6 +24,42 @@ const Explorer = () => {
       .catch(console.log);
   }, [currentLocation]);
 
+  useEffect(() => {
+    const videoFiles = files
+      .filter(file => VIDEO_EXTENSIONS.some(s => file.path.endsWith(s)));
+
+    const videoFilesLoading = videoFiles
+      .filter(file => file.images === 'loading');
+
+    if (videoFilesLoading.length < MAX_INSPECTS) {
+      const videoToLoad = videoFiles.find(videoFile => !videoFile.images);
+      if (!videoToLoad) return;
+
+      postLocal('/api/files/inspect', { path: videoToLoad.path })
+        .then(res => {
+          setFiles(oldFiles => oldFiles
+            .map(file => file.path === videoToLoad.path
+              ? ({
+                ...file,
+                images: res,
+              })
+              : file
+            )
+          );
+        })
+        .catch(console.log);
+
+      setFiles(files
+        .map(file => file.path === videoToLoad.path
+          ? ({
+            ...file,
+            images: 'loading',
+          })
+          : file,
+        ));
+    }
+  }, [files]);
+
   return <div style={styles.container}>
     <div style={{ display: 'flex' }}>
       <h3 style={styles.explorerItem} onMouseDown={() => setCurrentLocationAction([])}>
@@ -35,18 +72,18 @@ const Explorer = () => {
           style={styles.explorerItem}
         >
           {loc}/
-        </h3>
+        </h3>,
       )}
     </div>
     <div style={styles.itemContainer}>
-      {files && files
+      {files
         .map((item) =>
           <ExplorerItem
             currentLocation={currentLocation}
-            drive={item}
+            item={item}
             key={item.path}
             name={item.path.split('/').slice(-1)[0]}
-          />
+          />,
         )}
     </div>
   </div>;

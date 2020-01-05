@@ -10,6 +10,7 @@ export type ChromecastStoreState = {
 };
 
 export type FileItem = {
+  images?: 'loading' | 'string',
   path: string,
   size?: number,
   type: 'dir' | 'file' | 'forbidden' | 'symlink',

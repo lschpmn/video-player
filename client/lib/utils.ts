@@ -26,6 +26,23 @@ export function leadZero(num) {
   return ('0' + num).slice(-2);
 }
 
+export function post(url: string, body: object) {
+  const opts: RequestInit = {
+    body: JSON.stringify(body),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'POST',
+  };
+
+  return fetch(url, opts)
+    .then(async res => await res.json());
+}
+
+export function postLocal(url: string, body: object) {
+  return post(`http://localhost:${PORT}${url}`, body);
+}
+
 export async function requestDrives() {
   const response = await fetch(`http://localhost:${PORT}/api/files/get-drives`);
   return await response.json();
