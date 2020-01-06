@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
 
     '&:hover': {
-      backgroundColor: theme.palette.grey['200'],
+      backgroundColor: theme.palette.grey['300'],
     },
   },
 }));

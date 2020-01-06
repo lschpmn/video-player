@@ -1,3 +1,4 @@
+import makeStyles from '@material-ui/core/styles/makeStyles';
 import Folder from '@material-ui/icons/Folder';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import LoopIcon from '@material-ui/icons/Loop';
@@ -16,40 +17,48 @@ const ExplorerItem = ({ item }: Props) => {
   const launchAction = useAction(() => launch(item.path));
   const setCurrentLocationAction = useAction(() =>
     setCurrentLocation(currentLocation), [currentLocation]);
+  const classes = useStyles({});
 
-  return <div style={styles.folder}>
+  return <div className={classes.container}>
     {!item.images && (item.type === 'dir'
-      ? <Folder onDoubleClick={setCurrentLocationAction} style={styles.folderIcon}/>
-      : <InsertDriveFileIcon style={styles.folderIcon}/>)
+      ? <Folder onDoubleClick={setCurrentLocationAction}/>
+      : <InsertDriveFileIcon/>)
     }
-    {item.images === 'loading' && <LoopIcon style={styles.folderIcon} />}
+    {item.images === 'loading' && <LoopIcon />}
     {item.images && item.images !== 'loading' &&
-      <img onDoubleClick={launchAction} style={styles.image} src={item.images[0]} alt="thumbnail"/>
+      <img onDoubleClick={launchAction} src={item.images[0]} alt="thumbnail"/>
     }
-    <div style={styles.folderText}>{currentLocation.slice(-1)[0]}</div>
+    <div>{currentLocation.slice(-1)[0]}</div>
   </div>;
 };
 
-export default ExplorerItem;
-
-const styles = {
-  folder: {
+const useStyles = makeStyles(theme => ({
+  container: {
     cursor: 'pointer',
     display: 'flex',
     flexDirection: 'column',
     height: 'fit-content',
-    margin: '1rem',
+    padding: '1rem',
     width: '8rem',
-  } as React.CSSProperties,
-  folderIcon: {
-    fontSize: '5rem',
-    margin: '0 auto',
-  } as React.CSSProperties,
-  folderText: {
-    textAlign: 'center',
-    wordBreak: 'break-word',
-  } as React.CSSProperties,
-  image: {
-    maxWidth: '100%',
+
+    '& div': {
+      textAlign: 'center',
+      wordBreak: 'break-word',
+    },
+
+    '& img': {
+      width: '8rem',
+    },
+
+    '& svg': {
+      fontSize: '5rem',
+      margin: '0 auto',
+    },
+
+    '&:hover': {
+      backgroundColor: theme.palette.grey['300'],
+    },
   },
-};
+}));
+
+export default ExplorerItem;
