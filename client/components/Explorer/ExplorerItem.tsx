@@ -41,16 +41,16 @@ const useStyles = makeStyles(theme => ({
     padding: '1rem',
     width: '8rem',
 
-    '& div': {
+    '& > div': {
       textAlign: 'center',
       wordBreak: 'break-word',
     },
 
-    '& img': {
+    '& > img': {
       width: '8rem',
     },
 
-    '& svg': {
+    '& > svg': {
       fontSize: '5rem',
       margin: '0 auto',
     },
