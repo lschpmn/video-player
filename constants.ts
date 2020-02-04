@@ -54,6 +54,7 @@ export const VIDEO_EXTENSIONS = [
   'mxf',
   'nsv',
   'ogg',
+  'ogm',
   'ogv',
   'qt',
   'rm',
