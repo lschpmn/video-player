@@ -46,8 +46,7 @@ export default class ChromecastEmitter {
 
       console.log('Making mdns query');
       mdns
-        .query('_googlecast._tcp.local', 'PTR')
-        .catch(console.log);
+        .query('_googlecast._tcp.local', 'PTR');
     });
   }
 
