@@ -12,6 +12,18 @@ export type ChromecastInfo = {
   name: string,
 };
 
+export type DbSchema = {
+  history: HistoryItem[],
+  imageCache: {
+    [key: string]: string,
+  },
+};
+
+export type HistoryItem = {
+  path: string,
+  currentTime: number,
+};
+
 export type Listener = (action: { type: string, payload?: any }) => void;
 
 export type MediaStatus = {

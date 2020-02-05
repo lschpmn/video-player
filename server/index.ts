@@ -1,6 +1,7 @@
 import { readAsync as read, writeAsync as write } from 'fs-jetpack';
 import * as getIncrementalPort from 'get-incremental-port';
 import { createServer } from 'http';
+import { AdapterAsync } from 'lowdb';
 import { join } from 'path';
 import * as socketIO from 'socket.io';
 import {
@@ -17,6 +18,7 @@ import {
   SET_VOLUME,
   STOP_MEDIA,
 } from '../constants';
+import { DbSchema } from '../types';
 import { setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
 import * as lowdb from 'lowdb';
@@ -46,11 +48,12 @@ async function startServer() {
   port = await getIncrementalPort(START_PORT);
   await writePortToIndex(port);
 
-  const adapter = new FileAsync(join(__dirname, '..', 'db.json'));
+  const adapter: AdapterAsync<DbSchema> = new FileAsync(join(__dirname, '..', 'db.json'));
   db = await lowdb(adapter);
 
   await db
     .defaults({
+      history: [],
       imageCache: {},
     })
     .write();
