@@ -96,7 +96,7 @@ const Controls = () => {
     <div style={styles.slider} >
       <Slider
         className={classes.slider}
-        max={duration || 0}
+        max={duration || 1}
         min={0}
         onChange={onSliderChange}
         onMouseDown={() => setIsSeeking(true)}

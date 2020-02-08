@@ -11,6 +11,7 @@ import {
   SET_MUTED,
   SET_VOLUME,
   STOP_MEDIA,
+  UPDATE_HISTORY,
 } from '../../constants';
 import { ChromecastInfo } from '../../types';
 
@@ -71,4 +72,12 @@ export const setVolume = (volume: number) => ({
 
 export const stopMedia = () => ({
   type: STOP_MEDIA,
+});
+
+export const updateHistory = (title: string, currentTime: number) => ({
+  payload: {
+    currentTime,
+    title,
+  },
+  type: UPDATE_HISTORY,
 });

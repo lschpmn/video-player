@@ -27,6 +27,7 @@ export const SET_MUTED = 'SET_MUTED@server';
 export const SET_STATUS = 'SET_STATUS';
 export const SET_VOLUME = 'SET_VOLUME@server';
 export const STOP_MEDIA = 'STOP_MEDIA@server';
+export const UPDATE_HISTORY = 'UPDATE_HISTORY@server';
 
 // General Data
 

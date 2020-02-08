@@ -4,17 +4,23 @@ import isEqual from 'lodash/isEqual';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { connect, getChromecasts, getMediaStatus, launch, PLAYING } from '../../lib/player-actions';
+import { connect, getChromecasts, getMediaStatus, launch, PLAYING, updateHistory } from '../../lib/player-actions';
 import { useAction } from '../../lib/utils';
 import { ReducerState } from '../../types';
 import { ChromecastIcon } from './ChromecastIcon';
+
+const PAUSED_STATUS_INTERVAL = 5000;
+const PLAYING_STATUS_INTERVAL = 1000;
+const UPDATE_INTERVAL = 3;
 
 const Media = () => {
   const connectAction = useAction(connect);
   const getChromecastsAction = useAction(getChromecasts);
   const getMediaStatusAction = useAction(getMediaStatus);
   const launchAction = useAction(launch);
+  const updateHistoryAction = useAction(updateHistory);
   const chromecastStore = useSelector((state: ReducerState) => state.chromecastStore, isEqual);
+  const [lastUpdate, setLastUpdate] = useState(0);
   const [showUrlField, setShowUrlField] = useState(false);
   const [url, setUrl] = useState('');
 
@@ -24,7 +30,7 @@ const Media = () => {
       setShowUrlField(false);
       setUrl('');
     }
-  } ,[url]);
+  }, [url]);
 
   useEffect(() => {
     getChromecastsAction();
@@ -45,10 +51,23 @@ const Media = () => {
 
   useEffect(() => {
     const isPlaying = chromecastStore.mediaStatus?.playerState === PLAYING;
-    const intervalId = setInterval(() => getMediaStatusAction(), isPlaying ? 1000 : 5000);
+    const intervalId = setInterval(() =>
+      getMediaStatusAction(), isPlaying ? PLAYING_STATUS_INTERVAL : PAUSED_STATUS_INTERVAL);
 
     return () => clearInterval(intervalId);
   }, [chromecastStore.mediaStatus?.playerState]);
+
+  useEffect(() => {
+    const isPlaying = chromecastStore.mediaStatus?.playerState === PLAYING;
+    if (isPlaying) {
+      const currentTime = chromecastStore.mediaStatus.currentTime;
+      if (Math.abs(currentTime - lastUpdate) > UPDATE_INTERVAL) {
+        setLastUpdate(currentTime);
+        updateHistoryAction(chromecastStore.mediaStatus.title, ~~currentTime);
+        console.log(~~currentTime);
+      }
+    }
+  }, [chromecastStore.mediaStatus?.currentTime]);
 
   return <div style={styles.container}>
     <ChromecastIcon chromecastStore={chromecastStore}/>

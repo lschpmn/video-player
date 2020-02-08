@@ -1,7 +1,9 @@
 import { readAsync as read, writeAsync as write } from 'fs-jetpack';
 import * as getIncrementalPort from 'get-incremental-port';
 import { createServer } from 'http';
+import * as lowdb from 'lowdb';
 import { AdapterAsync } from 'lowdb';
+import * as FileAsync from 'lowdb/adapters/FileAsync';
 import { join } from 'path';
 import * as socketIO from 'socket.io';
 import {
@@ -17,12 +19,11 @@ import {
   SET_MUTED,
   SET_VOLUME,
   STOP_MEDIA,
+  UPDATE_HISTORY,
 } from '../constants';
 import { DbSchema } from '../types';
 import { setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
-import * as lowdb from 'lowdb';
-import * as FileAsync from 'lowdb/adapters/FileAsync';
 import { FilesRouter } from './FilesRouter';
 
 const bodyParser = require('body-parser');
@@ -53,7 +54,7 @@ async function startServer() {
 
   await db
     .defaults({
-      history: [],
+      history: {},
       imageCache: {},
     })
     .write();
@@ -72,8 +73,10 @@ async function startServer() {
     chromecastEmitter.setDispatch(dispatch);
 
     socket.on('dispatch', async ({ type, payload }) => {
-      if (type !== GET_MEDIA_STATUS) console.log(type);
-      payload && console.log(payload);
+      if (![GET_MEDIA_STATUS, UPDATE_HISTORY].includes(type)) {
+        console.log(type);
+        payload && console.log(payload);
+      }
 
       switch (type) {
         // player
@@ -113,6 +116,10 @@ async function startServer() {
         case STOP_MEDIA:
           chromecastEmitter.stop();
           return;
+        case UPDATE_HISTORY:
+          const { currentTime, title } = payload;
+          await db.set(['history', title], currentTime).write();
+          return;
       }
     });
   });
@@ -129,6 +136,6 @@ async function writePortToIndex(port: number) {
   const index = await read(join(__dirname, '../client/index.html'));
   await write(
     join(__dirname, '../public/index.html'),
-    index.replace('PORT__ = 0', `PORT__ = ${port}`)
+    index.replace('PORT__ = 0', `PORT__ = ${port}`),
   );
 }
