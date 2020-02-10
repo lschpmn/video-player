@@ -1,13 +1,13 @@
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
 import isEqual from 'lodash/isEqual';
-import * as React from 'react';
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { connect, getChromecasts, getMediaStatus, launch, PLAYING, updateHistory } from '../../lib/player-actions';
 import { useAction } from '../../lib/utils';
 import { ReducerState } from '../../types';
-import { ChromecastIcon } from './ChromecastIcon';
+import ChromecastIcon from './ChromecastIcon';
+import ContinueModal from './ContinueModal';
 
 const PAUSED_STATUS_INTERVAL = 5000;
 const PLAYING_STATUS_INTERVAL = 1000;
@@ -94,6 +94,7 @@ const Media = () => {
         Add URL
       </Button>
     }
+    <ContinueModal />
   </div>;
 };
 
@@ -104,6 +105,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
+    position: 'relative',
     wordBreak: 'break-all',
   } as React.CSSProperties,
   name: {

@@ -12,7 +12,7 @@ type Props = {
   chromecastStore: ChromecastStoreState,
 };
 
-export const ChromecastIcon = ({ chromecastStore }: Props) => {
+const ChromecastIcon = ({ chromecastStore }: Props) => {
   const launchAppAction = useAction(launchApp);
   const [anchorEl, setAnchorEl] = useState();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -50,6 +50,8 @@ export const ChromecastIcon = ({ chromecastStore }: Props) => {
     </Menu>
   </div>;
 };
+
+export default ChromecastIcon;
 
 const styles = {
   name: {
