@@ -12,6 +12,7 @@ export const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION';
 // player
 export const CONNECT = 'CONNECT@server';
 export const CONNECTION = 'CONNECTION';
+export const DB_UPDATE = 'DB_UPDATE';
 export const GET_CHROMECASTS = 'GET_CHROMECASTS@server';
 export const GET_MEDIA_STATUS = 'GET_MEDIA_STATUS@server';
 export const GET_STATUS = 'GET_STATUS@server';

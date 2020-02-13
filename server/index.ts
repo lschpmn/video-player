@@ -22,7 +22,7 @@ import {
   UPDATE_HISTORY,
 } from '../constants';
 import { DbSchema } from '../types';
-import { setChromecasts } from './action-creators';
+import { dbUpdate, setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
 import { FilesRouter } from './FilesRouter';
 
@@ -69,6 +69,7 @@ async function startServer() {
   io.on('connection', socket => {
     console.log('client connected');
     const dispatch = action => socket.emit('dispatch', action);
+    dispatch(dbUpdate(db.value()));
 
     chromecastEmitter.setDispatch(dispatch);
 

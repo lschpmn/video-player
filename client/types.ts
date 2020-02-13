@@ -20,9 +20,14 @@ export type ExplorerState = {
   currentLocation: string[],
 };
 
+export type HistoryState = {
+  [title: string]: number,
+};
+
 export type ReducerState = {
   chromecastStore: ChromecastStoreState,
   explorer: ExplorerState,
+  history: HistoryState,
 };
 
 export type VolumeStatus = {

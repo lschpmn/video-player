@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import {
   CONNECT,
   CONNECTION,
+  DB_UPDATE,
   GET_CHROMECASTS,
   GET_MEDIA_STATUS,
   PAUSE,
@@ -12,9 +13,10 @@ import {
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
   SET_STATUS,
+  UPDATE_HISTORY,
 } from '../../constants';
 import { ChromecastInfo, ReceiverStatus } from '../../types';
-import { ChromecastStoreState, ExplorerState, VolumeStatus } from '../types';
+import { ChromecastStoreState, ExplorerState, HistoryState, VolumeStatus } from '../types';
 
 type Action = {
   type: string,
@@ -33,6 +35,8 @@ const defaultChromecastStore: ChromecastStoreState = {
 const defaultExplorerState: ExplorerState = {
   currentLocation: [],
 };
+
+const defaultHistoryState: HistoryState = {};
 
 function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, action: Action) {
   switch (action.type) {
@@ -101,9 +105,24 @@ function explorer(state: ExplorerState = defaultExplorerState, action) {
   }
 }
 
+function history(state: HistoryState = defaultHistoryState, action) {
+  switch (action.type) {
+    case DB_UPDATE:
+      return action.payload.history;
+    case UPDATE_HISTORY:
+      return {
+        ...state,
+        [action.payload.title]: action.payload.currentTime,
+      };
+    default:
+      return state;
+  }
+}
+
 export default combineReducers({
   chromecastStore,
   explorer,
+  history,
 });
 
 function setSelected(state: ChromecastStoreState, status: ReceiverStatus): ChromecastInfo {

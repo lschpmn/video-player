@@ -1,9 +1,22 @@
-import { CONNECTION, LOG, SET_CHROMECASTS, SET_MEDIA_DISCONNECT, SET_MEDIA_STATUS, SET_STATUS } from '../constants';
-import { MediaStatus, MediaStatusServer } from '../types';
+import {
+  CONNECTION,
+  DB_UPDATE,
+  LOG,
+  SET_CHROMECASTS,
+  SET_MEDIA_DISCONNECT,
+  SET_MEDIA_STATUS,
+  SET_STATUS,
+} from '../constants';
+import { DbSchema, MediaStatus, MediaStatusServer } from '../types';
 
 export const connection = (isConnected: boolean) => ({
   payload: isConnected,
   type: CONNECTION,
+});
+
+export const dbUpdate = (db: DbSchema) => ({
+  payload: db,
+  type: DB_UPDATE,
 });
 
 export const log = message => ({
