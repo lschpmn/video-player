@@ -1,4 +1,5 @@
 import {
+  ADD_SERVER_EVENT,
   CONNECTION,
   DB_UPDATE,
   LOG,
@@ -7,7 +8,15 @@ import {
   SET_MEDIA_STATUS,
   SET_STATUS,
 } from '../constants';
-import { DbSchema, MediaStatus, MediaStatusServer } from '../types';
+import { DbSchema, MediaStatus, MediaStatusServer, ServerEvent } from '../types';
+
+export const addServerEvent = (event: ServerEvent) => ({
+  payload: {
+    ...event,
+    id: Math.random().toString(36).slice(-10),
+  },
+  type: ADD_SERVER_EVENT,
+});
 
 export const connection = (isConnected: boolean) => ({
   payload: isConnected,
@@ -15,7 +24,9 @@ export const connection = (isConnected: boolean) => ({
 });
 
 export const dbUpdate = (db: DbSchema) => ({
-  payload: db,
+  payload: {
+    imageCache: db.imageCache,
+  },
   type: DB_UPDATE,
 });
 

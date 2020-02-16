@@ -3,26 +3,56 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import T from '@material-ui/core/Typography';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { removeServerEvent } from '../../lib/action-creators';
+import { seek } from '../../lib/player-actions';
+import { getTimeString, useAction } from '../../lib/utils';
 import { ReducerState } from '../../types';
 
 const ContinueModal = () => {
-  const [open, setOpen] = useState(false);
-  const title = useSelector((state: ReducerState) => state.chromecastStore?.mediaStatus?.title);
+  const removeServerEventAction = useAction(removeServerEvent);
+  const seekAction = useAction(seek);
+  const [continueId, setContinueId] = useState(null);
+  const continueEvents = useSelector((state: ReducerState) =>
+    state.serverEvents.filter(e => e.type === 'continue'));
+  const prev = continueEvents?.[0]?.payload;
 
-  useEffect(() => console.log(title), [title]);
+  const clearContinueId = useCallback(() => {
+    removeServerEventAction(continueId);
+    setContinueId(null);
+  }, [continueId]);
 
-  return open && (
+  const continuePrev = useCallback(() => {
+    seekAction(prev);
+    clearContinueId();
+  }, [clearContinueId, prev]);
+
+  useEffect(() => {
+    if (!continueId && continueEvents.length) {
+      setContinueId(continueEvents[0].id);
+    } else if (continueEvents.length > 1) {
+      removeServerEventAction(continueId);
+      setContinueId(continueEvents[1].id);
+    } else if (continueId && !continueEvents.length) {
+      clearContinueId();
+    }
+  }, [clearContinueId, continueEvents.length]);
+
+  return continueId && (
     <div style={styles.container}>
       <Card>
         <CardContent>
-          Continue from 0:30?
+          Continue from {getTimeString(prev)}?
         </CardContent>
         <CardActions style={styles.cartActions}>
-          <Button color='primary' variant='outlined'>Yes</Button>
+          <Button color='primary' variant='outlined' onClick={continuePrev}>
+            Yes
+          </Button>
           <T color='error'>
-            <Button color='inherit' variant='outlined'>No</Button>
+            <Button color='inherit' variant='outlined' onClick={clearContinueId}>
+              No
+            </Button>
           </T>
         </CardActions>
       </Card>

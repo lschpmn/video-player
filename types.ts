@@ -112,3 +112,9 @@ export type ReceiverStatus = {
   },
   type: 'RECEIVER_STATUS'
 };
+
+export type ServerEvent = {
+  id?: string,
+  payload?: any,
+  type: string,
+};

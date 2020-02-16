@@ -10,6 +10,7 @@ export const LOG = 'LOG';
 export const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION';
 
 // player
+export const ADD_SERVER_EVENT = 'ADD_SERVER_EVENT';
 export const CONNECT = 'CONNECT@server';
 export const CONNECTION = 'CONNECTION';
 export const DB_UPDATE = 'DB_UPDATE';
@@ -20,6 +21,7 @@ export const LAUNCH = 'LAUNCH@server';
 export const LAUNCH_APP = 'LAUNCH_APP@server';
 export const PAUSE = 'PAUSED@server';
 export const PLAY = 'PLAYING@server';
+export const REMOVE_SERVER_EVENT = 'REMOVE_SERVER_EVENT';
 export const SEEK = 'SEEK@server';
 export const SET_CHROMECASTS = 'SET_CHROMECASTS';
 export const SET_MEDIA_DISCONNECT = 'SET_MEDIA_DISCONNECT';

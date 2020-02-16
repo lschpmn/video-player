@@ -1,22 +1,22 @@
 import { combineReducers } from 'redux';
 import {
+  ADD_SERVER_EVENT,
   CONNECT,
   CONNECTION,
-  DB_UPDATE,
   GET_CHROMECASTS,
   GET_MEDIA_STATUS,
   PAUSE,
   PLAY,
+  REMOVE_SERVER_EVENT,
   SEEK,
   SET_CHROMECASTS,
   SET_CURRENT_LOCATION,
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
   SET_STATUS,
-  UPDATE_HISTORY,
 } from '../../constants';
-import { ChromecastInfo, ReceiverStatus } from '../../types';
-import { ChromecastStoreState, ExplorerState, HistoryState, VolumeStatus } from '../types';
+import { ChromecastInfo, ReceiverStatus, ServerEvent } from '../../types';
+import { ChromecastStoreState, ExplorerState, VolumeStatus } from '../types';
 
 type Action = {
   type: string,
@@ -35,8 +35,6 @@ const defaultChromecastStore: ChromecastStoreState = {
 const defaultExplorerState: ExplorerState = {
   currentLocation: [],
 };
-
-const defaultHistoryState: HistoryState = {};
 
 function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, action: Action) {
   switch (action.type) {
@@ -94,35 +92,30 @@ function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, a
 }
 
 function explorer(state: ExplorerState = defaultExplorerState, action) {
-  switch (action.type) {
-    case SET_CURRENT_LOCATION:
-      return {
-        ...state,
-        currentLocation: action.payload,
-      };
-    default:
-      return state;
+  if (action.type === SET_CURRENT_LOCATION) {
+    return {
+      ...state,
+      currentLocation: action.payload,
+    };
+  } else {
+    return state;
   }
 }
 
-function history(state: HistoryState = defaultHistoryState, action) {
-  switch (action.type) {
-    case DB_UPDATE:
-      return action.payload.history;
-    case UPDATE_HISTORY:
-      return {
-        ...state,
-        [action.payload.title]: action.payload.currentTime,
-      };
-    default:
-      return state;
+function serverEvents(state: ServerEvent[] = [], action) {
+  if (action.type === ADD_SERVER_EVENT) {
+    return [...state, action.payload];
+  } else if (action.type === REMOVE_SERVER_EVENT) {
+    return state.filter(e => e.id !== action.payload);
+  } else {
+    return state;
   }
 }
 
 export default combineReducers({
   chromecastStore,
   explorer,
-  history,
+  serverEvents,
 });
 
 function setSelected(state: ChromecastStoreState, status: ReceiverStatus): ChromecastInfo {

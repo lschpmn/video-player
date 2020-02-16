@@ -22,7 +22,7 @@ import {
   UPDATE_HISTORY,
 } from '../constants';
 import { DbSchema } from '../types';
-import { dbUpdate, setChromecasts } from './action-creators';
+import { addServerEvent, dbUpdate, setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
 import { FilesRouter } from './FilesRouter';
 import { getFileUrl, ipAddress } from './FileUtils';
@@ -94,15 +94,23 @@ async function startServer() {
         case GET_STATUS:
           chromecastEmitter.getStatus();
           return;
-        case LAUNCH:
-          let url;
-          if (payload.isUrl) {
-            url = payload.path.replace('127.0.0.1', ipAddress);
-          } else {
-            url = await getFileUrl(payload.path);
+        case LAUNCH: {
+          const url = payload.isUrl
+            ? payload.path.replace('127.0.0.1', ipAddress)
+            : await getFileUrl(payload.path);
+
+          const title = basename(payload.isUrl ? url : payload.path);
+          const prev = db.get(['history', title]).value();
+          if (prev) {
+            dispatch(addServerEvent({
+              payload: prev,
+              type: 'continue',
+            }));
           }
-          await chromecastEmitter.launch(url, basename(payload.isUrl ? url : payload.path));
+
+          await chromecastEmitter.launch(url, title);
           return;
+        }
         case LAUNCH_APP:
           chromecastEmitter.launchApp(payload);
           return;

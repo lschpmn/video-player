@@ -1,4 +1,4 @@
-import { ChromecastInfo, MediaStatus } from '../types';
+import { ChromecastInfo, MediaStatus, ServerEvent } from '../types';
 
 export type ChromecastStoreState = {
   chromecasts: ChromecastInfo[],
@@ -20,14 +20,10 @@ export type ExplorerState = {
   currentLocation: string[],
 };
 
-export type HistoryState = {
-  [title: string]: number,
-};
-
 export type ReducerState = {
   chromecastStore: ChromecastStoreState,
   explorer: ExplorerState,
-  history: HistoryState,
+  serverEvents: ServerEvent[],
 };
 
 export type VolumeStatus = {
