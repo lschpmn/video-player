@@ -64,7 +64,6 @@ const Media = () => {
       if (Math.abs(currentTime - lastUpdate) > UPDATE_INTERVAL) {
         setLastUpdate(currentTime);
         updateHistoryAction(chromecastStore.mediaStatus.title, ~~currentTime);
-        console.log(~~currentTime);
       }
     }
   }, [chromecastStore.mediaStatus?.currentTime]);

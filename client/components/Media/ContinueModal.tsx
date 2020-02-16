@@ -39,6 +39,14 @@ const ContinueModal = () => {
     }
   }, [clearContinueId, continueEvents.length]);
 
+  useEffect(() => {
+    if (continueId) {
+      const id = setTimeout(() => clearContinueId(), 7500);
+
+      return () => clearTimeout(id);
+    }
+  }, [clearContinueId]);
+
   return continueId && (
     <div style={styles.container}>
       <Card>
