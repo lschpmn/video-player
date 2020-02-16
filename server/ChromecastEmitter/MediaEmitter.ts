@@ -1,10 +1,8 @@
 import { Client } from 'castv2';
 import { random } from 'lodash';
-import { basename } from 'path';
 import { MEDIA_NAMESPACE } from '../../constants';
 import { Channel, Listener, MediaStatusServer } from '../../types';
 import { log, setMediaDisconnect, setMediaStatus } from '../action-creators';
-import { getFileUrl, ipAddress } from '../FileUtils';
 import { channelErrorLogger } from '../utils';
 import Timeout = NodeJS.Timeout;
 
@@ -72,15 +70,8 @@ export default class MediaEmitter {
     this.media.send({ type: 'GET_STATUS', requestId: 1 });
   }
 
-  async launch(path: string, isUrl = false) {
+  async launch(url: string, title: string) {
     if (!this.isConnected) return;
-
-    let url;
-    if (isUrl) {
-      url = path.replace('127.0.0.1', ipAddress);
-    } else {
-      url = await getFileUrl(path);
-    }
 
     const media = {
       contentId: url,
@@ -89,7 +80,7 @@ export default class MediaEmitter {
       metadata: {
         type: 0,
         metadataType: 0,
-        title: basename(isUrl ? url : path),
+        title,
         images: [],
       },
     };

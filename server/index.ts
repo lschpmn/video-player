@@ -4,7 +4,7 @@ import { createServer } from 'http';
 import * as lowdb from 'lowdb';
 import { AdapterAsync } from 'lowdb';
 import * as FileAsync from 'lowdb/adapters/FileAsync';
-import { join } from 'path';
+import { join, basename } from 'path';
 import * as socketIO from 'socket.io';
 import {
   CONNECT,
@@ -25,6 +25,7 @@ import { DbSchema } from '../types';
 import { dbUpdate, setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
 import { FilesRouter } from './FilesRouter';
+import { getFileUrl, ipAddress } from './FileUtils';
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -94,7 +95,13 @@ async function startServer() {
           chromecastEmitter.getStatus();
           return;
         case LAUNCH:
-          chromecastEmitter.launch(payload.path, payload.isUrl).catch(console.log);
+          let url;
+          if (payload.isUrl) {
+            url = payload.path.replace('127.0.0.1', ipAddress);
+          } else {
+            url = await getFileUrl(payload.path);
+          }
+          await chromecastEmitter.launch(url, basename(payload.isUrl ? url : payload.path));
           return;
         case LAUNCH_APP:
           chromecastEmitter.launchApp(payload);

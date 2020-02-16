@@ -161,7 +161,7 @@ export default class ChromecastEmitter {
     this.isMediaConnected && this.mediaEmitter.getStatus();
   }
 
-  async launch(filePath: string, isUrl = false) {
+  async launch(url: string, title: string) {
     if (!this.isConnected) return;
 
     if (this.appId !== DEFAULT_MEDIA_RECEIVER_ID) this.receiver.send({
@@ -172,7 +172,7 @@ export default class ChromecastEmitter {
 
     await waitForTrue(() => this.isMediaConnected, 15000);
 
-    this.mediaEmitter?.launch(filePath, isUrl).catch(console.log);
+    return this.mediaEmitter?.launch(url, title);
   }
 
   launchApp(appId: string) {
