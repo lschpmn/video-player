@@ -26,6 +26,7 @@ import { addServerEvent, dbUpdate, setChromecasts } from './action-creators';
 import ChromecastEmitter from './ChromecastEmitter';
 import { FilesRouter } from './FilesRouter';
 import { getFileUrl, ipAddress } from './FileUtils';
+import filesReducer from './files/files-reducer';
 
 const bodyParser = require('body-parser');
 const cors = require('cors');
@@ -79,6 +80,9 @@ async function startServer() {
         console.log(type);
         payload && console.log(payload);
       }
+
+      filesReducer(type, payload)
+        .catch(console.log);
 
       switch (type) {
         // player
