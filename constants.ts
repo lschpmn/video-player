@@ -7,7 +7,9 @@ export const MEDIA_NAMESPACE = 'urn:x-cast:com.google.cast.media';
 export const LOG = 'LOG';
 
 // files
-export const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION';
+export const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION@server';
+export const THUMBNAIL_REQUEST = 'THUMBNAIL_REQUEST@server';
+export const SET_FILES = 'SET_FILES';
 
 // player
 export const ADD_SERVER_EVENT = 'ADD_SERVER_EVENT';
@@ -31,7 +33,6 @@ export const SET_STATUS = 'SET_STATUS';
 export const SET_VOLUME = 'SET_VOLUME@server';
 export const STOP_MEDIA = 'STOP_MEDIA@server';
 export const UPDATE_HISTORY = 'UPDATE_HISTORY@server';
-export const THUMBNAIL_REQUEST = 'THUMBNAIL_REQUEST@server';
 
 // General Data
 

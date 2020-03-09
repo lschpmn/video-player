@@ -11,6 +11,7 @@ import {
   SEEK,
   SET_CHROMECASTS,
   SET_CURRENT_LOCATION,
+  SET_FILES,
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
   SET_STATUS,
@@ -96,6 +97,11 @@ function explorer(state: ExplorerState = defaultExplorerState, action) {
     return {
       ...state,
       currentLocation: action.payload,
+    };
+  } else if (action.type === SET_FILES) {
+    return {
+      ...state,
+      files: action.payload,
     };
   } else {
     return state;

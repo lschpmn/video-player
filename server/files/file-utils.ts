@@ -5,6 +5,7 @@ import { networkInterfaces } from 'os';
 import { FileItem } from '../../client/types';
 import { FilesRouter } from '../FilesRouter';
 import { port } from '../index';
+import { join } from 'path';
 
 export const ipAddress = networkInterfaces().Ethernet
   ? networkInterfaces().Ethernet.find(e => e.family === 'IPv4').address
@@ -25,8 +26,8 @@ export function getDrives(): Promise<string[]> {
 
 export async function getFileItems(path: string): Promise<FileItem[]> {
   const files = await listAsync(path);
-  return await Promise.all(files.map(async file => {
-    const filePath = path + file;
+  const fileInspectPromises = files.map(async file => {
+    const filePath = join(path, file);
     try {
       const inspect = await inspectAsync(filePath);
       return {
@@ -34,9 +35,23 @@ export async function getFileItems(path: string): Promise<FileItem[]> {
         path: filePath,
       };
     } catch (err) {
-      return { path: filePath, type: 'forbidden' as 'forbidden' };
+      return null;
     }
-  }));
+  });
+
+  return (await Promise.all(fileInspectPromises))
+    .filter(a => !!a)
+    .sort((aItem, bItem) => {
+      if (aItem.type === 'dir' && bItem.type === 'dir') {
+        return aItem.path.localeCompare(bItem.path);
+      } else if (aItem.type === 'dir' && bItem.type !== 'dir') {
+        return -1;
+      } else if (aItem.type !== 'dir' && bItem.type === 'dir') {
+        return 1;
+      }
+
+      return aItem.path.localeCompare(bItem.path);
+    });
 }
 
 export async function getFileUrl(path: string) {

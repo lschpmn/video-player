@@ -2,7 +2,7 @@ import { readAsync as read, writeAsync as write } from 'fs-jetpack';
 import * as getIncrementalPort from 'get-incremental-port';
 import { createServer } from 'http';
 import * as lowdb from 'lowdb';
-import { AdapterAsync } from 'lowdb';
+import { AdapterAsync, LowdbAsync } from 'lowdb';
 import * as FileAsync from 'lowdb/adapters/FileAsync';
 import { join, basename } from 'path';
 import * as socketIO from 'socket.io';
@@ -35,7 +35,7 @@ let retries = 2;
 
 const START_PORT = 3000;
 
-export let db;
+export let db: LowdbAsync<DbSchema>;
 export let port;
 
 (function serverRestarter() {
@@ -81,7 +81,7 @@ async function startServer() {
         payload && console.log(payload);
       }
 
-      filesReducer(type, payload)
+      filesReducer(type, payload, dispatch)
         .catch(console.log);
 
       switch (type) {
