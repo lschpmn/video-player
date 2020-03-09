@@ -1,4 +1,3 @@
-import { join } from 'path';
 import { setFiles } from '../../client/lib/file-actions';
 import { SET_CURRENT_LOCATION, THUMBNAIL_REQUEST } from '../../constants';
 import { setThumbnail } from '../action-creators';
@@ -8,7 +7,7 @@ export default async (type: string, payload: any, dispatch: (action: any) => voi
   switch (type) {
     case SET_CURRENT_LOCATION: {
       const files = !!payload.length
-        ? await getFileItems(join(...payload))
+        ? await getFileItems(payload.join('\\'))
         : await getDrives();
 
       dispatch(setFiles(files));

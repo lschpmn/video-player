@@ -111,7 +111,7 @@ function explorer(state: ExplorerState = defaultExplorerState, action) {
     case SET_THUMBNAIL: {
       const files = cloneDeep(state.files);
       const file = files.find(f => f.path === action.payload.filePath);
-      file.images = [action.payload.imagePath];
+      file && (file.images = [action.payload.imagePath]);
       return {
         ...state,
         files,
@@ -120,7 +120,7 @@ function explorer(state: ExplorerState = defaultExplorerState, action) {
     case THUMBNAIL_REQUEST: {
       const files = cloneDeep(state.files);
       const file = files.find(f => f.path === action.payload);
-      file.images = 'loading';
+      file && (file.images = 'loading');
       return {
         ...state,
         files,

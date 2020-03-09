@@ -20,11 +20,10 @@ export function getDrives(): Promise<FileItem[]> {
       if (err) return reject(err);
 
       const drives = stdout.match(/\w:/g)
-        .map(drive => ({
-          path: `${drive}\\`,
+        .map(path => ({
+          path,
           type: 'dir',
         } as FileItem));
-      console.log(drives);
       resolve(drives);
     });
   });
@@ -35,8 +34,6 @@ export async function getFileItems(path: string): Promise<FileItem[]> {
   const files = await listAsync(path);
   const fileInspectPromises = files.map(async file => {
     const filePath = `${path}\\${file}`;
-    console.log('filePath');
-    console.log(filePath);
     try {
       const inspect = await inspectAsync(filePath);
       return {
