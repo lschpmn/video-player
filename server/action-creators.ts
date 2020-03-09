@@ -8,7 +8,6 @@ import {
   SET_MEDIA_STATUS,
   SET_STATUS,
   SET_THUMBNAIL,
-  SET_THUMBNAIL_LOADING,
 } from '../constants';
 import { DbSchema, MediaStatus, MediaStatusServer, ServerEvent } from '../types';
 
@@ -71,9 +70,4 @@ export const setThumbnail = (filePath: string, imagePath: string) => ({
     imagePath,
   },
   type: SET_THUMBNAIL,
-});
-
-export const setThumbnailLoading = (path: string) => ({
-  payload: path,
-  type: SET_THUMBNAIL_LOADING,
 });

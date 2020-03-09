@@ -16,7 +16,8 @@ import {
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
   SET_STATUS,
-  SET_THUMBNAIL, SET_THUMBNAIL_LOADING,
+  SET_THUMBNAIL,
+  THUMBNAIL_REQUEST,
 } from '../../constants';
 import { ChromecastInfo, ReceiverStatus, ServerEvent } from '../../types';
 import { ChromecastStoreState, ExplorerState, VolumeStatus } from '../types';
@@ -116,7 +117,7 @@ function explorer(state: ExplorerState = defaultExplorerState, action) {
         files,
       };
     }
-    case SET_THUMBNAIL_LOADING: {
+    case THUMBNAIL_REQUEST: {
       const files = cloneDeep(state.files);
       const file = files.find(f => f.path === action.payload);
       file.images = 'loading';

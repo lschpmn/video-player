@@ -34,7 +34,9 @@ export async function getFileItems(path: string): Promise<FileItem[]> {
   const db = DB.value();
   const files = await listAsync(path);
   const fileInspectPromises = files.map(async file => {
-    const filePath = path.includes('\\') ? join(path, file) : `${path}\\${file}`;
+    const filePath = `${path}\\${file}`;
+    console.log('filePath');
+    console.log(filePath);
     try {
       const inspect = await inspectAsync(filePath);
       return {
