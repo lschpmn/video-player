@@ -10,6 +10,8 @@ export const LOG = 'LOG';
 export const SET_CURRENT_LOCATION = 'SET_CURRENT_LOCATION@server';
 export const THUMBNAIL_REQUEST = 'THUMBNAIL_REQUEST@server';
 export const SET_FILES = 'SET_FILES';
+export const SET_THUMBNAIL = 'SET_THUMBNAIL';
+export const SET_THUMBNAIL_LOADING = 'SET_THUMBNAIL_LOADING';
 
 // player
 export const ADD_SERVER_EVENT = 'ADD_SERVER_EVENT';

@@ -2,9 +2,9 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 import ArrowRight from '@material-ui/icons/ArrowRight';
 import React, { useCallback, useEffect, useState } from 'react';
+import { FileItem } from '../../../types';
 import { setCurrentLocation } from '../../lib/file-actions';
 import { requestFileItems } from '../../lib/utils';
-import { FileItem } from '../../types';
 
 type Props = {
   fileItem: FileItem,
@@ -29,25 +29,27 @@ const DirectoryItem = ({ fileItem, setCurrentLocation }: Props) => {
     }
   }, [isOpen]);
 
-  return <div className={classes.container}>
-    <div className={classes.nameContainer}>
-      {isOpen ? <ArrowDropDownIcon onMouseDown={toggleOpen}/> : <ArrowRight onMouseDown={toggleOpen}/>}
-      <div className={classes.name} onMouseDown={setCurrentLocationAction}>
-        {location.slice(-1)[0]}
-      </div>
-    </div>
-    {isOpen && files
-      .filter(item => item.type === 'dir')
-      .map(item =>
-        <div className={classes.children} key={item.path}>
-          <DirectoryItem
-            fileItem={item}
-            setCurrentLocation={setCurrentLocation}
-          />
+  return (
+    <div className={classes.container}>
+      <div className={classes.nameContainer}>
+        {isOpen ? <ArrowDropDownIcon onMouseDown={toggleOpen}/> : <ArrowRight onMouseDown={toggleOpen}/>}
+        <div className={classes.name} onMouseDown={setCurrentLocationAction}>
+          {location.slice(-1)[0]}
         </div>
-      )
-    }
-  </div>
+      </div>
+      {isOpen && files
+        .filter(item => item.type === 'dir')
+        .map(item =>
+          <div className={classes.children} key={item.path}>
+            <DirectoryItem
+              fileItem={item}
+              setCurrentLocation={setCurrentLocation}
+            />
+          </div>
+        )
+      }
+    </div>
+  );
 };
 
 const useStyles = makeStyles(theme => ({

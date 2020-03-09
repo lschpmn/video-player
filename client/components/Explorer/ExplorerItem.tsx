@@ -3,17 +3,17 @@ import Folder from '@material-ui/icons/Folder';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import LoopIcon from '@material-ui/icons/Loop';
 import * as React from 'react';
+import { FileItem } from '../../../types';
 import { setCurrentLocation } from '../../lib/file-actions';
 import { launch } from '../../lib/player-actions';
 import { useAction } from '../../lib/utils';
-import { FileItem } from '../../types';
 
 type Props = {
   item: FileItem,
 };
 
 const ExplorerItem = ({ item }: Props) => {
-  const currentLocation = item.path.split('/');
+  const currentLocation = item.path.split('\\').filter(Boolean);
   const launchAction = useAction(() => launch(item.path));
   const setCurrentLocationAction = useAction(() =>
     setCurrentLocation(currentLocation), [currentLocation]);

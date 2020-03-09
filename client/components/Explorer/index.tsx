@@ -1,28 +1,23 @@
 import * as React from 'react';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { VIDEO_EXTENSIONS } from '../../../constants';
-import { setCurrentLocation } from '../../lib/file-actions';
-import { postLocal, requestDrives, requestFileItems, useAction } from '../../lib/utils';
-import { FileItem, ReducerState } from '../../types';
+import { setCurrentLocation, thumbnailRequest } from '../../lib/file-actions';
+import { useAction } from '../../lib/utils';
+import { ReducerState } from '../../types';
 import ExplorerItem from './ExplorerItem';
 
 const MAX_INSPECTS = 3;
 
 const Explorer = () => {
-  const [files, setFiles] = useState([] as FileItem[]);
   const currentLocation = useSelector((state: ReducerState) => state.explorer.currentLocation);
+  const files = useSelector((state: ReducerState) => state.explorer.files);
   const setCurrentLocationAction = useAction(setCurrentLocation);
+  const thumbnailRequestAction = useAction(thumbnailRequest);
 
   useEffect(() => {
-    const request = currentLocation.length === 0
-      ? requestDrives()
-      : requestFileItems(currentLocation.join('/') + '/');
-
-    request
-      .then(res => setFiles(res))
-      .catch(console.log);
-  }, [currentLocation]);
+    setCurrentLocationAction(currentLocation);
+  }, []);
 
   useEffect(() => {
     const videoFiles = files
@@ -35,28 +30,7 @@ const Explorer = () => {
       const videoToLoad = videoFiles.find(videoFile => !videoFile.images);
       if (!videoToLoad) return;
 
-      postLocal('/api/files/get-thumbnail', { path: videoToLoad.path })
-        .then(res =>
-          setFiles(oldFiles => oldFiles
-            .map(file => file.path === videoToLoad.path
-              ? ({
-                ...file,
-                images: [res.path],
-              })
-              : file
-            )
-          )
-        )
-        .catch(console.log);
-
-      setFiles(oldFiles => oldFiles
-        .map(file => file.path === videoToLoad.path
-          ? ({
-            ...file,
-            images: 'loading',
-          })
-          : file,
-        ));
+      thumbnailRequestAction(videoToLoad.path);
     }
   }, [files]);
 
@@ -77,7 +51,7 @@ const Explorer = () => {
     </div>
     <div style={styles.itemContainer}>
       {files
-        .map((item) =>
+        .map(item =>
           <ExplorerItem
             item={item}
             key={item.path}

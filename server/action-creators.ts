@@ -7,6 +7,8 @@ import {
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
   SET_STATUS,
+  SET_THUMBNAIL,
+  SET_THUMBNAIL_LOADING,
 } from '../constants';
 import { DbSchema, MediaStatus, MediaStatusServer, ServerEvent } from '../types';
 
@@ -61,4 +63,17 @@ export const setMediaStatus = (status: MediaStatusServer): { payload: MediaStatu
 export const setStatus = status => ({
   payload: status,
   type: SET_STATUS,
+});
+
+export const setThumbnail = (filePath: string, imagePath: string) => ({
+  payload: {
+    filePath,
+    imagePath,
+  },
+  type: SET_THUMBNAIL,
+});
+
+export const setThumbnailLoading = (path: string) => ({
+  payload: path,
+  type: SET_THUMBNAIL_LOADING,
 });

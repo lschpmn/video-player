@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useEffect, useState } from 'react';
+import { FileItem } from '../../../types';
 import { setCurrentLocation } from '../../lib/file-actions';
 import { requestDrives, useAction } from '../../lib/utils';
-import { FileItem } from '../../types';
 import DirectoryItem from './DirectoryItem';
 
 const FileStructure = () => {

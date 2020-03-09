@@ -1,3 +1,4 @@
+import { cloneDeep } from 'lodash';
 import { combineReducers } from 'redux';
 import {
   ADD_SERVER_EVENT,
@@ -15,6 +16,7 @@ import {
   SET_MEDIA_DISCONNECT,
   SET_MEDIA_STATUS,
   SET_STATUS,
+  SET_THUMBNAIL, SET_THUMBNAIL_LOADING,
 } from '../../constants';
 import { ChromecastInfo, ReceiverStatus, ServerEvent } from '../../types';
 import { ChromecastStoreState, ExplorerState, VolumeStatus } from '../types';
@@ -35,6 +37,7 @@ const defaultChromecastStore: ChromecastStoreState = {
 
 const defaultExplorerState: ExplorerState = {
   currentLocation: [],
+  files: [],
 };
 
 function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, action: Action) {
@@ -93,18 +96,37 @@ function chromecastStore(state: ChromecastStoreState = defaultChromecastStore, a
 }
 
 function explorer(state: ExplorerState = defaultExplorerState, action) {
-  if (action.type === SET_CURRENT_LOCATION) {
-    return {
-      ...state,
-      currentLocation: action.payload,
-    };
-  } else if (action.type === SET_FILES) {
-    return {
-      ...state,
-      files: action.payload,
-    };
-  } else {
-    return state;
+  switch (action.type) {
+    case SET_CURRENT_LOCATION:
+      return {
+        ...state,
+        currentLocation: action.payload,
+      };
+    case SET_FILES:
+      return {
+        ...state,
+        files: action.payload,
+      };
+    case SET_THUMBNAIL: {
+      const files = cloneDeep(state.files);
+      const file = files.find(f => f.path === action.payload.filePath);
+      file.images = [action.payload.imagePath];
+      return {
+        ...state,
+        files,
+      };
+    }
+    case SET_THUMBNAIL_LOADING: {
+      const files = cloneDeep(state.files);
+      const file = files.find(f => f.path === action.payload);
+      file.images = 'loading';
+      return {
+        ...state,
+        files,
+      };
+    }
+    default:
+      return state;
   }
 }
 

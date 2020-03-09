@@ -1,4 +1,4 @@
-import { ChromecastInfo, MediaStatus, ServerEvent } from '../types';
+import { ChromecastInfo, FileItem, MediaStatus, ServerEvent } from '../types';
 
 export type ChromecastStoreState = {
   chromecasts: ChromecastInfo[],
@@ -9,15 +9,9 @@ export type ChromecastStoreState = {
   volumeStatus?: VolumeStatus,
 };
 
-export type FileItem = {
-  images?: 'failed' | 'loading' | string[],
-  path: string,
-  size?: number,
-  type: 'dir' | 'file' | 'forbidden' | 'symlink',
-};
-
 export type ExplorerState = {
   currentLocation: string[],
+  files: FileItem[],
 };
 
 export type ReducerState = {

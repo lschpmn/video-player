@@ -21,6 +21,13 @@ export type DbSchema = {
   },
 };
 
+export type FileItem = {
+  images?: 'failed' | 'loading' | string[],
+  path: string,
+  size?: number,
+  type: 'dir' | 'file' | 'forbidden' | 'symlink',
+};
+
 export type Listener = (action: { type: string, payload?: any }) => void;
 
 export type MediaStatus = {

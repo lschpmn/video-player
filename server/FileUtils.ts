@@ -2,7 +2,7 @@ import { exec } from 'child_process';
 import { static as expressStatic } from 'express';
 import { inspectAsync, listAsync } from 'fs-jetpack';
 import { networkInterfaces } from 'os';
-import { FileItem } from '../client/types';
+import { FileItem } from '../types';
 import { FilesRouter } from './FilesRouter';
 import { port } from './index';
 
