@@ -7,9 +7,9 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { applyMiddleware, createStore } from 'redux';
 import App from './App';
-import loggerMiddleware from './lib/loggerMiddleware';
+import loggerMiddleware from './lib/logger-middleware';
 import reducers from './lib/reducers';
-import socketMiddleware from './lib/socketMiddleware';
+import socketMiddleware from './lib/socket-middleware';
 
 const store = createStore(reducers, applyMiddleware(loggerMiddleware, socketMiddleware));
 const theme = createMuiTheme({
