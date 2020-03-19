@@ -1,9 +1,9 @@
 import { Client } from 'castv2';
 import { random } from 'lodash';
-import { MEDIA_NAMESPACE } from '../../constants';
-import { Channel, Listener, MediaStatusServer } from '../../types';
-import { log, setMediaDisconnect, setMediaStatus } from '../action-creators';
-import { channelErrorLogger } from '../utils';
+import { MEDIA_NAMESPACE } from '../../../constants';
+import { Channel, Listener, MediaStatusServer } from '../../../types';
+import { log, setMediaDisconnect, setMediaStatus } from '../../action-creators';
+import { channelErrorLogger } from '../../utils';
 import Timeout = NodeJS.Timeout;
 
 export default class MediaEmitter {

@@ -108,6 +108,4 @@ export async function getThumbnail(path: string): Promise<string> {
         timemarks: ['10%'],
       });
   });
-
-
 }

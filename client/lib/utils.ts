@@ -1,8 +1,7 @@
 import { useCallback } from 'react';
 import { useDispatch } from 'react-redux';
-import { WindowState } from '../types';
 
-const PORT = (window as any as WindowState).__PORT__;
+const PORT = window.__PORT__;
 
 export function getTimeString(time) {
   if (!time) return '0:00';

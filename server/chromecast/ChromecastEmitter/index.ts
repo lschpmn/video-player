@@ -1,9 +1,9 @@
 import { Client } from 'castv2';
 import * as multicastdns from 'multicast-dns';
-import { BACKDROP_RECEIVER_ID, DEFAULT_MEDIA_RECEIVER_ID, MEDIA_NAMESPACE } from '../../constants';
-import { Channel, ChromecastInfo, Listener, ReceiverStatus } from '../../types';
-import { connection, setMediaDisconnect, setStatus } from '../action-creators';
-import { channelErrorLogger, waitForTrue } from '../utils';
+import { BACKDROP_RECEIVER_ID, DEFAULT_MEDIA_RECEIVER_ID, MEDIA_NAMESPACE } from '../../../constants';
+import { Channel, ChromecastInfo, Listener, ReceiverStatus } from '../../../types';
+import { connection, setMediaDisconnect, setStatus } from '../../action-creators';
+import { channelErrorLogger, waitForTrue } from '../../utils';
 import MediaEmitter from './MediaEmitter';
 import Timeout = NodeJS.Timeout;
 

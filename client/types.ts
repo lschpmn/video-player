@@ -25,6 +25,8 @@ export type VolumeStatus = {
   muted: boolean,
 };
 
-export type WindowState = {
-  __PORT__: number,
-};
+declare global {
+  interface Window {
+    __PORT__: number,
+  }
+}
