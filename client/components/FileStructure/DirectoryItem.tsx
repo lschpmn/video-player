@@ -4,7 +4,7 @@ import ArrowRight from '@material-ui/icons/ArrowRight';
 import React, { useCallback, useEffect, useState } from 'react';
 import { FileItem } from '../../../types';
 import { setCurrentLocation } from '../../lib/file-actions';
-import { requestFileItems } from '../../lib/utils';
+import { getFiles } from '../../lib/socket';
 
 type Props = {
   fileItem: FileItem,
@@ -14,14 +14,14 @@ type Props = {
 const DirectoryItem = ({ fileItem, setCurrentLocation }: Props) => {
   const [files, setFiles] = useState([] as FileItem[]);
   const [isOpen, setIsOpen] = useState(false);
-  const location = fileItem.path.split('/');
+  const location = fileItem.path.split('\\');
   const setCurrentLocationAction = useCallback(() => setCurrentLocation(location), []);
   const toggleOpen = useCallback(() => setIsOpen(!isOpen), [isOpen]);
   const classes = useStyles({});
 
   useEffect(() => {
     if (isOpen && fileItem.type === 'dir' && !files.length) {
-      requestFileItems(fileItem.path + '/')
+      getFiles(fileItem.path)
         .then(res => {
           setFiles(res);
         })

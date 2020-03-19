@@ -9,13 +9,10 @@ import * as socketIO from 'socket.io';
 import { GET_MEDIA_STATUS, UPDATE_HISTORY } from '../constants';
 import { DbSchema } from '../types';
 import { dbUpdate } from './action-creators';
-import chromecastReducer from './chromecast/chromecast-reducer';
+import { chromecastReducer } from './chromecast';
 import ChromecastEmitter from './chromecast/ChromecastEmitter';
-import filesReducer from './files/files-reducer';
-import { FilesRouter } from './FilesRouter';
+import { filesReducer, filesRequest } from './files';
 
-const bodyParser = require('body-parser');
-const cors = require('cors');
 const express = require('express');
 let retries = 2;
 
@@ -63,7 +60,7 @@ async function startServer() {
 
     chromecastEmitter.setDispatch(dispatch);
 
-    socket.on('dispatch', async ({ type, payload }) => {
+    socket.on('dispatch', ({ type, payload }) => {
       if (![GET_MEDIA_STATUS, UPDATE_HISTORY].includes(type)) {
         console.log(type);
         payload && console.log(payload);
@@ -75,12 +72,12 @@ async function startServer() {
       filesReducer(type, payload, dispatch)
         .catch(console.log);
     });
+
+    socket.on('message', (type, data, res) => {
+      filesRequest(type, data, res)
+        .catch(console.log);
+    });
   });
-
-  app.use(bodyParser.json());
-  app.use(cors());
-
-  app.use('/api/files', FilesRouter);
 
   server.listen(port, () => console.log(`server running on port ${port}`));
 }

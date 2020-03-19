@@ -10,11 +10,11 @@ import {
   PLAY, SEEK, SET_MUTED, SET_VOLUME, STOP_MEDIA, UPDATE_HISTORY,
 } from '../../constants';
 import { addServerEvent, setChromecasts } from '../action-creators';
+import { getFileUrl, ipAddress } from '../files/file-utils';
 import ChromecastEmitter from './ChromecastEmitter';
-import { getFileUrl, ipAddress } from '../FileUtils';
 import { chromecastEmitter, db } from '../index';
 
-export default async (type: string, payload: any, dispatch: (action: any) => void) => {
+export const chromecastReducer =  async (type: string, payload: any, dispatch: (action: any) => void) => {
   switch (type) {
     // player
     case CONNECT:

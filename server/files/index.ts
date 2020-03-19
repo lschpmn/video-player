@@ -1,9 +1,9 @@
 import { setFiles } from '../../client/lib/file-actions';
-import { SET_CURRENT_LOCATION, THUMBNAIL_REQUEST } from '../../constants';
+import { GET_DRIVES, GET_FILES, SET_CURRENT_LOCATION, THUMBNAIL_REQUEST } from '../../constants';
 import { setThumbnail } from '../action-creators';
 import { getDrives, getFileItems, getThumbnail } from './file-utils';
 
-export default async (type: string, payload: any, dispatch: (action: any) => void) => {
+export const filesReducer = async (type: string, payload: any, dispatch: (action: any) => void) => {
   switch (type) {
     case SET_CURRENT_LOCATION: {
       const files = !!payload.length
@@ -20,3 +20,13 @@ export default async (type: string, payload: any, dispatch: (action: any) => voi
   }
 };
 
+export const filesRequest = async (type: string, data: any, res: (...x: any) => void) => {
+  switch(type) {
+    case GET_DRIVES:
+      res(await getDrives());
+      return;
+    case GET_FILES:
+      res(await getFileItems(data));
+      return;
+  }
+};

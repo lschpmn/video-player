@@ -35,6 +35,10 @@ export const SET_VOLUME = 'SET_VOLUME@server';
 export const STOP_MEDIA = 'STOP_MEDIA@server';
 export const UPDATE_HISTORY = 'UPDATE_HISTORY@server';
 
+// file requests
+export const GET_DRIVES = 'GET_DRIVES';
+export const GET_FILES = 'GET_FILES';
+
 // General Data
 
 export const VIDEO_EXTENSIONS = [
