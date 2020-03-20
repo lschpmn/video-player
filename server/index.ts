@@ -12,6 +12,7 @@ import { dbUpdate } from './action-creators';
 import { chromecastReducer } from './chromecast';
 import ChromecastEmitter from './chromecast/ChromecastEmitter';
 import { filesReducer, filesRequest } from './files';
+import { FilesRouter } from './files/file-utils';
 
 const express = require('express');
 let retries = 2;
@@ -78,6 +79,8 @@ async function startServer() {
         .catch(console.log);
     });
   });
+
+  app.use('/api/files', FilesRouter);
 
   server.listen(port, () => console.log(`server running on port ${port}`));
 }

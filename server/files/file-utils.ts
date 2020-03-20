@@ -7,7 +7,7 @@ import { join } from 'path';
 import { db as DB, port } from '..';
 import { FileItem } from '../../types';
 
-const FilesRouter = Router();
+export const FilesRouter = Router();
 
 export const ipAddress = networkInterfaces().Ethernet
   ? networkInterfaces().Ethernet.find(e => e.family === 'IPv4').address
