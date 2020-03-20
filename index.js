@@ -32,7 +32,7 @@ const openWindow = _.after(2, createWindow);
 
 function createWindow() {
   win = new BrowserWindow({
-    height: 720,
+    height: 720 + 400, // TODO: remove in prod
     webPreferences: {
       nodeIntegration: true,
     },
