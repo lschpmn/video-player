@@ -6,12 +6,12 @@ import { FileItem } from '../../types';
 let socket;
 
 export const getDrives = (): Promise<FileItem[]> => {
-  const socket = getSocket();
+  const localSocket = getSocket();
 
   return new Promise((res, rej) => {
     const rejectId = setTimeout(rej, 3000);
 
-    socket.send(GET_DRIVES, null, drives => {
+    localSocket.send(GET_DRIVES, null, drives => {
       res(drives);
       clearTimeout(rejectId);
     });
@@ -19,12 +19,12 @@ export const getDrives = (): Promise<FileItem[]> => {
 };
 
 export const getFiles = (path: string): Promise<FileItem[]> => {
-  const socket = getSocket();
+  const localSocket = getSocket();
 
   return new Promise((res, rej) => {
     const rejectId = setTimeout(rej, 3000);
 
-    socket.send(GET_FILES, path, files => {
+    localSocket.send(GET_FILES, path, files => {
       res(files);
       clearTimeout(rejectId);
     });
