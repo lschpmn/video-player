@@ -2,6 +2,7 @@ import makeStyles from '@material-ui/core/styles/makeStyles';
 import Folder from '@material-ui/icons/Folder';
 import InsertDriveFileIcon from '@material-ui/icons/InsertDriveFile';
 import LoopIcon from '@material-ui/icons/Loop';
+import { useCallback } from 'react';
 import * as React from 'react';
 import { FileItem } from '../../../types';
 import { setCurrentLocation } from '../../lib/file-actions';
@@ -10,20 +11,23 @@ import { useAction } from '../../lib/utils';
 
 type Props = {
   item: FileItem,
+  onRightClick?: (e, item: FileItem) => void,
 };
 
-const ExplorerItem = ({ item }: Props) => {
+const ExplorerItem = ({ item, onRightClick }: Props) => {
   const currentLocation = item.path.split('\\').filter(Boolean);
   const launchAction = useAction(() => launch(item.path));
   const setCurrentLocationAction = useAction(() =>
     setCurrentLocation(currentLocation), [currentLocation]);
   const classes = useStyles({});
 
+  const onContextMenu = useCallback((e) => onRightClick(e, item), [item]);
+
   const doubleClickAction = item.type === 'dir'
     ? setCurrentLocationAction
     : launchAction;
 
-  return <div className={classes.container} onDoubleClick={doubleClickAction}>
+  return <div className={classes.container} onDoubleClick={doubleClickAction} onContextMenu={onContextMenu}>
     {!item.images && (item.type === 'dir'
       ? <Folder />
       : <InsertDriveFileIcon />)
