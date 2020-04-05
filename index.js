@@ -17,7 +17,7 @@ const openWindow = _.after(2, createWindow);
   const options = {
     contentBase: './public',
     hot: true,
-    host: 'localhost',
+    host: '127.0.0.1',
   };
 
   webpackDevServer.addDevServerEntrypoints(config, options);
@@ -34,13 +34,14 @@ function createWindow() {
   win = new BrowserWindow({
     height: 720 + 400, // TODO: remove in prod
     webPreferences: {
+      enableRemoteModule: false,
       nodeIntegration: true,
     },
     width: 1280,
   });
 
   win
-    .loadURL(`http://localhost:${port}/index.html`)
+    .loadURL(`http://127.0.0.1:${port}/index.html`)
     .catch(console.log);
 
   win.webContents.openDevTools();

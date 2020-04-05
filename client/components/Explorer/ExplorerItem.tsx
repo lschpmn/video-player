@@ -19,14 +19,18 @@ const ExplorerItem = ({ item }: Props) => {
     setCurrentLocation(currentLocation), [currentLocation]);
   const classes = useStyles({});
 
-  return <div className={classes.container}>
+  const doubleClickAction = item.type === 'dir'
+    ? setCurrentLocationAction
+    : launchAction;
+
+  return <div className={classes.container} onDoubleClick={doubleClickAction}>
     {!item.images && (item.type === 'dir'
-      ? <Folder onDoubleClick={setCurrentLocationAction}/>
-      : <InsertDriveFileIcon/>)
+      ? <Folder />
+      : <InsertDriveFileIcon />)
     }
     {item.images === 'loading' && <LoopIcon />}
     {item.images && item.images !== 'loading' &&
-      <img onDoubleClick={launchAction} src={item.images[0]} alt="thumbnail"/>
+      <img src={item.images[0]} alt="thumbnail"/>
     }
     <div>{currentLocation.slice(-1)[0]}</div>
   </div>;

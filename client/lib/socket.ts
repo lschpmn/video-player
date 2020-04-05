@@ -33,5 +33,5 @@ export const getFiles = (path: string): Promise<FileItem[]> => {
 
 export const getSocket = (): Socket => {
   if (socket) return socket;
-  return socket = io(`http://localhost:${window.__PORT__}`);
+  return socket = io(`http://127.0.0.1:${window.__PORT__}`);
 };
