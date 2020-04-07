@@ -31,7 +31,7 @@ export function getDrives(): Promise<FileItem[]> {
 
 export async function getFileItems(path: string): Promise<FileItem[]> {
   const db = DB.value();
-  const files = await listAsync(path);
+  const files = await listAsync(path + '\\');
   const fileInspectPromises = files.map(async file => {
     const filePath = `${path}\\${file}`;
     try {
