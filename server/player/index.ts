@@ -35,7 +35,7 @@ export const playerReducer =  async (type: string, payload: any, dispatch: (acti
         : await getFileUrl(payload.path);
 
       const title = basename(payload.isUrl ? url : payload.path);
-      const prev = db.get(['history', title]).value();
+      const prev = db.get(['history', payload.isUrl ? url : payload.path]).value();
       if (prev) {
         dispatch(addServerEvent({
           payload: prev,
