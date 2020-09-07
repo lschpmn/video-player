@@ -9,8 +9,8 @@ import * as socketIO from 'socket.io';
 import { GET_MEDIA_STATUS, UPDATE_HISTORY } from '../constants';
 import { DbSchema } from '../types';
 import { dbUpdate } from './action-creators';
-import { chromecastReducer } from './chromecast';
-import ChromecastEmitter from './chromecast/ChromecastEmitter';
+import { playerReducer } from './player';
+import ChromecastEmitter from './lib/ChromecastEmitter';
 import { filesReducer, filesRequest } from './files';
 import { FilesRouter } from './files/file-utils';
 
@@ -67,7 +67,7 @@ async function startServer() {
         payload && console.log(payload);
       }
 
-      chromecastReducer(type, payload, dispatch)
+      playerReducer(type, payload, dispatch)
         .catch(console.log);
 
       filesReducer(type, payload, dispatch)

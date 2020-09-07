@@ -5,7 +5,7 @@ import { Channel, Listener, MediaStatusServer } from '../../../types';
 import { log, setMediaDisconnect, setMediaStatus } from '../../action-creators';
 import { channelErrorLogger } from '../../utils';
 import Timeout = NodeJS.Timeout;
-import StateMachine from '../../lib/StateMachine';
+import StateMachine from '../StateMachine';
 
 const HEARTBEAT_INTERVAL = 5000;
 const HEARTBEAT_TIMEOUT = 10000;

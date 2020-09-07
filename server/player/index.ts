@@ -11,10 +11,10 @@ import {
 } from '../../constants';
 import { addServerEvent, setChromecasts } from '../action-creators';
 import { getFileUrl, ipAddress } from '../files/file-utils';
-import ChromecastEmitter from './ChromecastEmitter';
+import ChromecastEmitter from '../lib/ChromecastEmitter';
 import { chromecastEmitter, db } from '../index';
 
-export const chromecastReducer =  async (type: string, payload: any, dispatch: (action: any) => void) => {
+export const playerReducer =  async (type: string, payload: any, dispatch: (action: any) => void) => {
   switch (type) {
     // player
     case CONNECT:
