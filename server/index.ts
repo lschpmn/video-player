@@ -17,6 +17,7 @@ import { FilesRouter } from './files/file-utils';
 const express = require('express');
 let retries = 2;
 
+const IS_PROD = process.argv.includes('--prod');
 const START_PORT = 3000;
 
 export let chromecastEmitter: ChromecastEmitter;
