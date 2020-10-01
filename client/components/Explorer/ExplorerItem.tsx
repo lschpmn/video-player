@@ -34,7 +34,7 @@ const ExplorerItem = ({ item, onRightClick }: Props) => {
     }
     {item.images === 'loading' && <LoopIcon />}
     {item.images && item.images !== 'loading' &&
-      <img src={item.images[0]} alt="thumbnail"/>
+      <img src={`.${item.images[0]}`} alt="thumbnail"/>
     }
     <div>{currentLocation.slice(-1)[0]}</div>
   </div>;
