@@ -6,13 +6,16 @@ import Explorer from './components/Explorer';
 import FileStructure from './components/FileStructure';
 import FileUpload from './components/FileUpload';
 import Media from './components/Media';
+import TopBar from './components/TopBar';
 
 const App = () => {
   const classes = useStyles({});
   return <FileUpload>
     <div className={classes.container}>
-      <div className={classes.top} />
-      <div style={styles.middle}>
+      <div className={classes.top} >
+        <TopBar />
+      </div>
+      <div className={classes.middle}>
         <div style={{ flex: 1 }}>
           <Media />
         </div>
@@ -26,7 +29,7 @@ const App = () => {
         </div>
       </div>
 
-      <div style={styles.bottom}>
+      <div className={classes.bottom}>
         <Controls />
       </div>
     </div>
@@ -34,6 +37,10 @@ const App = () => {
 };
 
 const useStyles = makeStyles(theme => ({
+  bottom: {
+    alignSelf: 'flex-end',
+    width: '100%',
+  },
   container: {
     alignItems: 'stretch',
     backgroundColor: theme.palette.background.default,
@@ -41,8 +48,14 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
     height: '100%',
   },
+  middle: {
+    display: 'flex',
+    flexDirection: 'row',
+    flex: 9,
+    height: '100%',
+    width: '100%',
+  },
   top: {
-    backgroundColor: theme.palette.primary.main,
     display: 'flex',
     flexDirection: 'row',
     height: '3rem',
@@ -51,23 +64,3 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default hot(App);
-
-const styles = {
-  bottom: {
-    alignSelf: 'flex-end',
-    width: '100%',
-  } as React.CSSProperties,
-  middle: {
-    display: 'flex',
-    flexDirection: 'row',
-    flex: 9,
-    height: '100%',
-    width: '100%',
-  } as React.CSSProperties,
-  parent: {
-    alignItems: 'stretch',
-    display: 'flex',
-    flexDirection: 'column',
-    height: '100%',
-  } as React.CSSProperties,
-};
