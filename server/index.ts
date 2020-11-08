@@ -93,3 +93,5 @@ async function writePortToIndex(port: number) {
     index.replace('PORT__ = 0', `PORT__ = ${port}`),
   );
 }
+
+process.on('unhandledRejection', console.log);
