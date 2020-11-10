@@ -1,13 +1,13 @@
-import Modal from '@material-ui/core/Modal';
-import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
+import Modal from '@material-ui/core/Modal';
+import Paper from '@material-ui/core/Paper';
 import makeStyles from '@material-ui/core/styles/makeStyles';
 import useTheme from '@material-ui/core/styles/useTheme';
 import AddIcon from '@material-ui/icons/Add';
-import { useCallback, useEffect, useState } from 'react';
 import * as React from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { hot } from 'react-hot-loader/root';
 import { launch } from '../lib/player-actions';
 import { useAction } from '../lib/utils';
@@ -19,20 +19,19 @@ const TopBar = () => {
   const [url, setUrl] = useState("");
   const launchAction = useAction(launch);
 
-  const onEnter = useCallback(({ key }) => {
-    if (key === 'Enter') {
-      console.log('enter hit');
-      launchAction(url, true);
-      console.log('launch');
-      setOpen(false);
-      setUrl('');
-    }
+  const onEnter = useCallback(() => {
+    if (url === '') return;
+    launchAction(url, true);
+    setOpen(false);
+    setUrl('');
   }, [url]);
 
   useEffect(() => {
     if (open) {
-      document.addEventListener('keydown', onEnter);
-      return () => document.removeEventListener('keydown', onEnter);
+      const listener = ({ key }) => key === 'Enter' && onEnter();
+
+      document.addEventListener('keydown', listener);
+      return () => document.removeEventListener('keydown', listener);
     }
   }, [open, onEnter]);
   console.log(`open ${open}`);

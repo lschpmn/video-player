@@ -1,9 +1,7 @@
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
 import isEqual from 'lodash/isEqual';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import { connect, getChromecasts, getMediaStatus, launch, PLAYING, updateHistory } from '../../lib/player-actions';
+import { connect, getChromecasts, getMediaStatus, PLAYING, updateHistory } from '../../lib/player-actions';
 import { useAction } from '../../lib/utils';
 import { ReducerState } from '../../types';
 import ChromecastIcon from './ChromecastIcon';
@@ -17,20 +15,9 @@ const Media = () => {
   const connectAction = useAction(connect);
   const getChromecastsAction = useAction(getChromecasts);
   const getMediaStatusAction = useAction(getMediaStatus);
-  const launchAction = useAction(launch);
   const updateHistoryAction = useAction(updateHistory);
   const chromecastStore = useSelector((state: ReducerState) => state.chromecastStore, isEqual);
   const [lastUpdate, setLastUpdate] = useState(0);
-  const [showUrlField, setShowUrlField] = useState(false);
-  const [url, setUrl] = useState('');
-
-  const onEnter = useCallback(({ key }) => {
-    if (key === 'Enter') {
-      launchAction(url, true);
-      setShowUrlField(false);
-      setUrl('');
-    }
-  }, [url]);
 
   useEffect(() => {
     getChromecastsAction();
@@ -41,13 +28,6 @@ const Media = () => {
       setTimeout(() => connectAction(chromecastStore.chromecasts[0]), 500);
     }
   }, [chromecastStore.chromecasts[0], chromecastStore.loading, chromecastStore.isConnected]);
-
-  useEffect(() => {
-    if (showUrlField) {
-      document.addEventListener('keydown', onEnter);
-      return () => document.removeEventListener('keydown', onEnter);
-    }
-  }, [showUrlField, url]);
 
   useEffect(() => {
     const isPlaying = chromecastStore.mediaStatus?.playerState === PLAYING;
@@ -76,23 +56,6 @@ const Media = () => {
 
     <div style={{ flex: 1 }}/>
 
-    {showUrlField
-      ? <TextField
-        label="URL"
-        onBlur={() => setShowUrlField(false)}
-        onChange={e => setUrl(e.target.value)}
-        style={styles.urlInput}
-        variant="filled"
-        value={url}
-      />
-      : <Button
-        onMouseDown={() => setShowUrlField(true)}
-        style={styles.urlInput}
-        variant="contained"
-      >
-        Add URL
-      </Button>
-    }
     <ContinueModal />
   </div>;
 };
