@@ -1,10 +1,10 @@
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import IconButton from '@material-ui/core/IconButton';
 import Input from '@material-ui/core/Input';
-import Modal from '@material-ui/core/Modal';
-import Paper from '@material-ui/core/Paper';
 import makeStyles from '@material-ui/core/styles/makeStyles';
-import useTheme from '@material-ui/core/styles/useTheme';
 import AddIcon from '@material-ui/icons/Add';
 import * as React from 'react';
 import { useCallback, useEffect, useState } from 'react';
@@ -14,7 +14,6 @@ import { useAction } from '../lib/utils';
 
 const TopBar = () => {
   const classes = useStyles({});
-  const theme = useTheme();
   const [open, setOpen] = useState(false);
   const [url, setUrl] = useState("");
   const launchAction = useAction(launch);
@@ -34,29 +33,17 @@ const TopBar = () => {
       return () => document.removeEventListener('keydown', listener);
     }
   }, [open, onEnter]);
-  console.log(`open ${open}`);
 
   return <div className={classes.container}>
-    <IconButton onClick={() => {
-      console.log('setOpen true')
-      setOpen(true);
-    }}>
+    <IconButton onMouseDown={() => setOpen(true)}>
       <AddIcon style={{ color: 'white' }}/>
     </IconButton>
-    <Modal open={open} onBackdropClick={() => setOpen(false)} style={{
-      border: '1px solid black',
-      display: 'flex',
-      flexDirection: 'column',
-      height: '100%',
-      justifyContent: 'center',
-    }}>
-      <Paper elevation={3} style={{
-        backgroundColor: theme.palette.background.paper,
-        borderRadius: 5,
-        margin: 'auto',
-        outline: 'none',
-        padding: '2rem',
-      }}>
+    <Dialog
+      open={open}
+      onBackdropClick={() => setOpen(false)}
+    >
+      <DialogTitle>Add URL</DialogTitle>
+      <DialogContent>
         <Input
           onChange={e => setUrl(e.target.value)}
           value={url}
@@ -71,8 +58,8 @@ const TopBar = () => {
         >
           Add URL
         </Button>
-      </Paper>
-    </Modal>
+      </DialogContent>
+    </Dialog>
   </div>;
 };
 
