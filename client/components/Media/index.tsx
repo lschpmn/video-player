@@ -9,7 +9,7 @@ import ContinueModal from './ContinueModal';
 
 const PAUSED_STATUS_INTERVAL = 5000;
 const PLAYING_STATUS_INTERVAL = 1000;
-const UPDATE_INTERVAL = 3;
+const UPDATE_HISTORY_INTERVAL = 3; //seconds
 
 const Media = () => {
   const connectAction = useAction(connect);
@@ -25,14 +25,16 @@ const Media = () => {
 
   useEffect(() => {
     if (chromecastStore.chromecasts[0] && !chromecastStore.loading && !chromecastStore.isConnected) {
-      setTimeout(() => connectAction(chromecastStore.chromecasts[0]), 500);
+      setTimeout(() => connectAction(chromecastStore.chromecasts[0]), 15000);
     }
   }, [chromecastStore.chromecasts[0], chromecastStore.loading, chromecastStore.isConnected]);
 
   useEffect(() => {
     const isPlaying = chromecastStore.mediaStatus?.playerState === PLAYING;
-    const intervalId = setInterval(() =>
-      getMediaStatusAction(), isPlaying ? PLAYING_STATUS_INTERVAL : PAUSED_STATUS_INTERVAL);
+    const intervalId = setInterval(
+      () => getMediaStatusAction(),
+      isPlaying ? PLAYING_STATUS_INTERVAL : PAUSED_STATUS_INTERVAL
+    );
 
     return () => clearInterval(intervalId);
   }, [chromecastStore.mediaStatus?.playerState]);
@@ -41,7 +43,7 @@ const Media = () => {
     const isPlaying = chromecastStore.mediaStatus?.playerState === PLAYING;
     if (isPlaying) {
       const currentTime = chromecastStore.mediaStatus.currentTime;
-      if (Math.abs(currentTime - lastUpdate) > UPDATE_INTERVAL) {
+      if (Math.abs(currentTime - lastUpdate) > UPDATE_HISTORY_INTERVAL) {
         setLastUpdate(currentTime);
         updateHistoryAction(chromecastStore.mediaStatus.title, ~~currentTime);
       }
