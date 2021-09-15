@@ -7,6 +7,8 @@ anything currently streaming to the chosen Chromecast, even streaming Apps like 
 
 - `git clone https://github.com/lschpmn/video-player.git`
 - `npm i`
+- `source ./source.sh`
+- `start`
 
 ## Usage
 
