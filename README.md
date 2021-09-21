@@ -16,4 +16,4 @@ On startup will look for the first Chromecast it finds on the local network and 
 streaming on that Chromecast, this application will give you basic media controls of whatever is streaming. The application 
 also allows you to stream your own content to Chromecast. The content needs to already be compatible with Chromecast, (mp4
 almost always works, other file types are hit-and-miss). The application starts up a mini server that exposes the file you 
-want to play, sending a url of that to Chromecast. 
+want to play, and the application sends that url to Chromecast. 
